@@ -3,35 +3,45 @@
 > **Status:** Completed  
 > **Module:** 22 — Date, Time, and Internationalization  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (Locale, NumberFormat, ResourceBundle)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
 
-## 1. Learning Objectives
+## 1. Learning Objectives *(mandatory)*
 
-- Use **`Locale`** to select formatting rules.
-- Format numbers and currency with **`NumberFormat`**.
-- Load messages from **`ResourceBundle`** property files.
+- Construct **`Locale`** instances and select formatting rules.
+- Format currency and numbers with **`NumberFormat`**.
+- Load localized messages from **`ResourceBundle`** property files.
 
-## 2. Prerequisites
+## 2. Prerequisites *(mandatory)*
 
-- Ch.01–02; basic properties files.
+- Ch.01–02; properties files on classpath.
 
-## 3. Why This Concept Exists
+## 3. Why This Concept Exists *(mandatory)*
 
-Users expect dates, numbers, and messages in **their language and conventions**. `java.util.Locale` and resource bundles separate **code** from **translatable text**.
+**i18n** designs for many markets; **l10n** supplies locale-specific data. Hard-coded English strings and `US` number formats break German or Japanese expectations.
 
-## 4. Conceptual Explanation
+## 4. Conceptual Explanation *(mandatory)*
 
 - **`Locale`** — language, country, variant (`en_US`, `de_DE`).
-- **`NumberFormat.getCurrencyInstance(locale)`** — currency symbols and grouping.
-- **`ResourceBundle.getBundle(baseName, locale)`** — loads `baseName_locale.properties`.
-- **i18n** — internationalization (design for many locales); **l10n** — localization (specific locale data).
+- **`NumberFormat`** — decimal grouping and currency symbols per locale.
+- **`ResourceBundle.getBundle(baseName, locale)`** — resolves `baseName_lang_COUNTRY.properties`.
+- **Locale ≠ time zone** — orthogonal; combine with Ch.02 formatters for full datetime i18n.
 
-## 5. Step-by-Step Examples
+## 5. Mechanism and Execution Flow *(mandatory)*
 
-Demo: [locale-i18n-demo](../../examples/core-java/locale-i18n-demo/) with `messages.properties`.
+1. Create `Locale.US` and `Locale.GERMANY`.
+2. `NumberFormat.getCurrencyInstance(locale)` for money display.
+3. `ResourceBundle.getBundle("messages", locale)` loads keys; `getString("greeting")`.
 
-**Verified output:**
+Bundle chain: exact locale → language-only → root.
+
+## 8. Step-by-Step Examples *(mandatory)*
+
+Demo: [locale-i18n-demo](../../examples/core-java/locale-i18n-demo/).
+
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 usPrice=$1,999.50
@@ -42,38 +52,29 @@ greeting=Hello
 farewell=Goodbye
 ```
 
-US currency vs German number grouping; bundle keys `greeting`/`farewell`.
+## 11. Edge Cases and Limitations *(strongly encouraged)*
 
-## 6. Real-World Use Cases
+- Console encoding may garble symbols—demo documents `deCurrency=EUR` fallback.
+- Missing bundle keys → `MissingResourceException`.
+- `MessageFormat` plural rules deferred to framework modules.
 
-- E-commerce prices per market.
-- Error messages keyed for translation teams.
-- `MessageFormat` for pluralization (expand in web modules).
+## 12. Common Mistakes *(mandatory)*
 
-## 7. Edge Cases and Limitations
+Hard-coded user-visible strings in services instead of bundle keys.
 
-- **Console encoding** may garble currency symbols on Windows—use UTF-8 or separate currency code (`deCurrency=EUR`).
-- **Fallback chain** — bundle missing key throws `MissingResourceException`.
-- **Locale** not the same as **time zone**—orthogonal concerns.
+## 16. Security Considerations *(conditional)*
 
-## 8. Common Mistakes
+Bundles are not cryptographic secrets—do not store credentials in properties.
 
-Hard-coding English strings in business logic instead of bundle keys.
+## 23. Chapter Summary *(mandatory)*
 
-## 9. Best Practices
+**Locale** selects formatting; **ResourceBundle** selects text—pair with `java.time` formatters for complete user-facing datetime and messaging.
 
-- Keep bundles on classpath; use UTF-8 property files with native2ascii only when required.
-- Test **Germany vs US** number parsing both directions.
+## 26. Next Steps
 
-## 10. Chapter Summary
-
-Locale drives formatting; ResourceBundle drives text—combine with `java.time` formatters for full i18n.
-
-## 11. Next Steps
-
-Module 23 — regular expressions.
+Module **23** — Regular Expressions.
 
 ## Review Checklist
 
-- [x] Verified output  
-- [x] Encoding note documented
+- [x] Technical; Verified Temurin 21.0.12.1
+- [x] Encoding note preserved

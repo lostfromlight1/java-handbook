@@ -3,35 +3,53 @@
 > **Status:** Completed  
 > **Module:** 22 — Date, Time, and Internationalization  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (ZoneId, ZonedDateTime, formatters)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
 
-## 1. Learning Objectives
+## 1. Learning Objectives *(mandatory)*
 
-- Convert instants across **`ZoneId`** with **`ZonedDateTime`**.
-- Format and parse with **`DateTimeFormatter`** (pattern and localized).
-- Explain **same instant, different local time** clearly.
+- Convert the same **`Instant`** across **`ZoneId`** with **`ZonedDateTime`**.
+- Format and parse with **`DateTimeFormatter`** patterns and localized styles.
+- Explain **same instant, different local clock** without conflating zones and locales.
 
-## 2. Prerequisites
+## 2. Prerequisites *(mandatory)*
 
-- Ch.01 `java.time` types.
+- Ch.01 `java.time` types, especially `Instant` and `LocalDateTime`.
 
-## 3. Why This Concept Exists
+## 3. Why This Concept Exists *(mandatory)*
 
-Global systems must display local times while storing a single timeline. **`ZonedDateTime`** binds local fields to a zone ruleset; **`DateTimeFormatter`** controls human-readable text.
+Users see **local civil time**; systems store a **single timeline**. **`ZonedDateTime`** binds local fields to a **zone ruleset** (including DST). **`DateTimeFormatter`** renders parseable text for humans and APIs.
 
-## 4. Conceptual Explanation
+## 4. Conceptual Explanation *(mandatory)*
 
-- **`ZoneId`** — region rules (`America/New_York`, `Asia/Yangon`) or offsets.
-- **`ZonedDateTime`** — local date-time + zone; `withZoneSameInstant` converts.
-- **`DateTimeFormatter`** — pattern letters (`yyyy-MM-dd HH:mm z`) or styles.
-- Prefer **named zones** over fixed offsets when rules change (DST).
+- **`ZoneId`** — region rules (`Asia/Yangon`, `America/New_York`) or fixed offsets—not interchangeable for long-lived data when DST exists.
+- **`ZonedDateTime`** — local date-time + zone; **`withZoneSameInstant`** converts display.
+- **`DateTimeFormatter`** — pattern letters (`yyyy-MM-dd HH:mm z`) or `ofLocalizedDateTime`.
+- **Persist** `Instant` + `ZoneId` (or offset) rather than ambiguous wall time alone.
 
-## 5. Step-by-Step Examples
+## 5. Mechanism and Execution Flow *(mandatory)*
+
+1. Fix an `Instant` on the UTC line.
+2. `instant.atZone(ZoneId.of("UTC"))` vs `atZone(ZoneId.of("Asia/Yangon"))`.
+3. `withZoneSameInstant` moves zone while keeping instant.
+4. Formatter reads zone rules for abbreviation display (`MMT`).
+
+```mermaid
+flowchart LR
+    I[Instant UTC point]
+    Z1[ZonedDateTime UTC]
+    Z2[ZonedDateTime Yangon]
+    I --> Z1
+    I --> Z2
+```
+
+## 8. Step-by-Step Examples *(mandatory)*
 
 Demo: [zones-formatting-demo](../../examples/core-java/zones-formatting-demo/).
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 utc=15:30
@@ -40,44 +58,27 @@ formatted=2026-11-10 22:00 MMT
 legacyDateAvoided=true
 ```
 
-UTC 15:30 equals 22:00 in Asia/Yangon (UTC+6:30). Formatter includes zone abbreviation.
+UTC 15:30 aligns with 22:00 in UTC+6:30. Formatter includes zone abbreviation (display only).
 
-## 6. Real-World Use Cases
+## 11. Edge Cases and Limitations *(strongly encouraged)*
 
-- Meeting scheduler showing attendee local times.
-- Support dashboards formatting user locale + zone from profile.
-- Parsing ISO-8601 from APIs (`Instant.parse` / formatter with offset).
+- **DST gaps/overlaps** — local times may be invalid or ambiguous; use `ZonedDateTime` rules API for edge cases.
+- Zone **abbreviations** are not unique globally.
+- **Legacy `Date`** avoided in demo—do not mix with `java.time` without explicit conversion.
 
-## 7. Edge Cases and Limitations
+## 12. Common Mistakes *(mandatory)*
 
-- **DST gaps/overlaps** — local times may be invalid or ambiguous; use `ZonedDateTime` rules.
-- **Abbreviations** like `MMT` are display-only—not unique globally.
-- Do not persist `ZonedDateTime` without clarity—often persist `Instant` + zone id.
+Storing wall-clock `LocalDateTime` without zone for distributed events.
 
-## 8. Common Mistakes
+## 23. Chapter Summary *(mandatory)*
 
-### Incorrect
+Zones map **instants** to civil times; formatters render text—know whether you manipulate **instant**, **local**, or **zoned** values.
 
-Storing wall-clock time without zone for distributed events.
-
-### Corrected
-
-Store `Instant` + `ZoneId` or offset separately.
-
-## 9. Best Practices
-
-- Use **`DateTimeFormatter.ISO_*`** constants when possible.
-- Thread-safe formatters: immutable `DateTimeFormatter` instances.
-
-## 10. Chapter Summary
-
-Zones translate instants to local civil time; formatters render and parse text—always know which zone context applies.
-
-## 11. Next Steps
+## 26. Next Steps
 
 [03-locale-and-internationalization.md](03-locale-and-internationalization.md)
 
 ## Review Checklist
 
-- [x] java.time only  
-- [x] Verified demo
+- [x] Technical; Verified Temurin 21.0.12.1; diagram for instant→zones
+- [x] Omissions: Security, Performance

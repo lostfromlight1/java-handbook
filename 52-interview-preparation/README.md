@@ -1,13 +1,16 @@
 # Module 52 — Interview Preparation
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed  
+**Last reviewed:** 2026-11-10
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Core Java Interviews | Not started |
-| 02 | JVM and Concurrency Interviews | Not started |
-| 03 | Spring and System Design Interviews | Not started |
+| 01 | [Core Java Interviews](01-core-java-interviews.md) | Completed |
+| 02 | [JVM and Concurrency Interviews](02-jvm-and-concurrency-interviews.md) | Completed |
+| 03 | [Spring and System Design Interviews](03-spring-and-system-design-interviews.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Core curriculum Modules 02–28; backend track 36–40 for Ch.03.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [52-interview-preparation-assessment.md](../assessments/module-assessments/52-interview-preparation-assessment.md)
+
+**Next:** [53-projects](../53-projects/) and [projects/](../projects/)

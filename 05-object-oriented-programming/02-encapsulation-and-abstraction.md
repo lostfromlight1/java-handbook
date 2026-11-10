@@ -4,7 +4,24 @@
 > **Module:** 05 — Object-Oriented Programming  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (access modifiers, invariants, `Temperature` API)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -134,7 +151,35 @@ throw new IllegalArgumentException("below absolute zero");
 
 `IllegalArgumentException` extends `RuntimeException` — callers are **not** forced to declare it (unchecked). It signals “you passed an illegal value.” Module 14 covers exception taxonomy, `try` / `catch`, and when to use checked vs unchecked exceptions. **Here:** use it at validation boundaries in constructors and setters when bad arguments must never produce a half-valid object.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+Encapsulation is enforced in **two layers**: the compiler (access control) and your methods (invariants). Abstraction is what callers see after those gates.
+
+### 5.1 Compile-time access control
+
+When code outside class `Temperature` references a `private` field:
+
+1. The compiler resolves the member (JLS §6.6).
+2. If the reference site is not allowed for that modifier, compilation **fails** with an error—no silent “best effort.”
+
+`protected` and `public` widen the allowed reference sites; package-private uses the declaring package. This chapter focuses on **`private` fields + public methods** for domain types.
+
+### 5.2 Validation path on write
+
+For a setter or constructor mutator:
+
+1. Caller passes a value across the **public API** boundary.
+2. Method evaluates **preconditions** (non-negative balance, temperature above absolute zero, non-blank name).
+3. If invalid → **`throw new IllegalArgumentException(...)`** — object state is not corrupted.
+4. If valid → assign to `private` fields; **invariant holds** after return.
+
+Read paths (`getCelsius()`, `summary()`) may format or convert without exposing raw mutable internals.
+
+### 5.3 Abstraction vs representation churn
+
+Callers depend on method names and contracts (`fromCelsius`, `fahrenheit()`), not on whether you store kelvin, celsius, or a cached pair. **Information hiding** lets you change representation behind the same methods—call sites stay stable while internals evolve.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -146,7 +191,7 @@ throw new IllegalArgumentException("below absolute zero");
 | Information hiding | Conceal design decisions that may change |
 | `IllegalArgumentException` | Unchecked exception for invalid method/constructor arguments |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 **Private field + public behavior:**
 
@@ -172,7 +217,7 @@ public final class Temperature {
 
 **JavaBeans naming** (convention, not language rule): boolean getters may be `isEmpty()` instead of `getEmpty()`.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 Full program: [examples/core-java/encapsulation-demo/](../examples/core-java/encapsulation-demo/)
 
@@ -181,7 +226,7 @@ javac EncapsulationDemo.java
 java EncapsulationDemo
 ```
 
-### 7.1 Minimal: validated setter
+### 8.1 Minimal: validated setter
 
 ```java
 class Counter {
@@ -199,7 +244,7 @@ class Counter {
 
 Encapsulation here: no `count++` scattered outside; only `increment` mutates. No setter for arbitrary values—invariant “only goes up by one through API.”
 
-### 7.2 Realistic: `Temperature` and `UserAccount`
+### 8.2 Realistic: `Temperature` and `UserAccount`
 
 **Temperature** — private constructor, factory, conversion hidden:
 
@@ -230,7 +275,7 @@ void setDisplayName(String displayName) {
 }
 ```
 
-### 7.3 Advanced: factory vs public constructor
+### 8.3 Advanced: factory vs public constructor
 
 | Approach | When |
 |----------|------|
@@ -240,7 +285,7 @@ void setDisplayName(String displayName) {
 
 The demo uses a **private constructor** so every instance passes through validation in one place.
 
-**Verified output (Temurin JDK 21.0.12.1):**
+**Verified (Temurin JDK 21.0.12.1):**
 
 ```text
 celsius=25.0
@@ -251,14 +296,14 @@ user=ada display='Ada Lovelace'
 
 The `rejected` line comes from catching the exception and printing `ex.getMessage()`.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **JPA entities** — private fields, getters; setters optional; validation in service layer or Bean Validation (`@NotNull`).
 - **Value types in APIs** — `Money`, `EmailAddress` classes reject bad construction.
 - **Security** — do not expose mutable internal `byte[]` for passwords; minimize surface.
 - **Library design** — public interface classes, package-private implementation helpers.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 **Language:** access checks are **compile-time** for most uses (JLS §6.6). Reflection can bypass `private` (frameworks do; not for normal application code).
 
@@ -266,14 +311,14 @@ The `rejected` line comes from catching the exception and printing `ex.getMessag
 
 **Framework note:** Spring and Jackson often need getters or visible fields for serialization—design DTOs explicitly rather than exposing entity internals.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Shallow vs deep encapsulation** — copying a reference to a mutable object inside your object (`Date`, `List`) without defensive copy breaks invariants.
 - **Getter returns mutable collection** — caller modifies your internal list; return `List.copyOf(items)` or unmodifiable view.
 - **Over-validation in getters** — getters should be cheap; heavy validation belongs on construction/mutation.
 - **`protected` leakage** — subclasses in other packages can access `protected` members; design carefully.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — public mutable field
 
@@ -335,7 +380,7 @@ public void setAge(int age) {
 
 Choose clamp vs throw based on whether bad values are **expected** (user typing) vs **programming errors**.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - **Favor immutability** where possible (`final` fields, no setters).
 - **Validate early** — constructors and factories, not “eventually consistent” broken objects.
@@ -343,7 +388,7 @@ Choose clamp vs throw based on whether bad values are **expected** (user typing)
 - **Minimize public surface** — every public method is a maintenance promise.
 - **Document invariants** in class Javadoc for team-facing types.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -352,25 +397,25 @@ Choose clamp vs throw based on whether bad values are **expected** (user typing)
 | Unchecked `IllegalArgumentException` | Clean API, fail fast | Caller must read docs/tests |
 | Checked exceptions for validation | Forces handling | Verbose; less common in modern Java APIs for pure argument errors |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Getter/setter overhead is negligible. Defensive `List.copyOf` on every getter can be costly—prefer unmodifiable views or immutable collections by design when hot paths matter (profile first).
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Encapsulation limits exposure of credentials and PII. Logging `toString()` on rich objects can leak hidden fields—override `toString` carefully. Never expose direct references to security-sensitive mutable buffers.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Access modifiers are unchanged in Java 21. `List.copyOf` and `String.isBlank()` are Java 9+ / 11+; validated on **21.0.12.1**. Records (later) combine compact syntax with accessor methods.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 - **C++** — `friend`, `public`/`private` similar spirit; header files expose more structure.
 - **Kotlin** — `val`/`var`, properties generate accessors; default `public` is restricted by idioms.
 - **Go** — capitalization exports symbols; no `private` keyword (package-level visibility).
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 **You should already understand:**
 
@@ -391,12 +436,12 @@ Access modifiers are unchanged in Java 21. `List.copyOf` and `String.isBlank()` 
 
 **Practical check:** Add `fromFahrenheit` to `Temperature` reusing private constructor and shared validation.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
 1. Run `EncapsulationDemo` and identify which methods are getters vs domain operations.
-2. Make `Counter` from §7.1 reject `decrement` below zero via `IllegalArgumentException`.
+2. Make `Counter` from §8.1 reject `decrement` below zero via `IllegalArgumentException`.
 3. List which members of `Temperature` are `private` vs package-private.
 
 ### Intermediate
@@ -410,7 +455,7 @@ Access modifiers are unchanged in Java 21. `List.copyOf` and `String.isBlank()` 
 7. Explain why returning `Collections.unmodifiableList(items)` still leaks if elements are mutable.
 8. Compare throwing `IllegalArgumentException` vs using `Optional` for a lookup API—trade-offs in two sentences each.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What is encapsulation?**
 2. **Difference between encapsulation and abstraction?**
@@ -418,7 +463,7 @@ Access modifiers are unchanged in Java 21. `List.copyOf` and `String.isBlank()` 
 4. **Why avoid public fields in domain models?**
 5. **What is `IllegalArgumentException` for?**
 
-## 21. Solutions
+## 22. Solutions
 
 1. `celsius()`, `fahrenheit()` are domain accessors; `getUsername()` / `getDisplayName()` are classic getters; `setDisplayName` is a mutator with validation.
 2. `if (count == 0) throw new IllegalArgumentException("already zero");` before decrement (or guard message of your choice).
@@ -429,22 +474,22 @@ Access modifiers are unchanged in Java 21. `List.copyOf` and `String.isBlank()` 
 7. Unmodifiable list prevents add/remove; element objects can still be mutated unless elements are immutable.
 8. `IllegalArgumentException` for clear programmer/API contract violation; `Optional` for “may not exist” as normal outcome without exceptions.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Encapsulation** protects state with `private` fields and validated methods. **Access modifiers** define who can see each member. **Getters and setters** help when they enforce rules or satisfy frameworks—not when they only duplicate public fields. **Abstraction** presents a purposeful API (`Temperature`, `withdraw`) without exposing implementation. **`IllegalArgumentException`** rejects illegal arguments at boundaries. Together, these ideas keep domain models safe and evolvable—on the server and in libraries.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Encapsulation · abstraction · information hiding · invariant · access modifier · getter · setter · factory method · `IllegalArgumentException`
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS §6.6 — Access Control](https://docs.oracle.com/javase/specs/jls/se21/html/jls-6.html#jls-6.6)
 - [JLS §8.4.2 — Method Body](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4.2)
 - [Java SE — `IllegalArgumentException`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html)
 - Effective Java (Bloch) — items on encapsulation, immutability, and minimizing accessibility
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [03-inheritance-and-polymorphism-intro.md](03-inheritance-and-polymorphism-intro.md) — `protected` and overrides in context.
 - Module 06 — constructors, `equals` / `hashCode`, immutability patterns.
@@ -452,8 +497,30 @@ Encapsulation · abstraction · information hiding · invariant · access modifi
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; access modifiers, invariants, and `Temperature` API at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Depth gate passed; Temperature and UserAccount progressive examples
-- [x] EncapsulationDemo verified on Temurin JDK 21.0.12.1
-- [x] Encapsulation vs abstraction clarified
-- [x] Revision and Mastery, exercises, solutions, references
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (access/validation flow in §5)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-10; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **§ Internal Behavior (bytecode)** — omitted; access control is compile-time; validation is ordinary method execution.
+
+**Verification note:** `EncapsulationDemo` output matches Temurin JDK 21.0.12.1 (2026-11-10 re-run).

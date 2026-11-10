@@ -4,7 +4,24 @@
 > **Module:** 05 — Object-Oriented Programming  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (class/object model, `new`, identity, encapsulation preview)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -128,6 +145,8 @@ Steps at a high level (JVMS view, simplified):
 3. Run the constructor on that object.
 4. Return a reference; assign it to `alice`.
 
+For the **ordered runtime sequence** (allocation, constructor, method call, identity), see §5.
+
 Another variable can refer to the **same** object:
 
 ```java
@@ -170,7 +189,41 @@ In typical server applications:
 
 Controllers often stay thin: parse HTTP, call a **service** object, map results to JSON. The **service** holds references to repositories and other collaborators (also objects). You do not need Spring to practice this pattern—the same object model appears in plain Java SE.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+Java OOP is defined in source (classes) but **executes** through heap allocation, constructors, references, and instance method calls. This section is the operational view behind §4.2–§4.5.
+
+### 5.1 Class instance creation (`new`)
+
+For `BankAccount alice = new BankAccount("Alice", 100);` (JLS §15.13, JVMS object model):
+
+1. Evaluate constructor arguments (`String`, `int`).
+2. **Allocate** a new instance of `BankAccount` on the heap.
+3. **Run** the matching constructor: fields initialized, invariants applied (`this.owner = owner`, etc.).
+4. The `new` expression **evaluates to a reference**; store it in `alice`.
+
+A second `new BankAccount("Bob", 50)` repeats the sequence for a **different** heap object. Class names are shared; instances are not singletons unless you design them that way.
+
+### 5.2 Instance method invocation
+
+On `alice.withdraw(40)`:
+
+1. Evaluate receiver `alice` (must not be `null`).
+2. **Select** instance method `withdraw` for the runtime class (`BankAccount` here).
+3. Enter a stack frame; bind **`this`** to that object; run body (Module 04 stack frames).
+4. Mutations (`balanceCents -= cents`) affect **only** the receiver instance.
+
+### 5.3 Reference assignment and identity
+
+`BankAccount sameRef = alice` **copies the reference**, not field values. Two variables can denote one object (`sameRef == alice` → `true`, JLS §15.21). `bob == alice` is `false` because two distinct allocations occurred.
+
+Use `==` for **same instance**; use `equals` for **value sameness** only when the type defines it (Module 06). Calling methods on `null` fails at runtime with `NullPointerException`.
+
+### 5.4 Encapsulation as compile-time boundary
+
+`private int balanceCents` means the compiler **rejects** external field access. Callers must use methods that enforce rules (positive amounts, sufficient balance). Runtime correctness still depends on method bodies—visibility is the first gate, validation is the second (Ch.02).
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -184,7 +237,7 @@ Controllers often stay thin: parse HTTP, call a **service** object, map results 
 | Identity (`==`) | Whether two references denote the same object |
 | Encapsulation | Bundling data with behavior and restricting direct access to internal state |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 **Class body** (JLS §8.1):
 
@@ -216,7 +269,7 @@ identifier.methodName(argumentList);
 
 **Default constructor:** If your class has **no** constructor declarations, Java inserts `public ClassName() { }` (or package-private in a package-private class). If you declare **any** constructor, you must provide what callers need—no automatic no-arg constructor.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 Full program: [examples/core-java/oop-fundamentals-demo/](../examples/core-java/oop-fundamentals-demo/)
 
@@ -225,7 +278,7 @@ javac OopFundamentalsDemo.java
 java OopFundamentalsDemo
 ```
 
-### 7.1 Minimal: one class, one object
+### 8.1 Minimal: one class, one object
 
 ```java
 class Greeter {
@@ -251,7 +304,7 @@ public class MinimalOop {
 - `Greeter` is the class; `g` is a reference to one object.
 - `greet()` is an **instance** method: it uses `name` from **that** object.
 
-### 7.2 Realistic: accounts and behavior
+### 8.2 Realistic: accounts and behavior
 
 The demo defines `BankAccount` with owner and balance, deposit/withdraw rules, and `summary()` for display:
 
@@ -274,7 +327,7 @@ System.out.println("sameRef == alice: " + (sameRef == alice));
 System.out.println("bob == alice: " + (bob == alice));
 ```
 
-### 7.3 Advanced: why not public fields?
+### 8.3 Advanced: why not public fields?
 
 ### Incorrect — balance can be corrupted from outside
 
@@ -305,7 +358,7 @@ class BankAccount {
 
 The corrected version is the encapsulation preview; Ch.02 adds accessors and validation exceptions.
 
-**Verified output (Temurin JDK 21.0.12.1):**
+**Verified (Temurin JDK 21.0.12.1):**
 
 ```text
 alice withdraw ok=true
@@ -315,14 +368,14 @@ sameRef == alice: true
 bob == alice: false
 ```
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Domain entities** — `Invoice`, `Shipment` with fields and methods that keep business rules local.
 - **Service classes** — `PaymentService` with references to `GatewayClient`, `LedgerRepository`; methods orchestrate use cases.
 - **DTOs vs rich models** — some layers use anemic data holders; domain models combine state + behavior. OOP fundamentals support the rich style.
 - **Testing** — construct objects with `new` in unit tests, call methods, assert on results without starting a server.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 **Language (JLS):** Class instance creation evaluates arguments, allocates storage, initializes the new instance (constructor chain and field initializers—details in Module 06), then the reference is assigned (JLS §15.13, §12.5).
 
@@ -330,14 +383,14 @@ bob == alice: false
 
 **HotSpot (implementation note):** Object allocation is fast-path optimized (often **TLAB**—thread-local allocation buffers). This is not a language guarantee; it explains why creating many small short-lived objects is often acceptable until profiling says otherwise.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **No object without class** — Java has no standalone “object” keyword like some languages; everything is an instance of a class (records and arrays are special class-like constructs—later modules).
 - **Constructor name must match class** — typos create ordinary methods that are **not** constructors (subtle bug).
 - **`==` on `Integer` and strings** — reference types need `equals` for value comparison; autoboxing creates new objects sometimes; do not use `==` for content (Module 06).
 - **Aliasing** — two references, one object: defensive copies when exposing mutable internals (Ch.02).
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — treating class name like an object
 
@@ -380,7 +433,7 @@ BankAccount alice = new BankAccount("Alice", 100);
 alice.deposit(10);
 ```
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Model **nouns** from the domain as classes; **verbs** as methods.
 - Keep fields **`private`** unless you have a deliberate API reason otherwise.
@@ -388,7 +441,7 @@ alice.deposit(10);
 - Return meaningful types (`boolean` for success/failure, optional types later) instead of magic numbers.
 - Name classes with **PascalCase**, fields and methods with **lowerCamelCase**.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -397,25 +450,25 @@ alice.deposit(10);
 | Public fields | Less boilerplate | Breaks invariants, hard to evolve |
 | Many instances with `new` | Simple mental model | Lifecycle and sharing need care in concurrent apps |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Object creation is cheap at moderate rates on modern JVMs; prefer clarity. Micro-optimizing away objects without measurement often hurts readability. Long-lived caches of mutable objects need thread-safety analysis (later concurrency modules).
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 If sensitive state (tokens, keys) is stored in objects, **encapsulation** and controlled methods reduce accidental leakage. Do not expose mutable collections or internal arrays without copying when security depends on immutability (Ch.02, immutability modules).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Classes, objects, `new`, and identity are core Java since 1.0. Examples validated on **21.0.12.1** (Temurin). Records (Java 16+) are compact class-like types—Module 09+.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 - **C:** `struct` has data but no methods attached in the type; Java unifies them in classes.
 - **Python:** attributes can be added at runtime; Java fields are fixed by the class declaration (with reflection as an escape hatch).
 - **JavaScript:** prototypes vs Java’s class syntax (ES6) — Java classes are stricter at compile time.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 **You should already understand:**
 
@@ -437,7 +490,7 @@ Classes, objects, `new`, and identity are core Java since 1.0. Examples validate
 
 **Practical check:** Add a `transferTo(BankAccount other, int cents)` method that withdraws from `this` and deposits to `other` only when funds suffice.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -456,7 +509,7 @@ Classes, objects, `new`, and identity are core Java since 1.0. Examples validate
 7. Without running, predict whether `new BankAccount("Ada", 0) == new BankAccount("Ada", 0)`.
 8. Read JLS §15.13 summary: list three steps of instance creation in your own words.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What is the difference between a class and an object?**
 2. **What does `new` do?**
@@ -464,7 +517,7 @@ Classes, objects, `new`, and identity are core Java since 1.0. Examples validate
 4. **Why make fields private?**
 5. **What is `this` in an instance method?**
 
-## 21. Solutions
+## 22. Solutions
 
 1. Two `BankAccount` instances (`alice`/`sameRef` share one; `bob` is separate).
 2. Example: `void printOwner() { System.out.println(owner); }` — note `owner` is `private` but visible inside the class.
@@ -475,22 +528,22 @@ Classes, objects, `new`, and identity are core Java since 1.0. Examples validate
 7. **False** — two distinct `new` expressions create two objects.
 8. Typical answer: evaluate constructor arguments, allocate instance, run constructor initializer (simplified).
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 OOP organizes programs around objects combining state (fields) and behavior (methods). A **class** defines the shape; **`new`** creates **instances** referenced by variables. **`==`** tests **identity**; logical equality uses `equals` when defined. **`private` fields** preview **encapsulation**, which Chapter 02 deepens. Backend code uses the same idea: domain objects and services collaborating through references.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Class · object · instance · field · method · constructor · `new` · reference · identity · `==` · `this` · encapsulation (preview) · heap (preview)
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS §8 — Classes](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html)
 - [JLS §12.5 — Creation of New Class Instances](https://docs.oracle.com/javase/specs/jls/se21/html/jls-12.html#jls-12.5)
 - [JLS §15.13 — Class Instance Creation Expressions](https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html#jls-15.13)
 - [JVMS §2 — Structures](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html) (objects, references)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [02-encapsulation-and-abstraction.md](02-encapsulation-and-abstraction.md) — access modifiers, invariants, getters/setters, abstraction.
 - Module 06 — constructors and `equals` / `hashCode` in depth.
@@ -498,9 +551,30 @@ Class · object · instance · field · method · constructor · `new` · refere
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; class/object, `new`, and identity at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Depth gate passed; progressive §7 examples
-- [x] OopFundamentalsDemo verified on Temurin JDK 21.0.12.1
-- [x] Encapsulation and `equals` previewed with current explanation
-- [x] Revision and Mastery, exercises, solutions, JLS references
-- [x] Backend connection included
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (conceptual/flow in §4–§5)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-10; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **§ Advanced examples beyond §8.3** — omitted; minimal/realistic/advanced trilogy covers this module’s scope.
+
+**Verification note:** `OopFundamentalsDemo` output matches Temurin JDK 21.0.12.1 (2026-11-10 re-run).

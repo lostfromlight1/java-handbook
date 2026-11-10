@@ -4,7 +4,24 @@
 > **Module:** 05 — Object-Oriented Programming  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (`extends`, `super`, polymorphism and virtual dispatch at Level 3)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -144,6 +161,8 @@ for (Employee e : team) {
 
 Each element may be `Employee` or `Manager`; each iteration picks the right `label()` and `annualPay()` without `if (e instanceof Manager)`.
 
+For the step-by-step **constructor chain** and **virtual dispatch** sequence, see §5.
+
 **Language guarantee:** instance method dispatch on non-`private`, non-`static`, non-`final` methods uses the **runtime class** (JLS instance method selection). HotSpot implements that with vtables and related mechanisms—implementation detail, not something you rely on for security.
 
 **Limitation at this depth:** `final` methods cannot be overridden; `private` methods are not inherited for overriding purposes; fields are **not** polymorphic—accessing a field through a superclass-typed reference uses the field declared in the compile-time type (a common mistake; Module 07 expands).
@@ -188,7 +207,37 @@ Symptoms: overriding one method accidentally breaks another that called it; supe
 
 Mitigations (deeper modules): **favor composition**, **seal** small hierarchies, **program to interfaces**, keep superclass surface minimal and stable, avoid calling overridable methods from constructors (advanced pitfall).
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+Inheritance links **type relationships** at compile time; **polymorphism** shows up when the JVM runs instance methods on actual objects.
+
+### 5.1 Subclass construction order
+
+`new Manager("Riley", 50_000, 10_000)` (simplified):
+
+1. Allocate `Manager` storage (subclass instance includes superclass fields).
+2. Subclass constructor must begin by **`super(...)`** to the superclass constructor (first statement rule when required).
+3. Superclass constructor initializes inherited fields; control returns to subclass body for subclass-only fields.
+4. Reference is ready; runtime class is `Manager`, compile-time variable may still be `Employee`.
+
+### 5.2 Virtual dispatch (instance methods)
+
+For `Employee e = manager; e.annualPay();` where `Manager` overrides `annualPay`:
+
+1. **Compile time:** resolve that `Employee` declares `annualPay`; the call type-checks.
+2. **Runtime:** the JVM uses the **actual class** of the object (`Manager`) to select the **overriding** method body (JLS §15.12; HotSpot uses vtables—an implementation detail, not a language guarantee you should code against).
+
+Only **instance** methods participate in this dispatch; `static` methods and fields bind by **declared** type, not runtime class.
+
+### 5.3 `instanceof` and narrowing
+
+`e instanceof Manager` evaluates the **runtime type** of `e`. A `true` result justifies a **downcast** when you need `Manager`-only API—wrong casts cause `ClassCastException`. Pattern matching for `instanceof` appears in later modules; here the mental model is **test runtime type, then narrow carefully**.
+
+### 5.4 When dispatch does not help
+
+If behavior should vary by **pluggable part** (engine type, pricing strategy) without an is-a domain relationship, **composition** and delegation (Ch.04, Module 08 interfaces) avoid brittle inheritance trees.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -204,7 +253,7 @@ Mitigations (deeper modules): **favor composition**, **seal** small hierarchies,
 | Upcast | Assign subclass reference to superclass type (`Employee e = manager`) |
 | Downcast | Narrow reference to subclass (`(Manager) e`)—requires care |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 class SubclassName extends SuperclassName {
@@ -228,7 +277,7 @@ class SubclassName extends SuperclassName {
 - Only **instance methods** participate in the polymorphic dispatch described here.
 - `@Override` applies to methods overriding superclass or interface methods; required for records/interfaces in some cases—ordinary class overrides use it as documentation + safety.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 Full program: [examples/core-java/inheritance-poly-demo/](../examples/core-java/inheritance-poly-demo/)
 
@@ -237,7 +286,7 @@ javac InheritancePolyDemo.java
 java InheritancePolyDemo
 ```
 
-### 7.1 Minimal: inheritance skeleton
+### 8.1 Minimal: inheritance skeleton
 
 ```java
 class Employee {
@@ -275,7 +324,7 @@ In the full demo, `Employee` exposes package-private `baseSalary()` and `name()`
 - `super(name, baseSalary)` — initializes inherited `name` and `baseSalary`.
 - Without `annualPay()` override, a manager would get base pay only.
 
-### 7.2 Realistic: payroll array (polymorphism)
+### 8.2 Realistic: payroll array (polymorphism)
 
 ```java
 Employee[] team = {
@@ -291,7 +340,7 @@ for (Employee e : team) {
 
 The array type is `Employee[]`; elements 0 and 2 are plain employees; element 1 is a `Manager`. The loop never branches on type—overridden methods supply the right pay and label.
 
-### 7.3 Advanced: supertype reference, `instanceof`, polymorphic pay
+### 8.3 Advanced: supertype reference, `instanceof`, polymorphic pay
 
 ```java
 Employee asEmployee = new Manager("Casey", 60_000, 5_000);
@@ -301,7 +350,7 @@ System.out.println("polymorphic pay=" + asEmployee.annualPay());
 
 `asEmployee` is declared `Employee` but points at a `Manager`. `annualPay()` still returns `60_000 + 5_000` = `65000`.
 
-### Verified output (Temurin JDK 21.0.12.1)
+**Verified (Temurin JDK 21.0.12.1):**
 
 ```text
 Employee(Sam) pay=50000
@@ -313,20 +362,20 @@ polymorphic pay=65000
 
 **Line guide:** `label()` is overridden in `Manager` for clearer logging; package-private accessors in the demo keep the focus on inheritance (production code might use `protected` or public getters—Module 07).
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Framework callbacks:** servlet `service()`, JUnit `@Test` lifecycle, Spring template methods—you override hooks; the framework calls your code through a base type reference.
 - **Domain taxonomies:** `Payment`, `CardPayment`, `WirePayment` with shared `amount()` and specialized `settle()`.
 - **Plugin-style APIs:** abstract base class in a library; applications ship concrete subclasses (interfaces often preferred today—Module 08).
 - **Collections and streams:** variables typed `List<String>` hold `ArrayList` or `CopyOnWriteArrayList`; method calls dispatch to the runtime implementation (same polymorphic idea on interfaces).
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 For a virtual instance call, the JVM bytecode is typically **`invokevirtual`** (or `invokeinterface` for interface types). The constant pool entry names the **descriptor** and **class**; at execution, HotSpot resolves the **actual target** using the receiver object’s class (vtable or equivalent). That is why overriding works even when the receiver is stored in a superclass-typed variable.
 
 **Spec vs implementation:** the JLS defines which method is selected; HotSpot’s vtable layout is not an API guarantee. **`invokespecial`** is used for constructors, `private` methods, and `super` calls—not for ordinary polymorphic instance calls on `this`.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **`null` and `instanceof`:** `null instanceof Employee` is `false` (no `NullPointerException`).
 - **Overriding vs overload in subclass:** `void print(Employee e)` and `void print(Manager m)` in the same class overload; only exact signature match overrides.
@@ -334,7 +383,7 @@ For a virtual instance call, the JVM bytecode is typically **`invokevirtual`** (
 - **`final` class** cannot be extended; **`final` method** cannot be overridden.
 - **Constructor calls are not polymorphic**—`new Manager(...)` always runs `Manager` constructors; only instance methods dispatch virtually after construction.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect
 
@@ -378,7 +427,7 @@ log(ref);   // calls log(Employee), not log(Manager) — compile-time overload p
 
 Overloading is resolved at **compile time** using the **reference’s compile-time type**.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Model **is-a** only when substitutability is true for all callers of the superclass.
 - Annotate overrides with `@Override`.
@@ -387,7 +436,7 @@ Overloading is resolved at **compile time** using the **reference’s compile-ti
 - When reuse is about **containing** another object, prefer composition (next chapter).
 - Avoid calling overridable methods from superclass constructors (subclass state may not be ready)—advanced rule, but worth noting.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | Benefit | Cost |
 |----------|---------|------|
@@ -395,25 +444,25 @@ Overloading is resolved at **compile time** using the **reference’s compile-ti
 | Interface + composition | Flexible replacement; easier testing | More boilerplate; multiple types to learn |
 | Deep inheritance trees | Quick short-term modeling | Hard refactors; LSP violations (Module 07) |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Virtual calls are cheap on HotSpot; tiny methods are often **inlined** across overrides when the runtime type is provably stable (JIT optimization, not a language promise). Do not replace inheritance with manual `if (type)` chains for micro-performance without measurement—polymorphic calls are the idiomatic default.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 **Do not** rely on `instanceof` alone for security authorization when callers can pass arbitrary objects; combine with type-safe APIs, sealed hierarchies, or capability checks (security modules later). Downcasting must follow a successful `instanceof` (or equivalent) to avoid `ClassCastException` in security-sensitive paths.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Class inheritance and `instanceof` are core Java. `@Override` since Java 5; pattern matching `instanceof` since Java 16—this chapter uses classic `instanceof`. **Sealed classes** (Java 17) restrict subclasses—Module 15. Validated on **21.0.12.1** (Temurin).
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 - **C++:** multiple inheritance of classes; Java allows one class superclass, multiple interfaces.
 - **Kotlin:** classes `final` by default; inheritance is opt-in (`open`).
 - **Go:** composition via struct embedding, not Java-style class extension.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 **You should already understand:**
 
@@ -435,7 +484,7 @@ Class inheritance and `instanceof` are core Java. `@Override` since Java 5; patt
 
 **Practical check:** Add `class Contractor extends Employee` with a different `annualPay()`; run the demo loop and confirm dispatch without changing the loop body.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -454,7 +503,7 @@ Class inheritance and `instanceof` are core Java. `@Override` since Java 5; patt
 7. Without running, predict output if `Employee` declares `String label()` returning `"Employee"` and `Manager` does not override—what does Riley print?
 8. Research: why calling `toString()` from a superclass constructor can surprise subclasses (fragile base class).
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What is the difference between overloading and overriding?**
 2. **Can you override a `static` method?** — Hiding, not overriding; dispatch is not virtual.
@@ -462,7 +511,7 @@ Class inheritance and `instanceof` are core Java. `@Override` since Java 5; patt
 4. **Why use `@Override`?**
 5. **What is polymorphism in Java?** — Supertype reference, subtype object, virtual instance dispatch.
 
-## 21. Solutions
+## 22. Solutions
 
 1. Upcast: array assignment and `Employee asEmployee = new Manager(...)`; overriding: `annualPay`, `label`; `instanceof`: third block in `main`.
 2. Contractor line shows `Contractor(...)` pay = base + 5000 if you mirror `Manager` pattern.
@@ -473,15 +522,15 @@ Class inheritance and `instanceof` are core Java. `@Override` since Java 5; patt
 7. Riley prints `Employee(Riley)` if label not overridden; pay still 60000 if `annualPay` overridden.
 8. Subclass fields unset during `super()`; overridden `toString()` may read uninitialized subclass state.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Inheritance (`extends`) models **is-a** relationships and shares superclass implementation. Subclasses chain `super(...)` to initialize inherited state, **override** instance methods for specialized behavior, and mark overrides with `@Override`. **Polymorphism** lets superclass-typed references call subclass methods via **virtual dispatch**. **`instanceof`** inspects runtime type. Use inheritance when substitutability is real; otherwise prefer **composition**. Superclass changes can **break subclasses** (fragile base class)—design hierarchies with care; Module 07 deepens inheritance rules and alternatives.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Inheritance · superclass · subclass · `extends` · `super` · override · overload · `@Override` · polymorphism · virtual dispatch · `instanceof` · upcast · fragile base class
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS §8.1.4 — Superclasses and Subclasses](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.1.4)
 - [JLS §8.4.8 — Inheritance, Overriding, and Hiding](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4.8)
@@ -489,7 +538,7 @@ Inheritance · superclass · subclass · `extends` · `super` · override · ove
 - [Java Tutorial — Inheritance](https://docs.oracle.com/javase/tutorial/java/IandI/subclasses.html)
 - [Java Tutorial — Polymorphism](https://docs.oracle.com/javase/tutorial/java/IandI/polymorphism.html)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [04-composition-and-object-relationships.md](04-composition-and-object-relationships.md) — has-a, composition, object graphs, when not to inherit.
 - Module 07 — `protected`, `abstract`, Liskov substitution, sealed hierarchies, `super` calls on methods.
@@ -499,9 +548,30 @@ This chapter introduced inheritance and polymorphism at **intro** depth; later m
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; `extends`, `super`, and polymorphic dispatch at **Levels 2–3** (virtual dispatch at Level 3).
+
 - [x] Learning objectives covered
-- [x] Depth gate passed; progressive §7 examples
-- [x] InheritancePolyDemo verified on Temurin JDK 21.0.12.1
-- [x] Overriding vs overloading; composition and fragile base previewed with current explanation
-- [x] Revision and Mastery, exercises, solutions, JLS references
-- [x] Virtual dispatch labeled spec vs HotSpot where relevant
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (constructor chain and dispatch in §5)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-10; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **§ Language comparisons** — kept brief; inheritance semantics deepens in Module 07.
+
+**Verification note:** `InheritancePolyDemo` output matches Temurin JDK 21.0.12.1 (2026-11-10 re-run).

@@ -1,13 +1,15 @@
 # Module 21 — File I/O and Serialization
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed — all chapters quality-pass 2026-11-10.
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Files and Streams | Not started |
-| 02 | NIO.2 | Not started |
-| 03 | Serialization and Data Formats | Not started |
+| 01 | [Files and Streams](01-files-and-streams.md) | Completed |
+| 02 | [NIO.2](02-nio2.md) | Completed |
+| 03 | [Serialization and Data Formats](03-serialization-and-data-formats.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 14, 20; [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [21-file-io-serialization-assessment.md](../assessments/module-assessments/21-file-io-serialization-assessment.md).
+
+**Examples:** `files-streams-demo`, `nio2-demo`, `serialization-formats-demo` (temp files / in-memory).

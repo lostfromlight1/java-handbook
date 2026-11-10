@@ -17,3 +17,25 @@ Workspace settings in `.vscode/settings.json` **exclude** the CLI demo trees fro
 After pulling these settings, run **Java: Clean Java Language Server Workspace** and reload the window.
 
 To edit the JPMS demo with full IDE support, open `examples/build-tools/jpms-hello-demo/` as its own workspace folder.
+
+## Layout
+
+| Folder | Focus |
+|--------|--------|
+| `beginner/` | First programs, `main`, args, simple algorithms |
+| `core-java/` | Language and standard library demos |
+| `jvm/` | Classpath, memory, and runtime-facing demos |
+| `debugging/` | Reproduce-and-fix style samples |
+| `networking/` | JDK HTTP and sockets |
+| `testing/` | JUnit-oriented samples |
+| `build-tools/` | Maven awareness, classpath JARs, JPMS hello |
+| `backend/` | JDBC/JPA (Maven), DI/proxy/REST teaching demos |
+| `patterns/` | Creational and structural/behavioral sketches |
+| `clean-code/` | Readability and naming demos |
+| `security/` | Input-guard / defensive coding demos |
+| `resilience/` | Circuit-breaker style sketches |
+| `caching/` | In-memory LRU cache |
+| `observability/` | Structured logging sketches |
+| `advanced/` | Reflection, method handles, FFM preview, Java agents |
+
+Each leaf demo has its own `README.md` with `javac`/`java` commands and verified Temurin 21 output markers.

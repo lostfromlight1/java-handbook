@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 52 — Interview Preparation  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -15,23 +17,25 @@
 ## 2. Prerequisites
 
 - **Modules 02–18** — fundamentals through Optional/null.
-- **Module 12–13** — collections and generics (frequent interview focus).
+- **Modules 12–13** — collections and generics (frequent focus).
 
 ## 3. Why This Concept Exists
 
-Interview loops filter for **accurate mental models**, not trivia memorization. Candidates stumble on `==` vs `equals`, mutable keys in `HashMap`, generics erasure, and exception hierarchy—not because they lack years of experience, but because those details were never consolidated.
+Interview loops filter for **accurate mental models**, not trivia. Candidates stumble on `==` vs `equals`, mutable keys in `HashMap`, generics erasure, and exception hierarchy—not from lack of experience, but from uncollated detail.
 
-## 4. High-Yield Topics
+## 4. Conceptual Explanation
 
-### Types and memory
+### High-yield topics
+
+#### Types and memory
 
 | Question theme | Key points | Handbook |
 |----------------|------------|----------|
-| `==` vs `equals` | References vs logical equality; override contract | M02, M06 |
+| `==` vs `equals` | References vs logical equality; contract | M02, M06 |
 | `String` immutability | pool, concatenation, `StringBuilder` | M11 |
 | Autoboxing / NPE | `Integer` cache -128..127; unboxing null | M02 |
 
-### OOP
+#### OOP
 
 | Theme | Key points |
 |-------|------------|
@@ -39,39 +43,54 @@ Interview loops filter for **accurate mental models**, not trivia memorization. 
 | Interfaces vs abstract classes | multiple inheritance of type | M08 |
 | Overload vs override | compile-time vs virtual dispatch | M04, M07 |
 
-### Collections
+#### Collections
 
 | Theme | Key points |
 |-------|------------|
 | `List` vs `Set` vs `Map` | ordering, uniqueness | M12 |
-| `HashMap` bucket/collision | `hashCode`+`equals`; immutable keys | M12 |
-| `ConcurrentHashMap` | not same as synchronized map | M12, M24 |
+| `HashMap` | `hashCode`+`equals`; immutable keys | M12 |
+| `ConcurrentHashMap` | not synchronized `HashMap` | M12, M24 |
 
-### Generics
+#### Generics
 
-- **Erasure** — no `List<String>` at runtime; `ClassCastException` at bridge boundaries.
+- **Erasure** — no `List<String>` at runtime.
 - **PECS** — producer `extends`, consumer `super`.
 - Cannot `new T()`.
 
-### Exceptions
+#### Exceptions
 
 - Checked vs unchecked philosophy.
 - try-with-resources and suppressed exceptions (M14).
 
-## 5. Sample Questions with Answer Shape
+## 5. Mechanism and Execution Flow
+
+### `HashMap.put` (interview whiteboard)
+
+```mermaid
+flowchart TD
+  K[put key value] --> H[hash key]
+  H --> B[bucket index]
+  B --> E{equals match?}
+  E -->|yes| R[replace value]
+  E -->|no| C[collision chain / tree]
+```
+
+If `hashCode` changes while key is in map → **lost entry** (why immutable keys matter).
+
+## 6. Sample Questions with Answer Shape
 
 **Q: Why must equal objects have equal hash codes?**  
-**A:** `HashMap` uses hash to choose bucket; unequal hashes break `Map` contract → lookups fail for equal keys. Override both together (M06).
+**A:** `HashMap` uses hash for bucket; broken contract breaks lookup. Override both (M06).
 
 **Q: What does `final` mean on a reference field?**  
-**A:** Reference cannot be reassigned; object state may still mutate unless immutable (M06).
+**A:** Reference cannot be reassigned; object may still mutate unless immutable (M06).
 
 **Q: Difference `ArrayList` vs `LinkedList`?**  
-**A:** Array-backed random access O(1) vs node list; middle insert differs; memory locality favors `ArrayList` usually (M12).
+**A:** Array-backed O(1) index vs nodes; locality usually favors `ArrayList` (M12).
 
-## 6. Code Reading Drills
+## 7. Code Reading Drills
 
-Practice predicting output then verify in `jshell` or small `main` (Temurin 21). Example pattern:
+Practice in `jshell` or small `main` on **Temurin 21**:
 
 ```java
 Map<String, Integer> m = new HashMap<>();
@@ -81,27 +100,27 @@ s = new String("a");
 System.out.println(m.get(s));
 ```
 
-Explain: keys equal if `equals` true; separate `new String` instances with same content still match if `equals` overridden correctly → prints `1`.
+`String` overrides `equals` → content-equal keys match → prints `1`.
 
-## 7. Common Candidate Mistakes
+## 8. Common Candidate Mistakes
 
-- Saying “generics are only syntax sugar” without mentioning erasure consequences.
-- Claiming `volatile` makes compound operations atomic.
-- Confusing `ConcurrentModificationException` cause (fail-fast iterator).
+- “Generics are only syntax sugar” without erasure consequences.
+- Claiming `volatile` makes `i++` atomic.
+- Confusing `ConcurrentModificationException` (fail-fast iterator).
 
-## 8. Revision and Mastery
+## 9. Revision and Mastery
 
-- Explain `equals` contract five clauses informally.
-- Whiteboard `HashMap.put` flow at high level.
+- Explain `equals` contract informally (reflexive, symmetric, transitive, consistent, non-null).
+- Whiteboard `HashMap.put` flow.
 
-## 9. Exercises
+## 10. Exercises
 
-1. Write five self-quiz questions from Modules 11–13 with answers hidden.
-2. Record 2-minute spoken answer on interfaces vs abstract classes.
+1. Five self-quiz questions from Modules 11–13 with hidden answers.
+2. Two-minute spoken answer: interfaces vs abstract classes.
 
-## 10. Chapter Summary
+## 11. Chapter Summary
 
-Core Java interviews reward precise contracts: equality, collections, generics erasure, OOP dispatch, and exceptions. Use handbook modules as revision map; always add a small example.
+Core Java interviews reward precise contracts: equality, collections, generics erasure, OOP dispatch, and exceptions. Use handbook modules as revision map; attach a small example.
 
 ## Next Steps
 
@@ -109,4 +128,4 @@ Core Java interviews reward precise contracts: equality, collections, generics e
 
 ## Review Checklist
 
-- [x] Topic map; sample Q&A; drills
+- [x] Technical L2–3; HashMap mechanism; topic map preserved

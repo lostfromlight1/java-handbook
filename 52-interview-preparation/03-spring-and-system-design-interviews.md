@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 52 — Interview Preparation  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -19,9 +21,11 @@
 
 ## 3. Why This Concept Exists
 
-Many Java roles blend **framework fluency** with **design** questions (“design URL shortener”, “ticket booking”). Interviewers want clear APIs, data model, failure handling, and awareness of Spring’s proxy-based tx/AOP limits.
+Many Java roles blend **framework fluency** with **design** questions. Interviewers want clear APIs, data models, failure handling, and awareness of Spring’s **proxy-based** transaction/AOP limits.
 
-## 4. Spring Interview Topics
+## 4. Conceptual Explanation
+
+### Spring interview topics
 
 | Topic | Depth |
 |-------|-------|
@@ -29,60 +33,81 @@ Many Java roles blend **framework fluency** with **design** questions (“design
 | Bean scope | singleton vs prototype trap (M36) |
 | `@Transactional` | Proxy boundaries; rollback rules |
 | MVC flow | DispatcherServlet → controller → service → repo |
-| Spring Boot | auto-config idea; profiles; Actuator |
-| Security filter chain | order; stateless JWT vs session (M39) |
+| Spring Boot | auto-config; profiles; Actuator |
+| Security filter chain | order; JWT vs session (M39) |
 
 **Q: Why constructor injection?**  
-Immutability, testability, required dependencies explicit (M36).
+Immutability, testability, explicit dependencies (M36).
 
 **Q: Self-invocation breaks `@Transactional` — why?**  
-Call bypasses proxy; needs external bean call (M36 Ch.02).
+Bypasses proxy; needs external bean call (M36).
 
-## 5. System Design Framework
+## 5. Mechanism and Execution Flow
 
-Use **CIDR**-style structure (adapt as needed):
+### Spring MVC request (simplified)
+
+```mermaid
+sequenceDiagram
+  participant C as Client
+  participant DS as DispatcherServlet
+  participant CT as Controller
+  participant S as Service
+  participant R as Repository
+  C->>DS: HTTP
+  DS->>CT: handler mapping
+  CT->>S: business call
+  S->>R: persistence
+  R-->>C: response via DS
+```
+
+### `@Transactional` proxy boundary
+
+External caller → **proxy** → target bean method runs inside transaction. **Internal** `this.method()` skips proxy (classic interview trap).
+
+## 6. System Design Framework
 
 1. **Clarify** — scale, SLA, read/write ratio, consistency.
 2. **API** — REST resources, idempotency keys (M38).
-3. **Data** — schema, indexes, caching, partitioning (M33–34).
+3. **Data** — schema, indexes, cache, partitioning (M33–34).
 4. **Components** — JVM services, DB, cache, queue.
-5. **Deep dives** — hot path, failure modes, observability (M47).
+5. **Deep dives** — hot path, failures, observability (M47).
 
-Example prompt: **Rate-limited public API**
+Example: **Rate-limited public API**
 
-- API gateway or filter; token bucket (Module 39 auth).
-- JDBC write path + read replica for queries.
-- Horizontal scale stateless Boot pods (M49).
-- Metrics on 429 rate and latency p99.
+- Token bucket at gateway (M39).
+- JDBC write + read replica.
+- Stateless Boot pods (M49).
+- Metrics on 429 and p99.
 
-## 6. Trade-off Tables (interview habit)
+## 7. Trade-off Tables
 
 | Choice | Pro | Con |
 |--------|-----|-----|
 | Monolith | Simpler deploy | Scale limits |
-| Cache-aside Redis | Fast reads | Invalidation complexity |
-| Sync REST | Simple | Coupling latency |
+| Cache-aside Redis | Fast reads | Invalidation (M46) |
+| Sync REST | Simple | Latency coupling |
 
-## 7. Common Mistakes
+## 8. Common Mistakes
 
-- Describing only happy path without DB or cache failure.
-- Saying “use microservices” without boundary justification (M40).
-- Ignoring idempotency for payment POST.
+- Happy path only—no DB/cache failure.
+- “Microservices” without boundary justification (M40).
+- Payment POST without idempotency.
 
-## 8. Revision and Mastery
+## 9. Revision and Mastery
 
 - Draw Spring request lifecycle for one `@GetMapping`.
-- 15-minute outline: “notification service” with email + DB queue.
+- 15-minute outline: notification service with queue.
 
-## 9. Exercises
+## 10. Exercises
 
-1. Mock interview: 25 min system design + 5 min questions.
-2. Map three Spring annotations to underlying Java mechanism (reflection/proxy).
+1. Mock interview: 25 min design + 5 min questions.
+2. Map three Spring annotations to Java mechanism (reflection/proxy, M50).
 
-## 10. Chapter Summary
+## 11. Chapter Summary
 
-Spring interviews test DI, proxies, transactions, and web flow; system design interviews test REST/data/scale reasoning using Modules 36–40 and cloud-native themes from 48–49.
+Spring interviews test DI, proxies, transactions, and web flow; system design tests REST/data/scale using Modules 36–40 and 46–49.
 
 ## Review Checklist
 
-- [x] Spring topics; design framework; trade-offs
+- [x] Technical L2–3; MVC + transactional proxy mechanisms
+- [x] Spring topics; design framework preserved

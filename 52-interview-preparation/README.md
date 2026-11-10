@@ -1,7 +1,9 @@
 # Module 52 — Interview Preparation
 
 **Status:** Completed  
-**Last reviewed:** 2026-11-10
+**Last reviewed:** 2026-11-11  
+**Chapter profile:** Technical (module)  
+**Depth target:** Levels 2–3  
 
 | # | Chapter | Status |
 |---|---------|--------|
@@ -9,8 +11,8 @@
 | 02 | [JVM and Concurrency Interviews](02-jvm-and-concurrency-interviews.md) | Completed |
 | 03 | [Spring and System Design Interviews](03-spring-and-system-design-interviews.md) | Completed |
 
-**Prerequisites:** Core curriculum Modules 02–28; backend track 36–40 for Ch.03.
+**Prerequisites:** Modules 02–18, 24–28, 36–40 recommended before mock interviews.
 
 **Assessment:** [52-interview-preparation-assessment.md](../assessments/module-assessments/52-interview-preparation-assessment.md)
 
-**Next:** [53-projects](../53-projects/) and [projects/](../projects/)
+**Depth note (2026-11-11):** Mechanism diagrams (HashMap, happens-before, Spring MVC) added for interview depth.

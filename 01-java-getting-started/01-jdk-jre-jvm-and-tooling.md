@@ -31,7 +31,7 @@ After completing this chapter, you should be able to:
 | Layer | What it is | What you use it for |
 |-------|------------|---------------------|
 | **Language** | Syntax and rules (JLS) | Writing `.java` source |
-| **JVM** | Runtime that executes bytecode | Running programs, GC, threads |
+| **JVM** | Runtime that executes bytecode | Running programs, memory management, threads |
 | **JDK** | Development kit: compiler + tools + libraries + runtime | Daily development |
 
 **JRE** historically meant “runtime only” (run apps, limited/no compiler). Modern Oracle/OpenJDK downloads emphasize the **JDK**. For this handbook: **install a JDK 21**.
@@ -63,7 +63,7 @@ This handbook validates examples on **Oracle JDK 21.0.9**. Other JDK 21 builds s
 | `javac` | Compile `.java` → `.class` |
 | `java` | Launch the JVM and run a main class |
 | `jar` | Create/inspect JAR archives |
-| `javap` | Disassemble class files (bytecode peek) |
+| `javap` | Print human-readable views of compiled `.class` files (see §4.6) |
 | `jshell` | Interactive REPL for experiments |
 | `jcmd` / `jps` | Runtime diagnostics (later modules) |
 
@@ -71,7 +71,44 @@ You do not need every tool on day one. You do need `javac` and `java` fluently.
 
 ### 4.4 What “running Java” starts
 
-`java MainClass` starts a JVM process, loads classes from the classpath/module path, and invokes `main`. The JVM in Oracle JDK 21 here is **HotSpot**—an implementation, not the language itself.
+When you type `java MainClass`, you are not “interpreting” your `.java` file directly. You start the **`java` launcher**, which boots a **JVM process** (HotSpot on Oracle JDK 21 used here). At a beginner level, the useful mental model is:
+
+1. **Locate the class** — The launcher asks the JVM to load a class whose *binary name* matches what you passed (for example `HelloWorld`, or `app.App` when using packages). It searches **classpath** entries and platform libraries (JDK classes like `java.lang.String`).
+2. **Load and verify** — The JVM’s **class loader** reads the matching `.class` file, checks it is well-formed, and prepares it for execution. You do not call the class loader yourself in day-one code; it is part of the runtime.
+3. **Find the entry point** — For classic programs, the JVM looks for `public static void main(String[] args)` on that class.
+4. **Invoke `main`** — The launcher passes your command-line tokens as the `String[] args` array and starts running bytecode from `main`.
+5. **Run until done** — Your code allocates objects on the **heap** (JVM-managed memory). **Garbage collection (GC)** is the JVM’s automatic reclaiming of objects that are no longer reachable, so you rarely call `free` manually. GC policies and tuning are advanced topics (Modules 27–28); here, remember: the JVM owns object lifetime.
+6. **Exit** — When all non-daemon threads finish (or you call `System.exit`), the JVM process ends and returns an exit code to the OS.
+
+The JVM in Oracle JDK 21 here is **HotSpot**—a concrete *implementation* of the JVM specification, not the Java language itself. Another JDK build might use a different VM; language and SE API behavior still come from the specifications.
+
+### 4.5 Classpath (first introduction)
+
+The **classpath** is the list of places the JVM and compiler look for **your** classes (not the built-in JDK libraries, which are always available). Each entry might be:
+
+- A directory whose subfolders mirror package names (for example `out/` containing `out/app/App.class`), or
+- A **JAR** file that bundles many `.class` files.
+
+**Why it exists:** Java separates *compile time* (where `.java` files live) from *run time* (where the JVM finds `.class` files). If compiled output sits in `out/` but you run `java` from the project root without telling the JVM about `out/`, the launcher cannot find your main class.
+
+**Typical commands:**
+
+```bash
+javac -d out src/app/App.java    # write .class files under out/
+java -cp out app.App             # search out/ when loading app.App
+```
+
+On many simple single-folder demos, the **current directory** `.` is on the classpath by default, so `java HelloWorld` works right beside `HelloWorld.class`. As soon as you use packages or a separate output folder, you set `-cp` (or `-classpath`) explicitly. Build tools (Module 29) compute classpath for you; the underlying idea is the same.
+
+### 4.6 What `javap` shows (conceptually)
+
+**`javap`** is a JDK tool that inspects **already compiled** `.class` files. It does not run your program. Think of it as a readable summary of what the compiler produced:
+
+- **Class name**, supertypes, and modifiers (`public`, `final`, …).
+- **Fields** and **methods** with descriptors (types in JVM shorthand).
+- With **`-c`**, a listing of **bytecode instructions** per method—the low-level steps the JVM executes (loads, calls, returns).
+
+You use `javap` to connect source-level Java to “what is actually in the class file,” for learning or debugging version/skew issues. Output is tied to your JDK’s format; treat it as a snapshot, not something you must memorize.
 
 ## 5. Terminology
 
@@ -81,7 +118,7 @@ You do not need every tool on day one. You do need `javac` and `java` fluently.
 | JRE | Java Runtime Environment (runtime-focused packaging) |
 | JVM | Java Virtual Machine |
 | Distribution | A vendor’s JDK/JRE build |
-| Classpath | Places the JVM searches for classes (Chapter 05 / Module 29) |
+| Classpath | List of directories/JARs where `javac`/`java` find user-defined classes; see §4.5 |
 | REPL | Read-Eval-Print Loop (`jshell`) |
 
 ## 6. Syntax and Language Rules
@@ -138,10 +175,11 @@ os.name = Windows 11
 
 ```bash
 javac RuntimeInfo.java
+javap -public RuntimeInfo
 javap -c RuntimeInfo
 ```
 
-Shows bytecode for methods. Treat listings as snapshots for your JDK/compiler.
+`-public` lists public fields and methods (you should see `main`). `-c` adds bytecode instructions for each method—useful to see that `main` is a real method body, not magic. Treat listings as snapshots for your JDK/compiler; names and instruction details can differ slightly across versions.
 
 ## 8. Real-World Use Cases
 

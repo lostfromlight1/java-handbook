@@ -12,10 +12,13 @@ Thank you for helping maintain this handbook. Quality and technical accuracy com
 ## Authoring rules
 
 - Write one substantial chapter at a time; do not create empty chapter stubs.
+- Follow the teaching principles in `DOCUMENTATION-STANDARDS.md`: detailed definitions, explain-before-use, standalone chapters, progressive depth, and “explain it now—expand it later.”
+- Never use a future chapter as a substitute for explaining a concept when it first appears.
 - Validate Java examples on JDK 21 (record the exact version).
 - Update glossary terms when introducing new vocabulary.
-- Update `PROGRESS.md` to match reality only.
+- Update `PROGRESS.md` to match reality only; editing alone does not make a chapter `Completed`.
 - Do not invent compiler output, benchmarks, or JVM guarantees.
+- Preserve useful existing content when improving chapters; expand shallow sections instead of regenerating whole documents without cause.
 
 ## Review
 

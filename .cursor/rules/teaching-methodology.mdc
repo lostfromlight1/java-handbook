@@ -1,5 +1,5 @@
 ---
-description: Beginner accessibility and Revision and Mastery for dual-track teaching
+description: Beginner accessibility, progressive teaching, and Revision and Mastery for dual-track handbook chapters
 globs:
   - "0*/**/*.md"
   - "1*/**/*.md"
@@ -13,8 +13,10 @@ alwaysApply: false
 # Teaching methodology
 
 - Track A: explain every prerequisite concept before depending on it; no unexplained jargon.
-- Use simple examples first, then realistic engineering scenarios.
-- Major chapters must include a **Revision and Mastery** section for Track B readers.
+- Track B: major chapters include a **Revision and Mastery** section with common gaps and advanced questions.
+- Use simple examples first, then realistic engineering scenarios; explain important lines of code.
+- When a related idea first appears (JVM, GC, thread, generics, DI, etc.), give a minimum viable explanation immediately, even if a later chapter goes deeper.
 - Separate exercises from solutions; do not spoil practice with immediate answers.
 - Core Java and foundations before Spring Boot and heavy framework material.
 - When teaching frameworks, explain underlying Java mechanisms (interfaces, reflection, proxies, etc.).
+- Preserve dual-audience value: accessible for beginners, technically meaningful for experienced developers.

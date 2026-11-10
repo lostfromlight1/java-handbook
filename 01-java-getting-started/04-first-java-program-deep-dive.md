@@ -29,21 +29,27 @@ HelloWorld proves the toolchain. This chapter makes the **entry point** intentio
 
 ### 4.1 The entry point contract
 
-When you run `java MainDeepDive`, the JVM looks for a method roughly matching:
+When you run `java MainDeepDive`, the JVM loads `MainDeepDive` and looks for a method with a specific shape. The form you will see in almost every codebase is:
 
 ```java
 public static void main(String[] args)
 ```
 
+Read it **outside-in**, like a normal method declaration:
+
 | Piece | Meaning |
 |-------|---------|
-| `public` | Accessible to the launcher |
-| `static` | Callable without creating an object first |
-| `void` | Does not return a value to the caller (use exit codes instead) |
-| `main` | Conventional name the launcher seeks |
-| `String[] args` | Command-line arguments as strings |
+| `public` | Any caller may invoke the method. The `java` launcher is outside your class, so the entry point must be visible—not `private` or package-private. |
+| `static` | Belongs to the **class**, not to one object instance. The launcher calls `MainDeepDive.main(...)` without doing `new MainDeepDive()` first. (Instance methods need an object; `main` is the bootstrap.) |
+| `void` | The method returns **no Java value** to its caller. Process success/failure is communicated separately via **exit codes** (§4.4), not via `return 0` like C. |
+| `main` | The **conventional name** the application launcher searches for on the class you named on the command line. Wrong name ⇒ “main method not found” style failures. |
+| `String[] args` | An array of **strings**: one element per command-line token **after** the class name. Shell quoting rules decide how tokens split; Java does not reinterpret them. |
 
-Exact language rules for launchable methods have expanded slightly over time (for example single-file source-code programs). This handbook’s primary path teaches the classic form first—the one you will see everywhere in production codebases.
+**`String[]` syntax:** `String` is the element type (text); `[]` means array. You will also see the older equivalent `String args[]`; prefer `String[] args` for consistency with modern style.
+
+**Class and file name:** A `public` class `MainDeepDive` must live in `MainDeepDive.java`. The launcher’s class argument matches the public class name, not the file path string with slashes.
+
+Exact language rules for launchable methods have expanded slightly over time (for example single-file source-code programs on the command line). This handbook’s primary path teaches the classic form first—the one servers, libraries, and build tools assume.
 
 ### 4.2 Arguments
 
@@ -55,7 +61,29 @@ java ArgsEcho hello Java 21
 
 → `args[0]="hello"`, `args[1]="Java"`, `args[2]="21"`.
 
-Arguments are **strings**. Converting to numbers comes with Module 02 (`Integer.parseInt`, etc.).
+Arguments are always **strings**, even when they look like numbers. The launcher does not parse integers or booleans for you. If you need an `int`, parse explicitly and handle bad input:
+
+```java
+public class AgePreview {
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.err.println("Usage: java AgePreview <age>");
+            System.exit(1);
+        }
+        try {
+            int age = Integer.parseInt(args[0].trim());
+            System.out.println("Next year: " + (age + 1));
+        } catch (NumberFormatException e) {
+            System.err.println("Not a valid integer: " + args[0]);
+            System.exit(1);
+        }
+    }
+}
+```
+
+`Integer.parseInt` is part of the standard library (Module 02 covers parsing, validation, and better error messages in depth). The pattern here: **validate length → trim if needed → parse → catch format errors**.
+
+Shell note: `java AgePreview 21` passes the string `"21"`, which parses fine; `java AgePreview twenty-one` fails parsing unless you add custom logic.
 
 ### 4.3 Standard streams
 
@@ -69,7 +97,16 @@ Scripts can redirect them separately. Put usage errors on `stderr`.
 
 ### 4.4 Exit codes
 
-By default, reaching the end of `main` successfully exits with status **0**. Calling `System.exit(code)` ends the JVM with that status. Nonzero conventionally means failure.
+When the JVM process ends, the operating system receives an **exit code** (also called **status code**): a small integer. Shells and automation use it to decide whether a step succeeded.
+
+| Convention | Meaning |
+|------------|---------|
+| **0** | Success—`main` returned normally without calling `System.exit` with another value, or you called `System.exit(0)`. |
+| **Nonzero** (often 1, 2, …) | Failure or abnormal completion; exact meaning is **your program’s contract** unless you document otherwise. |
+
+`System.exit(int)` **immediately** terminates the entire JVM with that code—use it at the top level of command-line apps when usage is wrong. Libraries and reusable components usually **throw exceptions** instead of exiting, so callers can recover (Module 14).
+
+**Observing exit codes:** After `java MainDeepDive` in PowerShell, check `$LASTEXITCODE`; in Bash, `echo $?`. Scripts chain commands with `&&` only when exit code is 0. The MainDeepDive example (§7.2) uses **1** for missing args and **2** for a blank name so scripts can distinguish cases if needed.
 
 ## 5. Terminology
 

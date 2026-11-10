@@ -37,6 +37,8 @@ A comprehensive, technically accurate Java textbook and professional reference�
 ## Core principles
 
 - **Quality over quantity** — no shallow chapters; no fabricated compiler or benchmark results.
+- **Explain it now, expand it later** — introduce concepts properly when they first appear; deepen them in later modules.
+- **Standalone chapters** — each completed chapter should be usable for learning and revision without constantly opening other files.
 - **Core Java before Spring Boot** — frameworks explain mechanisms; they do not replace fundamentals.
 - **Spec vs implementation** — distinguish JLS, JVMS, HotSpot, and framework behavior.
 - **Honest progress** — only mark work complete after the quality checklist passes.

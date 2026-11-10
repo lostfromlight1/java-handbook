@@ -33,15 +33,26 @@ Install a **JDK 21** (LTS), not a random outdated bundle. Vendors include Oracle
 
 Prefer official vendor download pages. See [Oracle Java Downloads](https://www.oracle.com/java/technologies/downloads/) and the [SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html).
 
-### 4.2 PATH
+### 4.2 PATH — finding the right `java` and `javac`
 
-`PATH` is the list of directories the OS searches for executables. If `jdk-21\bin` is on `PATH`, typing `javac` finds the compiler.
+**Problem:** Your shell does not know that “Java” lives inside `C:\Program Files\Java\jdk-21\bin`. When you type `javac`, the OS looks only in directories listed in **`PATH`**—an ordered list of folders where it searches for executables (`.exe` on Windows, binaries on macOS/Linux).
 
-**Problem pattern:** an older `javapath` shim or another JDK appears *before* your intended `bin` directory.
+**What PATH solves:** You can run `java` and `javac` from any working directory without typing the full path every time. Adding `...\jdk-21\bin` to PATH wires your terminal to that JDK’s launcher and compiler.
 
-### 4.3 JAVA_HOME
+**Failure modes:**
 
-`JAVA_HOME` conventionally points at the JDK root (the folder that contains `bin`, not `bin` itself). Many build tools (Maven/Gradle—Module 29) read `JAVA_HOME`.
+- **Command not found** — `bin` is missing from PATH (or the terminal was opened before you changed PATH).
+- **Wrong version** — Multiple installs exist; the OS uses the **first** matching `java.exe` on PATH. A common surprise on Windows is Oracle’s **`javapath`** shim appearing before your real `jdk-21\bin`.
+
+**How to verify:** `where java` (Windows) or `which java` (macOS/Linux) shows which binary wins. Compare with `java -version` and `javac -version`; both should report the JDK you intend (21 for this handbook).
+
+### 4.3 JAVA_HOME — one canonical JDK root for tools
+
+**Problem:** Scripts, IDEs, Maven, and Gradle need a **single directory** that means “this JDK installation,” not just whichever `java` happens to be first on PATH. Hard-coding `...\bin\java` breaks when teammates use Linux paths or when you switch JDKs.
+
+**What JAVA_HOME solves:** It points at the **JDK root**—the folder that **contains** `bin`, `lib`, and related layout—not `bin` itself. Tools join `JAVA_HOME` with `bin\java` or read libraries relative to that root. Your shell `PATH` and `JAVA_HOME` should describe the **same** JDK during learning.
+
+**Convention:** `JAVA_HOME=C:\Program Files\Java\jdk-21` (Windows) or `/Library/Java/...` / `/usr/lib/jvm/...` on Unix-like systems. Wrong value `...\jdk-21\bin` confuses installers and build plugins.
 
 Verified on the handbook machine:
 
@@ -73,8 +84,8 @@ Exact UI clicks change; the verification commands do not.
 
 | Term | Meaning |
 |------|---------|
-| PATH | Executable search list |
-| JAVA_HOME | Environment variable for JDK root |
+| PATH | Ordered list of folders the shell searches for programs like `java`/`javac` |
+| JAVA_HOME | Points at JDK installation root so tools agree on one JDK location |
 | Shim / javapath | Helper executable that redirects to a Java install |
 | Soft/hard link | OS aliasing that can confuse which binary runs |
 

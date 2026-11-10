@@ -33,15 +33,22 @@ IDEs hide important mechanics. If you only click green arrows, classpath and com
 edit source → javac → java → observe output/errors → repeat
 ```
 
+**Why use the CLI early:** Every IDE ultimately invokes the same kind of compile and launch steps. On the command line you see the **exact** classpath, class name, and working directory that succeeded or failed—so “works on my machine” bugs map to real flags instead of hidden GUI state.
+
 Benefits:
 
-- Matches CI and server environments
-- Forces understanding of directories and class names
-- Easy to paste exact commands into handbook issues
+- **Reproducibility** — CI servers, Docker images, and SSH boxes rarely have your IDE; they run `mvn`, `gradle`, or raw `javac`/`java`.
+- **Ground truth** — Directory names, package dots vs slashes, and `-cp` mistakes surface as compiler/launcher errors you learn to read once.
+- **Sharing** — Paste a three-line command into a ticket; teammates can rerun it without your project file.
 
 Costs:
 
-- Less help with typos and navigation at first
+- No completion or refactor shortcuts; typos cost more until you are comfortable.
+- You must set **classpath** and **working directory** yourself (see below).
+
+**Classpath (in this chapter):** The list of folders/JARs where the JVM finds your compiled classes. In the CLI you pass `-cp out` explicitly; in an IDE the **module/content root** and build settings assemble the same idea behind the scenes. If the IDE runs but the terminal fails, compare IDE “classpath” or module output path to your `-cp`.
+
+**Working directory:** The folder the OS treats as “current” when the process starts. Java exposes it as `System.getProperty("user.dir")`. Relative paths in your code (`new File("data.txt")`) and some launcher behavior depend on it—not on where your `.java` source file lives. CLI: whatever directory you `cd` to before `java`. IDE: the **Working directory** field on the Run configuration (often the project root, but you can change it).
 
 ### 4.2 IDE workflow (IntelliJ IDEA)
 
@@ -68,14 +75,23 @@ IntelliJ is recommended in this handbook’s curriculum list; VS Code + Java ext
 
 Automation is good—as long as you can still do the CLI version.
 
-### 4.4 When to prefer which
+### 4.4 When to prefer which (and why)
 
-| Prefer CLI when… | Prefer IDE when… |
-|------------------|------------------|
-| Learning compile/run fundamentals | Navigating larger code |
-| Reproducing handbook examples exactly | Refactoring/renames |
-| Debugging environment/`PATH` issues | Breakpoint debugging (Module 31) |
-| Writing scripts/CI commands | Exploring APIs with completion |
+| Prefer CLI when… | Why |
+|------------------|-----|
+| Learning compile/run fundamentals | You see `javac`/`java` errors and flags directly; no hidden defaults. |
+| Reproducing handbook or bug reports | Commands are copy-paste portable across machines. |
+| Debugging `PATH`, `JAVA_HOME`, or wrong JDK | IDEs can point at a different SDK than your shell. |
+| Authoring CI/build scripts | Pipelines mirror terminal invocations. |
+
+| Prefer IDE when… | Why |
+|------------------|-----|
+| Navigating many classes/packages | Jump to definition, hierarchy, and search scale past manual `grep`. |
+| Refactoring/renames across files | IDE updates references; CLI alone does not. |
+| Breakpoint debugging (Module 31) | Inspect variables and step without sprinkling `println`. |
+| Exploring unfamiliar APIs | Completion and inline Javadoc reduce doc-tab churn. |
+
+Professionals **switch deliberately**: reproduce failures on the CLI, then return to the IDE for editing at scale—keeping the same JDK 21 in both places.
 
 ## 5. Terminology
 
@@ -84,7 +100,8 @@ Automation is good—as long as you can still do the CLI version.
 | IDE | Integrated Development Environment |
 | Project SDK / JDK | IDE’s configured Java platform |
 | Run configuration | Saved “what to run / with which args” |
-| Working directory | Directory used as `user.dir` for a run |
+| Working directory | OS “current folder” for the process; becomes `user.dir` in Java |
+| Classpath | Where the JVM finds your compiled classes; CLI: `-cp`; IDE: module/output paths |
 | Source root | Folder the IDE treats as Java source |
 
 ## 6. Syntax and Language Rules

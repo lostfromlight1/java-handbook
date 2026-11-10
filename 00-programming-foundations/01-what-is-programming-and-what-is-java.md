@@ -118,6 +118,18 @@ These categories blur in practice. Java’s important story is:
 
 So Java is commonly described as “compiled to bytecode, then run on a virtual machine.” That design is central to Java’s portability story.
 
+**What bytecode is.** Bytecode is a compact instruction set defined for the JVM—not for a particular CPU family. Each `.class` file holds bytecode plus metadata (constant pool, type information). The JVM’s job is to load those instructions and carry them out safely on whatever machine you are using. You do not need to memorize opcodes in this chapter; think of bytecode as the **portable middle layer** between your Java source and the CPU’s native machine code.
+
+**What the JVM does for you (high level).** When you run `java HelloWorld`, the JVM typically:
+
+1. **Loads** class files from disk (and may load more classes as your program needs them).
+2. **Verifies** bytecode so obviously unsafe instructions are rejected before execution (platform safety).
+3. **Executes** bytecode—often by interpreting it at first, then **JIT-compiling** frequently used code to native machine code on HotSpot.
+4. **Manages memory** through **garbage collection** (reclaiming objects your program no longer uses—see §9.2).
+5. **Provides runtime services** such as threading support, reflection, and access to the standard library.
+
+Exact JIT tiers and default GC algorithms are **HotSpot choices**, not something every JVM must duplicate identically—but every conforming JVM must execute verified bytecode per the JVM Specification.
+
 ### 4.5 What Java is
 
 **Java** is:
@@ -169,11 +181,11 @@ flowchart TB
 
 A tiny Java program usually:
 
-1. Declares a **class** (a named blueprint; Module 05 explains this deeply).
-2. Declares a **`main` method**—the entry point the JVM looks for when you start the program.
-3. Executes statements inside `main` (for example, printing text).
+1. Declares a **class**—a named container that groups related code. In Java, nearly all executable code lives inside a class. A class name starts with an uppercase letter by convention (`HelloWorld`).
+2. Declares a **`main` method**—the **entry point** the JVM looks for when you start the program with `java ClassName`. If `main` is missing or has the wrong signature, the program cannot start the way you expect.
+3. Executes **statements** inside `main` (for example, printing text), one after another in order unless control flow changes that (covered in the Control Flow module, `03-control-flow`).
 
-You will soon learn variables, types, and objects. For this chapter, running “Hello, Java!” proves your toolchain works and connects the vocabulary above to something real.
+You will soon learn variables, types, and objects in depth (Module 02 and beyond). For this chapter, running “Hello, Java!” proves your toolchain works and connects the vocabulary above to something real.
 
 ## 5. Terminology
 
@@ -204,18 +216,30 @@ public class HelloWorld {
 }
 ```
 
-What matters right now:
+Read the program line by line:
 
-| Piece | Beginner meaning |
-|-------|------------------|
-| `public class HelloWorld` | Declares a class named `HelloWorld`. For this simple example, the file should be named `HelloWorld.java`. |
-| `public static void main(String[] args)` | Program entry point. The JVM starts here. |
-| `System.out.println(...)` | Prints a line of text to the console. |
-| `{ ... }` | Braces mark a block of code belonging to the class or method. |
-| `;` | Most statements end with a semicolon. |
-| `"Hello, Java!"` | A **string** literal—text data. |
+| Piece | What it means | Why it is there |
+|-------|----------------|-----------------|
+| `public` | **Access modifier:** this class is visible outside its own file/package (within the rules Java defines). For a small program in the default package, you use `public` on the class so the JVM can load it when you run `java HelloWorld`. | A non-`public` top-level class can exist, but then the file naming rules differ; beginners almost always use one `public` class per file matching the file name. |
+| `class` | Keyword introducing a **class**—the unit that holds fields and methods. | Java organizes code into classes; even `main` must live inside a class. |
+| `HelloWorld` | The class name (PascalCase by convention). | Must match `HelloWorld.java` for a `public` class. |
+| `public static void main(String[] args)` | The program **entry point** (see below). | The JVM searches for this exact signature to start execution. |
+| `System.out.println(...)` | Calls the standard library to print a line to **standard output** (your terminal). | Shows output without building a GUI. |
+| `{ ... }` | **Block:** statements grouped under the class or method. | Defines what belongs together. |
+| `;` | Ends a statement (Java syntax rule). | The compiler expects it after most statements. |
+| `"Hello, Java!"` | A **string literal**—constant text data in double quotes. | The message you want to print. |
 
-Exact rules for classes, access modifiers, and packages come in later modules. If something here feels mysterious, that is normal: we will unpack each word when you have the prerequisites.
+**The `main` method signature, word by word:**
+
+| Part | Meaning |
+|------|---------|
+| `public` | The JVM (outside this class) must be allowed to call `main`. |
+| `static` | Belongs to the **class**, not to an object instance. The JVM starts the program before any objects exist, so it calls `main` on the class itself. |
+| `void` | This method does not **return** a value to its caller (contrast with methods that return `int`, `String`, etc.). |
+| `main` | Conventional name for the entry point (required for this startup contract). |
+| `String[] args` | **Command-line arguments:** an array of text strings passed when you run `java HelloWorld arg1 arg2`. Empty `args` if you pass none (see §7.2). |
+
+**Packages and more modifiers** (private fields, multiple classes per file, `protected`) are part of everyday Java, but you can run HelloWorld without them. Modules **02** (types and syntax), **04** (methods), and **05** (classes and objects) deepen each keyword with rules, edge cases, and design practice.
 
 ### 6.2 Compile and run commands
 
@@ -289,7 +313,13 @@ Hello, friend!
 Hello, Ada!
 ```
 
-This introduces **decisions** (`if` / `else`) and **data** (`name`). Control flow and types get full chapters soon; here the lesson is: programs combine data + decisions + actions.
+This introduces **decisions** and **data**:
+
+- `String name;` declares a variable that can hold text (`String` is Java’s text type).
+- `if (args.length > 0) { ... } else { ... }` is a **decision:** if the condition in parentheses is true, the first block runs; otherwise the `else` block runs. Here, `args.length` counts how many command-line strings you passed.
+- `name = args[0];` assigns the first argument string to `name`.
+
+The Control Flow module (`03-control-flow`) covers every form of branching and looping; here the lesson is: programs combine **data + decisions + actions**.
 
 ### 7.3 Conceptual “advanced for this chapter” — the portability idea
 
@@ -344,7 +374,18 @@ At a high level (details in Module 26):
 
 ### 9.2 Automatic memory management (preview)
 
-Java reclaiming unused objects is called **garbage collection**. You rarely free memory manually (unlike C). That does **not** mean memory is irrelevant—leaks and GC pauses are advanced topics (Modules 25–27).
+In languages such as C, programmers often call `free` (or similar) when data is no longer needed. Java takes a different path: you allocate objects (and arrays) as you need them; the **JVM** decides when memory can be reclaimed.
+
+**Garbage collection (GC)** is the runtime process that **finds objects your program can no longer reach** and frees their memory so it can be reused. “No longer reachable” means no live variable, field, or call chain still points at that object. When nothing references an object, it is eligible for collection (exact timing is implementation-dependent on HotSpot).
+
+| Aspect | Beginner takeaway |
+|--------|-------------------|
+| **What** | Automatic reclaim of unused heap memory |
+| **Why Java needs it** | Objects and arrays live on the **heap**; manual `free` would be error-prone in large apps with many references |
+| **What you do** | Drop references (set variables to `null` or leave scope); avoid keeping unneeded objects in collections |
+| **What you do not do** | Call `delete`/`free` on Java objects—there is no standard way |
+
+GC is a major reason Java feels productive, but it is not free: **pauses** while the collector runs, **memory footprint**, and **retained references** (logical leaks) still matter in production. Modules **25–27** cover heap layout, collectors, and tuning; for now, remember: **create objects when you need them; let the JVM reclaim what you truly abandon.**
 
 ## 10. Edge Cases and Limitations
 

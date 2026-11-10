@@ -13,5 +13,6 @@ alwaysApply: true
 - Follow `.cursor/skills/java-documentation/SKILL.md`.
 - Attribute a subagent review only if that agent was actually invoked or its review was genuinely performed.
 - After a full module's chapters are `Completed`, create its assessment under `assessments/module-assessments/` with solutions in a separate file.
-- Update `PROGRESS.md` only to match reality.
+- Update `PROGRESS.md` only to match reality; never mark complete merely because content was edited or skimmed.
 - Target Java **21**. Verify version-sensitive claims against official docs. Record real `javac`/`java` results.
+- When improving existing chapters: preserve useful explanations; expand shallow definitions; fix deferred-without-explanation gaps; do not regenerate whole chapters without cause.

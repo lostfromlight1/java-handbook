@@ -1,6 +1,7 @@
 # Module 10 — Java Type System
 
-**Status:** Completed (2026-11-10)
+**Status:** Completed (2026-11-11)  
+**Standards alignment:** 2026-11-11 pass — Technical profile **L3** (type system), §5 Mechanism and Execution Flow, master checklist + verification labels, demos re-verified on **Temurin JDK 21.0.12.1**.
 
 | # | Chapter | Status |
 |---|---------|--------|

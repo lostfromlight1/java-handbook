@@ -1,12 +1,12 @@
 # Module 34 — SQL and Data Access
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | SQL for Java Developers | Not started |
-| 02 | Query Design and Migrations | Not started |
+| 01 | [SQL for Java Developers](01-sql-for-java-developers.md) | Completed |
+| 02 | [Query Design and Migrations](02-query-design-and-migrations.md) | Completed |
 
 **Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [34-sql-data-access-assessment.md](../assessments/module-assessments/34-sql-data-access-assessment.md)

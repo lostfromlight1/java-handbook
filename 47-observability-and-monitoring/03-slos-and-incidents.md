@@ -125,6 +125,32 @@ flowchart TD
 | No error budget policy | Define freeze thresholds |
 | Postmortem without tracked actions | Ticket each action item |
 
+### Error budget burn alert (conceptual)
+
+```text
+burn_rate = (errors_last_1h / allowed_errors_month) × (30×24)
+```
+
+If burn rate > 14 (consuming month budget in ~2 days), freeze risky releases and focus on reliability work—Google SRE multi-window pattern adapted here conceptually.
+
+### Incident commander checklist (Java backend)
+
+| Minute | Action |
+|--------|--------|
+| 0–5 | Page acknowledged; war room bridge |
+| 5–15 | Recent deploy? Flag/feature diff? Thread dump if CPU spike |
+| 15+ | Customer comms; scale replicas only if not DB-bound |
+
+Capture **JVM flags**, **image digest**, and **DB migration version** in incident ticket.
+
+### Postmortem action types
+
+| Action | Example |
+|--------|---------|
+| Prevent | Add ArchUnit rule; integration test for auth path |
+| Detect | SLO alert on checkout p99 |
+| Mitigate | Runbook for Redis failover |
+
 ## 12. Design Trade-offs
 
 | Tight SLO (99.99%) | Relaxed SLO |
@@ -141,17 +167,35 @@ flowchart TD
 - When burn error budget fast?
 - Three mitigate steps for payment timeout spike?
 
-## 14. Exercises
+## 14. Postmortem Template (blameless)
+
+```markdown
+## Impact
+- Duration, % users, revenue estimate if known
+## Timeline (UTC)
+- Detection, escalation, mitigation, recovery
+## Root cause
+- Technical chain; contributing factors
+## What went well / poorly
+## Action items (owner, due date)
+- [ ] Test added
+- [ ] Runbook updated
+- [ ] Alert threshold tuned
+```
+
+Java-specific annex: JVM version, deploy id, GC log snippet, thread dump if concurrency incident.
+
+## 15. Exercises
 
 1. Write SLI/SLO for `GET /health` vs business API—why differ?
 2. Draft postmortem outline for cache outage.
 3. Link alert rule to runbook section headers.
 
-## 15. Chapter Summary
+## 16. Chapter Summary
 
 Reliable Java operations define user-centric SLOs and error budgets, respond to incidents with clear phases, and improve via blameless postmortems tied to tests and observability.
 
 ## Review Checklist
 
 - [x] Technical L2–3; incident + budget mechanisms; SLI/SLO preserved
-- [x] Links Module 44/46/48
+- [x] Links Module 44/46/48; burn rate + IC checklist deepen pass 2026-11-11

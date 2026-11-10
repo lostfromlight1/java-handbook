@@ -5,7 +5,7 @@
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-11  
 > **Chapter profile:** Technical  
-> **Depth target:** Levels 2–3
+> **Depth target:** Levels 2–3 (target ≥ 250 lines post deepen pass)
 
 ## 1. Learning Objectives
 
@@ -74,6 +74,62 @@ Traffic shifts incrementally behind **facade** or API gateway; parity tests gate
 2. ArchUnit test fails on violation in CI.
 3. Fix dependency or revise rule via RFC—not silence the test.
 
+### Dependency graph hygiene
+
+Long-lived monoliths accumulate **forbidden edges**: controllers that import entities directly, `domain` packages that depend on Spring annotations, or circular module references that Maven only warns about indirectly (build order hacks, duplicate classes).
+
+| Signal | Tool / practice | Action |
+|--------|-----------------|--------|
+| JDK internal usage | `jdeps --jdk-internals` on shipped JAR | Replace or isolate |
+| Package cycles | Structure101, Sonar architecture | Break cycle at seam |
+| Module violations | ArchUnit in CI | Fail build on new edges |
+| Fan-in explosion | `domain` imported by 40+ packages | Split bounded context |
+
+**ArchUnit example (Illustrative)** — fails if REST lives in the same package as JPA entities:
+
+```java
+@AnalyzeClasses(packages = "com.acme")
+class LayeredArchitectureTest {
+    @ArchTest
+    static final ArchRule controllersDoNotDependOnEntities =
+        noClasses().that().resideInAPackage("..web..")
+            .should().dependOnClassesThat().resideInAPackage("..entity..");
+}
+```
+
+Run on every PR; violations require an RFC to change the rule, not `@Ignore`.
+
+### Ownership and change blast radius
+
+**CODEOWNERS** maps paths to teams (`/billing/` → `@billing-team`). Combined with required reviews, it prevents drive-by changes in payment flows. For Java multi-module repos, map **Maven modules** to owners so a dependency bump in `billing-client` notifies API consumers.
+
+**Blast radius questions** before a refactor:
+
+1. How many modules compile-transitively depend on this package?
+2. Are there external JAR consumers of `*-api` modules?
+3. Does a schema migration require coordinated mobile release?
+
+### Strangler parity and observability
+
+During strangler cutover, run **shadow traffic** or **parallel read**: legacy and new implementation both execute; compare responses (hashed) before flipping the facade route. Log **divergence metrics** (`strangler.mismatch`) so product can pause rollout.
+
+| Phase | Traffic | Rollback |
+|-------|---------|----------|
+| Dark launch | 0% new | Disable feature flag |
+| Canary | 5% new | Route table revert |
+| Majority | 50%+ new | Keep legacy warm 24h |
+| Complete | 100% new | Decommission after soak |
+
+### Build and test feedback loops
+
+| Build time driver | Mitigation |
+|-------------------|------------|
+| Full integration suite every commit | Test impact analysis; split fast vs slow CI jobs |
+| Annotation processors (JPA, MapStruct) | Incremental compilation; dedicated processor module |
+| Dockerized Testcontainers everywhere | `@DataJpaTest` slices for unit path |
+
+Target **&lt; 15 min** feedback on default PR pipeline; nightly full matrix on Temurin 21.
+
 ## 6. Terminology
 
 | Term | Meaning |
@@ -84,8 +140,9 @@ Traffic shifts incrementally behind **facade** or API gateway; parity tests gate
 
 ## 7. Real-World Use Cases
 
-- Bank core: dependency reports nightly.
-- SaaS: extract `payments` module before separate deployable.
+- **Bank core:** Nightly dependency graph reports to architecture board; ArchUnit blocks new `core` → `channels.ui` edges.
+- **SaaS billing:** Extract `payments-api` + `payments-impl` Maven modules six months before separate deployable; consumers compile only against API JAR.
+- **Retail monolith:** Package-by-feature under `com.retail.catalog` vs horizontal `service` layer reduced cross-team merge conflicts ~30% (illustrative planning metric—not a guarantee).
 
 ## 8. Edge Cases
 
@@ -112,17 +169,30 @@ False green when architecture already violated.
 |-------------------|-------------------------|
 | Ops overhead | Faster refactor across modules |
 
-## 11. Revision and Mastery
+## 11. Maven Module Graph Example (Illustrative)
+
+```text
+orders-parent (pom)
+├── orders-domain          (no Spring deps)
+├── orders-application     (depends domain)
+├── orders-adapters-jpa    (depends application)
+├── orders-adapters-web    (depends application)
+└── orders-bootstrap       (Spring Boot main, wires adapters)
+```
+
+`domain` compiles in seconds; full reactor runs integration tests only in `bootstrap` module—keeps feedback fast for domain changes.
+
+## 12. Revision and Mastery
 
 - Package-by-feature vs layer-by-type?
 - One ArchUnit rule for a Spring REST project?
 
-## 12. Exercises
+## 13. Exercises
 
 1. Sketch module graph for handbook-style REST + JPA app.
 2. Identify three strangler steps for legacy SOAP adapter.
 
-## 13. Chapter Summary
+## 14. Chapter Summary
 
 Large Java codebases need enforced boundaries, ownership, incremental modernization, and architecture feedback loops—not heroic rewrites.
 
@@ -132,5 +202,5 @@ Large Java codebases need enforced boundaries, ownership, incremental modernizat
 
 ## Review Checklist
 
-- [x] Technical L2–3; strangler + ArchUnit mechanism
-- [x] Structure, teams, mistakes preserved
+- [x] Technical L2–3; strangler + ArchUnit mechanism; deepen pass 2026-11-11
+- [x] Structure, teams, mistakes preserved; dependency hygiene + strangler phases added

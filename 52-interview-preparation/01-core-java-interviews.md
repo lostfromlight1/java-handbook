@@ -62,6 +62,19 @@ Interview loops filter for **accurate mental models**, not trivia. Candidates st
 - Checked vs unchecked philosophy.
 - try-with-resources and suppressed exceptions (M14).
 
+#### Records and sealed types (Java 21 refresh)
+
+| Question | Answer skeleton |
+|----------|-----------------|
+| Record vs class | Canonical constructor, accessors, `equals`/`hashCode` generated; no inheritance of state |
+| `equals` on record | Field-wise equality; do not add mutable fields |
+| Sealed hierarchy | `permits` list limits subclasses; interviewers test exhaustiveness in `switch` |
+
+#### Streams (light touch)
+
+- **Lazy** intermediates; one terminal consumes pipeline (M17).
+- `parallelStream()` only when workload is CPU-bound and splittable—wrong default for IO.
+
 ## 5. Mechanism and Execution Flow
 
 ### `HashMap.put` (interview whiteboard)
@@ -88,6 +101,21 @@ If `hashCode` changes while key is in map → **lost entry** (why immutable keys
 **Q: Difference `ArrayList` vs `LinkedList`?**  
 **A:** Array-backed O(1) index vs nodes; locality usually favors `ArrayList` (M12).
 
+**Q: Can you add to an immutable list?**  
+**A:** `List.of` / `Collections.unmodifiableList` throw; copy-on-write pattern or new list (M12).
+
+**Q: Why is `String` safe as `HashMap` key?**  
+**A:** Immutability keeps `hashCode` stable while referenced (M11).
+
+### Follow-up prompts interviewers use
+
+| After your answer | They may ask |
+|-------------------|--------------|
+| "`equals` contract" | What breaks if symmetry fails? |
+| `HashMap` buckets | When does bin become tree? (Java 8+: threshold on chain length) |
+| Generics erasure | Can you `instanceof List<String>`? |
+| `Optional` | Is it a field type? (usually avoid; collections better) |
+
 ## 7. Code Reading Drills
 
 Practice in `jshell` or small `main` on **Temurin 21**:
@@ -101,6 +129,30 @@ System.out.println(m.get(s));
 ```
 
 `String` overrides `equals` → content-equal keys match → prints `1`.
+
+### Drill B — autoboxing trap (Illustrative)
+
+```java
+Integer a = 127;
+Integer b = 127;
+Integer c = 128;
+Integer d = 128;
+System.out.println(a == b);
+System.out.println(c == d);
+```
+
+Cache applies -128..127 → first line `true`, second `false` (distinct objects).
+
+### Drill C — concurrent modification (Illustrative)
+
+```java
+List<String> list = new ArrayList<>(List.of("a", "b"));
+for (String s : list) {
+    if ("a".equals(s)) list.remove(s);
+}
+```
+
+Fails with `ConcurrentModificationException`—use `Iterator.remove` or removeIf.
 
 ## 8. Common Candidate Mistakes
 
@@ -128,4 +180,4 @@ Core Java interviews reward precise contracts: equality, collections, generics e
 
 ## Review Checklist
 
-- [x] Technical L2–3; HashMap mechanism; topic map preserved
+- [x] Technical L2–3; HashMap mechanism; topic map preserved; deepen pass 2026-11-11

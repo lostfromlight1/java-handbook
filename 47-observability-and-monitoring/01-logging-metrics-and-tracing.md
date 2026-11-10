@@ -166,6 +166,29 @@ Never **DEBUG** full payloads with PII in production.
 | Missing trace propagation | Filter/interceptor inject headers |
 | String concat logs | Parameterized / structured fields |
 
+### OpenTelemetry context propagation (conceptual)
+
+```mermaid
+flowchart LR
+  IN[Incoming traceparent] --> C[OTel Context]
+  C --> LOG[Slf4j MDC trace_id]
+  C --> OUT[Outgoing client header]
+```
+
+If the gateway strips `traceparent`, downstream services start **new traces**—incidents look disconnected. Enforce header pass-through at ingress (Module 32 / API gateway).
+
+### SLF4J usage patterns
+
+| Pattern | Prefer |
+|---------|--------|
+| `log.info("user=" + userId)` | `log.info("user={}", userId)` — avoids eager string work when level disabled |
+| Logging DTO whole object | Log selected fields; beware `toString()` on lazy Hibernate proxies |
+| `ERROR` for business validation | `WARN` or `INFO`; reserve `ERROR` for operator action |
+
+### Cardinality budget
+
+Before adding a label `tenant_id` on a counter, estimate: `tenants × time_series_per_tenant`. Above ~10k active series per scrape interval often hurts Prometheus—use logs/traces for tenant drill-down.
+
 ## 12. Design Trade-offs
 
 | Verbose logging | Lean logging |
@@ -176,23 +199,34 @@ Never **DEBUG** full payloads with PII in production.
 |--------------|---------------------------|
 | Agent on app | Scraper scrapes Actuator |
 
-## 13. Revision and Mastery
+## 13. Correlation ID Conventions
+
+| Header | Typical name | Propagate to |
+|--------|--------------|--------------|
+| W3C trace | `traceparent` | Outbound HTTP, messaging |
+| Legacy | `X-Correlation-Id` | Logs when trace not yet adopted |
+
+In Spring, register a `OncePerRequestFilter` that reads incoming id or generates UUID, sets **MDC** (`mdc.put("correlationId", id)`), and adds to `RestClient` / `WebClient` builders for outbound calls.
+
+**Incorrect:** new UUID per log line inside one request—breaks search in Kibana/Loki.
+
+## 14. Revision and Mastery
 
 - When metric vs log vs trace for “payment slow sometimes”?
 - Which fields in demo line identify the business event?
 - Name one high-cardinality label to avoid on metrics.
 
-## 14. Exercises
+## 15. Exercises
 
 1. Add `traceId` field to structured logger helper; propagate from incoming header.
 2. List three Micrometer metrics for a REST service.
 3. Define log policy for payment errors (fields, no PAN).
 
-## 15. Chapter Summary
+## 16. Chapter Summary
 
 Observability combines structured logs, metrics with percentiles, and distributed traces linked by correlation ids—the demo proves key=value logging on Temurin 21 without external stacks.
 
-## 16. Next Steps
+## 17. Next Steps
 
 [02-opentelemetry-and-prometheus.md](02-opentelemetry-and-prometheus.md)
 
@@ -200,4 +234,4 @@ Observability combines structured logs, metrics with percentiles, and distribute
 
 - [x] Technical L2–3; mechanism flow; three pillars preserved
 - [x] `structured-logging-demo` Verified Temurin 21.0.12.1
-- [x] Incorrect/correct logging; cardinality note
+- [x] Incorrect/correct logging; cardinality note; deepen pass 2026-11-11

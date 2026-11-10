@@ -169,6 +169,34 @@ Defeats CI purpose.
 
 Split fast (unit) vs slow (integration) jobs; parallelize slow stage.
 
+### Maven lifecycle gates (reference)
+
+| Phase | Typical CI use |
+|-------|----------------|
+| `compile` | Fast compile-only smoke on huge repos |
+| `test` | Unit tests |
+| `verify` | Includes integration, failsafe, quality plugins |
+| `package` | Produces JAR; still run tests before trusting artifact |
+
+**Handbook standard:** `mvnw -q verify` on Temurin 21 before tagging release image.
+
+### SBOM and provenance (headline)
+
+Modern supply-chain expectations:
+
+- Attach **CycloneDX/SPDX** SBOM to release artifacts.
+- Sign container images (cosign/Sigstore) so prod refuses unsigned digests.
+
+Java-specific: record **dependency tree** (`mvn dependency:tree`) in build logs for CVE diff on upgrades.
+
+### Branch protection pairing
+
+| Rule | Why |
+|------|-----|
+| Required `verify` status | No merge on red CI |
+| No direct push to main | Every change reviewed |
+| Required CODEOWNERS on `Dockerfile` | Infra changes reviewed |
+
 ## 9. Design Trade-offs
 
 | Monolithic pipeline YAML | Reusable workflows/composite actions |
@@ -201,4 +229,4 @@ CI/CD turns Java builds into repeatable automation: JDK 21 via wrapper, `verify`
 
 ## Review Checklist
 
-- [x] CI/CD definitions; pipeline stages; secrets; gates; mistakes; trade-offs
+- [x] CI/CD definitions; pipeline stages; secrets; gates; mistakes; trade-offs; deepen pass 2026-11-11

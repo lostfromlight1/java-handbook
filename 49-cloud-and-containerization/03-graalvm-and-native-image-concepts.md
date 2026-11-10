@@ -115,6 +115,27 @@ Many flags do not apply to Substrate VM.
 
 ### Corrected — native-specific monitoring and tuning docs.
 
+### Spring Native build pipeline (conceptual)
+
+```mermaid
+flowchart LR
+  Src[Java sources] --> AOT[Spring AOT processing]
+  AOT --> NI[native-image compile]
+  NI --> Bin[ELF binary]
+```
+
+**Runtime differences:** No dynamic classpath expansion; `spring.factories` replaced by generated reachability; profile-specific beans still exist but registration is build-time fixed.
+
+### Debugging native failures
+
+| Symptom | Likely cause |
+|---------|--------------|
+| `NoClassDefFoundError` at runtime | Reachability gap; add tracing agent at build with `-H:TraceClassInitialization` (build-time tool, version-specific) |
+| Hibernate metadata missing | Entity not registered in AOT hints |
+| Actuator endpoint missing | Endpoint not included in closed world |
+
+Re-run integration tests on the **binary**, not only JVM `mvn test`.
+
 ## 10. Design Trade-offs
 
 | JVM container | Native binary |
@@ -128,16 +149,27 @@ Many flags do not apply to Substrate VM.
 - Name two workloads better on HotSpot.
 - How does Spring AOT relate to closed-world assumption?
 
-## 12. Exercises
+## 12. Decision Matrix (when stakeholders ask for native)
+
+| Criterion | Weight | JVM score | Native score |
+|-----------|--------|-----------|--------------|
+| Cold start p99 | High | 2 | 5 |
+| Peak throughput | High | 5 | 3 |
+| Reflection-heavy libs | Medium | 5 | 2 |
+| JVMTI agents required | Low | 5 | 0 |
+
+Score honestly per workload; many Spring APIs stay on JVM until native CI proves parity.
+
+## 13. Exercises
 
 1. List handbook demos needing reflection config (proxy demo, JPA).
 2. Compare startup goals for API vs batch job.
 
-## 13. Chapter Summary
+## 14. Chapter Summary
 
 GraalVM Native Image trades dynamic flexibility for startup and size; Java 21 services usually stay on Temurin unless requirements drive native. Plan reflection metadata (Module 50) and Spring AOT when adopting.
 
 ## Review Checklist
 
 - [x] Technical L2–3; AOT mechanism diagram; HotSpot vs AOT preserved
-- [x] Closed world; Spring; when to use
+- [x] Closed world; Spring; when to use; deepen pass 2026-11-11

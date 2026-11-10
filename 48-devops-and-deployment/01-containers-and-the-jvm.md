@@ -183,6 +183,34 @@ Violates policy; filesystem writes as root inside container ease escalation if c
 - Log **JDK and container limits** at startup once (`Runtime.getRuntime().maxMemory()`, cgroup-aware metrics).
 - Keep **one process per container** for services; sidecars handle mesh proxy/logging.
 
+### cgroup v2 memory signals (JDK 21, labeled HotSpot/container)
+
+On Linux with cgroup v2, the JVM reads **container memory limit** for default ergonomics. Operators still see:
+
+| Observation | Interpretation |
+|-------------|----------------|
+| RSS near limit, heap not full | Metaspace, thread stacks, direct buffers, native libs |
+| Frequent OOMKilled exit 137 | Limit too tight vs `-XX:MaxRAMPercentage` |
+| CPU throttling with flat CPU% in `top` | cgroup quota; threads wait |
+
+Log at startup: `Runtime.version()`, effective `-Xmx` from `MemoryMXBean`, and container limit from orchestrator downward API when available.
+
+### Graceful shutdown sequence
+
+```mermaid
+sequenceDiagram
+  participant K8s as kubelet
+  participant JVM as Spring Boot
+  participant Pool as Tomcat
+  K8s->>JVM: SIGTERM
+  JVM->>Pool: stop accept new connections
+  Pool->>Pool: drain in-flight requests
+  JVM->>JVM: @PreDestroy beans
+  JVM->>K8s: exit 0
+```
+
+`terminationGracePeriodSeconds` must exceed worst-case drain + DB flush.
+
 ## 12. Design Trade-offs
 
 | Fat JRE image | jlink custom runtime |
@@ -194,27 +222,37 @@ Violates policy; filesystem writes as root inside container ease escalation if c
 |----------------|------------|
 | Easy `docker exec` debugging | Smaller; debug with ephemeral debug containers |
 
-## 13. Revision and Mastery
+## 13. Sample `JAVA_TOOL_OPTIONS` for K8s (Illustrative)
+
+```text
+JAVA_TOOL_OPTIONS=-XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom
+```
+
+`-XX:+ExitOnOutOfMemoryError` lets the orchestrator restart the pod instead of a zombie JVM serving errors. Pair with **liveness** only if OOME is truly unrecoverable—some teams prefer halt + alert without auto-restart loops.
+
+Document every flag in the image README; forbid copy-paste from blog posts without Temurin 21 validation.
+
+## 14. Revision and Mastery
 
 - Why can a 512m container die with “only” 300m heap used?
 - What does `MaxRAMPercentage` reference on JDK 21?
 - How does SIGTERM relate to Spring Boot graceful shutdown?
 
-## 14. Exercises
+## 15. Exercises
 
 1. Build a two-stage Dockerfile for any handbook `examples/backend/*` JAR pattern.
 2. Run with `-m 256m` and record `maxMemory()` from a one-line JVM main.
 3. List three differences between VM and container isolation.
 
-## 15. Chapter Summary
+## 16. Chapter Summary
 
 Containers standardize Java deployments; JDK 21 expects cgroup-aware defaults but production still needs explicit heap percentages, signal-aware shutdown, slim runtime choices, and non-root images. Validate memory and CPU inside the real orchestrator limits, not only on developer workstations.
 
-## 16. Next Steps
+## 17. Next Steps
 
 [02-ci-cd.md](02-ci-cd.md)
 
 ## Review Checklist
 
 - [x] Container vs VM; cgroup heap; multi-stage Dockerfile; signals; mistakes; trade-offs
-- [x] JDK 21 Temurin; no fabricated docker output
+- [x] JDK 21 Temurin; no fabricated docker output; deepen pass 2026-11-11

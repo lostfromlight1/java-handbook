@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 37 — Spring Boot  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive  
 > **Depth target:** Level 3 overall; **Level 4** on autoconfiguration conditions and classpath-triggered bean registration  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [spring-boot-minimal](../../examples/backend/spring-boot-minimal/) (`mvnw test`, fat JAR `/hello`); [rest-httpserver-demo](../../examples/backend/rest-httpserver-demo/); [manual-di-container](../../examples/backend/manual-di-container/)
 
@@ -134,7 +135,7 @@ Boot does **not**:
 
 Treat Boot as **automation around Spring**, not a substitute for core knowledge.
 
-## 5. Autoconfiguration Mechanics (Level 4)
+## 5. Mechanism and Execution Flow — Autoconfiguration (Level 4)
 
 ### 5.1 Where autoconfig classes come from
 

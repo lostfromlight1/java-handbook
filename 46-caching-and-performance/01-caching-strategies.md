@@ -202,6 +202,43 @@ Map to a record/DTO at cache boundary; invalidate on update events (Module 45).
 |-----------------------------|----------------------------------|
 | Microseconds; per-JVM | Milliseconds; shared across instances |
 
+## 12a. Spring Cache Abstraction (Illustrative)
+
+```java
+@Cacheable(value = "products", key = "#id")
+public ProductDto getProduct(String id) {
+    return repository.findById(id).map(ProductDto::from).orElseThrow();
+}
+
+@CacheEvict(value = "products", key = "#id")
+public void updateProduct(String id, ProductDto dto) {
+    repository.save(dto.toEntity(id));
+}
+```
+
+**Mechanism:** Spring wraps the bean in a **proxy** (Module 36). `@Cacheable` consults the configured `CacheManager` before invoking the method; on miss, the method runs and the return value is stored. **Self-invocation** skips the proxy—same trap as `@Transactional`.
+
+| Concern | Practice |
+|---------|----------|
+| Null results | `unless = "#result == null"` to avoid caching absent keys forever |
+| Exception on miss | Do not cache thrown exceptions unless using explicit error cache |
+| Sync mode | `@Cacheable(sync = true)` approximates single-flight per key |
+
+### Caffeine loading cache vs manual put
+
+```java
+LoadingCache<String, ProductDto> cache = Caffeine.newBuilder()
+    .maximumSize(10_000)
+    .expireAfterWrite(Duration.ofMinutes(10))
+    .build(id -> loadFromDb(id));
+```
+
+**Read-through** at the library layer: `cache.get(id)` invokes loader on miss internally—fewer races than hand-rolled `if (!map.containsKey)` under concurrency.
+
+### Hit ratio measurement
+
+Expose metrics: `cache_hits`, `cache_misses`, `cache_evictions`. Alert when hit ratio drops below SLO (e.g. 85%) for 15 minutes—often signals deploy cold start, wrong TTL, or key churn after schema change.
+
 ## 13. Revision and Mastery
 
 - When is **write-behind** acceptable, and what fails if the JVM crashes before flush?
@@ -224,6 +261,6 @@ Caching strategies assign responsibility for loads, writes, and eviction. **Cach
 
 ## Review Checklist
 
-- [x] Chapter profile Technical L2–3; mechanism flows; pattern catalog preserved
+- [x] Chapter profile Technical L2–3; mechanism flows; pattern catalog preserved; deepen pass 2026-11-11
 - [x] `in-memory-cache-demo` Verified Temurin 21.0.12.1 (`user:2=miss`, `in-memory-cache=ok`)
 - [x] Incorrect/corrected mutable cache entry; trade-offs; exercises

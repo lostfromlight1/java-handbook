@@ -129,6 +129,26 @@ Doubles traffic to DB during deploy.
 - **Smoke tests** after deploy against synthetic traffic.
 - Document **rollback runbook** with exact image digest and migration reversal policy.
 
+### Migration–deploy ordering matrix
+
+| Schema change | App deploy order |
+|---------------|------------------|
+| Add nullable column | Migration **before** app reading new column |
+| Drop column | App stops using **before** migration drops |
+| Rename (expand/contract) | Follow Module 51 dual-write phases |
+
+**Incorrect:** run destructive migration while old pods still SELECT dropped column.
+
+### Canary analysis metrics
+
+| Metric | Canary pass |
+|--------|-------------|
+| 5xx rate | ≤ control + epsilon |
+| p99 latency | ≤ control + SLO margin |
+| Business KPI | Conversion not regressed |
+
+Automated promotion only when all gates pass for N minutes—manual approval for payment flows.
+
 ## 9. Design Trade-offs
 
 | Faster rollouts | Safer rollouts |
@@ -145,16 +165,27 @@ Doubles traffic to DB during deploy.
 - How do readiness and liveness differ for a Spring Boot service?
 - Why must migrations often lead application deploys?
 
-## 11. Exercises
+## 11. Stateful vs Stateless Deploy Notes
+
+| Workload | Strategy nuance |
+|----------|-----------------|
+| Stateless REST | Rolling + readiness; any pod interchangeable |
+| Quartz / single leader | Ensure one scheduler instance; use DB lease or K8s leadership |
+| Kafka consumer | Rebalance on roll; tune `max.poll.interval` |
+| Session in JVM memory | Requires sticky sessions or external session store (Module 46) |
+
+**Java batch jobs:** prefer **CronJob** with `restartPolicy: OnFailure` and idempotent processing—do not assume rolling Deployment semantics for one-shot JVM batch.
+
+## 12. Exercises
 
 1. Sketch rolling vs canary timeline for a 10-pod service.
 2. Write acceptance criteria for “zero-downtime deploy” for a stateless REST API.
 3. List rollback steps for failed canary at 10% traffic.
 
-## 12. Chapter Summary
+## 13. Chapter Summary
 
 Deployment strategy is how safely new JVM instances replace old ones: probes respect warmup, migrations stay backward compatible, and rollback preserves immutable artifacts. Match strategy to SLA, statefulness, and schema change risk.
 
 ## Review Checklist
 
-- [x] Four strategies; probes; migrations; rollback; mistakes
+- [x] Four strategies; probes; migrations; rollback; mistakes; deepen pass 2026-11-11

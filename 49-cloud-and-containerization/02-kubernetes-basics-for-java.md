@@ -151,6 +151,33 @@ Scheduler packs nodes; JVM killed by OOM.
 
 ### Corrected — requests/limits + MaxRAMPercentage.
 
+### PodDisruptionBudget and JVM rolls
+
+```yaml
+# Illustrative
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: api
+```
+
+During node drain, PDB prevents eviction below `minAvailable`—pairs with graceful shutdown (Module 48) so in-flight JDBC work completes.
+
+### JDBC connection math (recap)
+
+`max_connections_db ≥ replicas × spring.datasource.hikari.maximum-pool-size + admin headroom`
+
+Scale **replicas down** before shrinking DB max connections after deploy rollback.
+
+### Ingress TLS termination
+
+Client TLS often ends at Ingress; pod may see plain HTTP. Configure `ForwardedHeaderFilter` / `server.forward-headers-strategy` so Spring generates correct absolute URLs and secure cookies.
+
 ## 8. Design Trade-offs
 
 | Helm chart | Plain YAML |
@@ -181,4 +208,4 @@ Kubernetes runs Java containers at scale: Deployments manage replicas and rollou
 
 ## Review Checklist
 
-- [x] K8s objects; sample YAML; probes; mistakes
+- [x] K8s objects; sample YAML; probes; mistakes; deepen pass 2026-11-11

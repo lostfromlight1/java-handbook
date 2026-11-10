@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 36 — Spring Framework  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive  
 > **Depth target:** Level 3 + Level 4 on lifecycle stages, proxies, and `@Transactional`  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [jdk-dynamic-proxy-demo](../../examples/backend/jdk-dynamic-proxy-demo/)
 
@@ -133,7 +134,7 @@ When debugging “why didn’t my `@PostConstruct` run?”, you often discover a
 | **Proxy** | Wrapper implementing the same interfaces (JDK) or subclassing the target (CGLIB) that runs interceptors/advice first. |
 | **Self-invocation** | A method on the target calls another method on **`this`**; calls do not pass through the proxy shell. |
 
-## 6. Bean Lifecycle — Stage by Stage
+## 6. Mechanism and Execution Flow — Bean Lifecycle by Stage
 
 ### 6.1 Bean definition registration
 
@@ -376,7 +377,7 @@ TransactionInterceptor (proxy)
 Business target object
 ```
 
-## 8. Proxy Mechanisms — JDK and CGLIB
+## 8. Mechanism and Execution Flow — JDK and CGLIB Proxies
 
 ### 8.1 JDK dynamic proxies (internals)
 

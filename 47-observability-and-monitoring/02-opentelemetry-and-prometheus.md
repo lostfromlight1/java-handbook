@@ -136,6 +136,40 @@ Grafana panels:
 | Scraping without auth | Network policy + mTLS |
 | Dashboards without SLO | Start from user journeys (Ch.03) |
 
+### Micrometer ↔ Prometheus naming
+
+| Micrometer | Prometheus exposition |
+|------------|----------------------|
+| `http.server.requests` timer | Histogram + `_count`, `_sum`, `_bucket` |
+| Tags `uri`, `status` | Label cardinality risk on raw paths |
+
+Prefer **templated routes** (`/api/users/{id}`) as tag values via Spring MVC observation—never raw `/users/7`, `/users/8` as separate time series.
+
+### Example PromQL patterns (Illustrative)
+
+```promql
+# 5xx rate as fraction of all requests (5m window)
+sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m]))
+  / sum(rate(http_server_requests_seconds_count[5m]))
+
+# p99 from histogram (if buckets configured)
+histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le))
+```
+
+Validate queries in staging—bucket layout must match histogram configuration.
+
+### OTel collector pipeline sketch
+
+```mermaid
+flowchart LR
+  SDK[Java OTel SDK] -->|OTLP gRPC| COL[Collector]
+  COL --> EXP1[Prometheus exporter]
+  COL --> EXP2[Jaeger]
+  AGENT[Java agent bytecode] --> COL
+```
+
+Run collector as sidecar or shared service; apps only speak OTLP to localhost collector.
+
 ## 12. Design Trade-offs
 
 | Java agent auto-instrument | Manual spans only |
@@ -169,4 +203,4 @@ OpenTelemetry standardizes Java instrumentation and OTLP export; Prometheus scra
 ## Review Checklist
 
 - [x] Technical L2–3; mechanism diagram; OTel/Prometheus conceptual
-- [x] No fabricated scrape data; preserved alerting/dashboard topics
+- [x] No fabricated scrape data; preserved alerting/dashboard topics; deepen pass 2026-11-11

@@ -107,6 +107,36 @@ flowchart TD
 
 Event-driven: `ProductUpdated` consumer deletes keys (Module 45).
 
+### Stampede lock pattern (conceptual)
+
+```mermaid
+sequenceDiagram
+  participant T1 as Thread 1
+  participant T2 as Thread 2
+  participant R as Redis
+  participant D as DB
+  T1->>R: GET key miss
+  T2->>R: GET key miss
+  T1->>R: SET lock:key NX EX 5
+  T2->>R: SET lock:key NX fails
+  T2->>R: GET key or short sleep retry
+  T1->>D: SELECT
+  T1->>R: SETEX key
+  T1->>R: DEL lock:key
+```
+
+Only the lock holder loads origin; others wait or serve stale with `max-stale` policy if product allows.
+
+### Spring Data Redis cache manager knobs
+
+| Property | Effect |
+|----------|--------|
+| `spring.cache.redis.time-to-live` | Default TTL |
+| `spring.cache.redis.cache-null-values` | Whether to cache negative results |
+| Lettuce pool max | Caps concurrent Redis commands per pod |
+
+Tune pool with expected RPS × commands per request—Redis RTT dominates when pool starved.
+
 ### Sessions and rate limiting
 
 - **Session store:** Spring Session Redis for sticky-less scaling; serializable session attributes only.
@@ -164,17 +194,37 @@ This chapter does not require a running Redis instance for handbook completion. 
 - Invalidation vs TTL for price updates during a sale?
 - Session in Redis vs JWT for a B2B API with instant revocation?
 
-## 13. Exercises
+## 13. Operational Playbook (Redis unavailable)
+
+| Phase | Application behavior |
+|-------|------------------------|
+| Detect | Circuit breaker open after N failures / high latency |
+| Degrade | Skip L2; optional skip L1 for security-sensitive reads |
+| Recover | Half-open probe; gradual traffic; watch stampede on refill |
+
+Log **cache bypass rate** metric during incident; postmortem asks whether TTL jitter would have softened the spike.
+
+## 14. Exercises
 
 1. Key naming convention for tenant-scoped cache (`tenant:{id}:product:{id}`).
 2. Invalidation flow diagram for product update API (DB commit → bus → consumers).
 3. Failure mode doc when Redis partition occurs (read path, write path).
 
-## 14. Chapter Summary
+## 15. Serialization Formats at the Cache Boundary
+
+| Format | Pros | Cons |
+|--------|------|------|
+| JSON (String value) | Human-debuggable in `redis-cli` | Larger, slower parse |
+| JDK serialization | Easy with `RedisTemplate` default | Fragile across class versions; security risk |
+| Protocol Buffers / Avro | Compact, schema evolution | Extra codegen pipeline |
+
+Prefer **versioned DTO + JSON** for handbook-style services; never cache JPA entities verbatim (Ch.01).
+
+## 16. Chapter Summary
 
 Redis centralizes distributed caching and coordination; pair with clear **invalidation**, **TTL discipline**, and **safe failure modes**—not as silent source of truth without database backing.
 
-## 15. Next Steps
+## 17. Next Steps
 
 [03-load-testing-and-capacity.md](03-load-testing-and-capacity.md)
 
@@ -182,4 +232,4 @@ Redis centralizes distributed caching and coordination; pair with clear **invali
 
 - [x] Technical L2–3; mechanism flows (cache-aside, L1/L2)
 - [x] Redis conceptual; invalidation; security note; no fabricated Redis output
-- [x] Preserved pattern catalog and exercises from prior draft
+- [x] Preserved pattern catalog and exercises; stampede lock deepen pass 2026-11-11

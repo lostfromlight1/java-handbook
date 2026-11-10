@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 36 — Spring Framework  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive  
 > **Depth target:** Level 3 (Spring Data, MVC pipeline, DTO/OSIV, security overview); Level 4 preview on repository proxy generation and filter ordering  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [rest-httpserver-demo](../../examples/backend/rest-httpserver-demo/); Ch.01–02 [manual-di-container](../../examples/backend/manual-di-container/), [jdk-dynamic-proxy-demo](../../examples/backend/jdk-dynamic-proxy-demo/)
 
@@ -95,7 +96,7 @@ flowchart TB
 | **Filter chain** | Ordered servlet `Filter` instances; each may proceed or short-circuit the response |
 | **Method security** | Authorization annotations enforced by AOP around method calls (often on services) |
 
-## 5. Spring Data JPA: Repository Proxies vs `EntityManager`
+## 5. Mechanism and Execution Flow — Spring Data, MVC, and Security
 
 ### 5.1 What Spring Data promises
 

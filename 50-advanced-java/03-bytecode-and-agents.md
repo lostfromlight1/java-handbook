@@ -134,6 +134,32 @@ New class file version surprises.
 
 ### Corrected — matrix test Temurin 21.0.12.1 with agent enabled.
 
+### Verification pipeline (JVMS)
+
+```mermaid
+flowchart TD
+  B[bytecode] --> V[verifier]
+  V -->|fail| X[VerifyError]
+  V -->|pass| L[class loading]
+  L --> I[initialization]
+```
+
+Verifier checks stack map frames, type safety, and illegal jumps—agents that inject broken bytecode fail here or at first execution.
+
+### Retransformation constraints
+
+`Instrumentation.retransformClasses` requires `canRetransform=true` in manifest and may not change schema of already-loaded classes beyond supported cases—test on Temurin 21 before production rollout.
+
+### Sample `premain` manifest (reference)
+
+```text
+Premain-Class: com.example.Agent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
+```
+
+Launch: `java -javaagent:agent.jar=verbose -jar app.jar`
+
 ## 11. Design Trade-offs
 
 | Source-only observability | Agent-based tracing |
@@ -147,17 +173,34 @@ New class file version surprises.
 - Difference `premain` vs `agentmain`?
 - Why might `javap` help when debugging agent failures?
 
-## 13. Exercises
+## 13. Reading `javap` Output (Illustrative)
+
+```bash
+javap -c -p MyClass.class
+```
+
+Look for:
+
+| Opcode | Meaning |
+|--------|---------|
+| `aload_0` | Load `this` |
+| `invokevirtual` | Virtual dispatch |
+| `invokeinterface` | Interface call |
+| `return` | Void return |
+
+Agents that inject calls at method entry often add `invokestatic` to a tracing helper—verify stack map frames still verify.
+
+## 14. Exercises
 
 1. Run bytecode-demo and name two opcodes you see.
 2. Modify agent to print agent args string.
 3. Research one production agent’s required JVM flags.
 
-## 14. Chapter Summary
+## 15. Chapter Summary
 
 Bytecode is what the JVM executes; agents instrument class loading through Instrumentation. The premain demo proves the hook sequence; production use demands transform scope limits and JDK 21 verification testing.
 
 ## Review Checklist
 
 - [x] Deep-dive L3–4; JVMS verification vs HotSpot startup cost
-- [x] Class files; agents; Verified premain demo Temurin 21.0.12.1
+- [x] Class files; agents; Verified premain demo Temurin 21.0.12.1; deepen pass 2026-11-11

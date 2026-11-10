@@ -140,6 +140,37 @@ Build fails without flags.
 
 ### Corrected — document flags in README and pipeline.
 
+### MethodHandle lookup modes (JLS access rules)
+
+| Lookup | Capability |
+|--------|------------|
+| `publicLookup()` | Public members only |
+| `lookup()` in same class | Private members of defining class |
+| `privateLookupIn` | Explicit module/package private access |
+
+Incorrect: obtain handle in class A and invoke private method on instance of unrelated class B—`IllegalAccessException` at runtime.
+
+### VarHandle coordinate types
+
+| Layout | Use |
+|--------|-----|
+| `int[]` element | Parallel array updates with `getAndAdd` |
+| `static` field on class | Counter without instance |
+| Byte array view | Manual serialization parsers |
+
+**Happens-before:** VarHandle access modes include volatile/plain/opaque—match JMM intent to operation (Module 25).
+
+### FFM arena lifecycle (preview on 21)
+
+```java
+try (Arena arena = Arena.ofConfined()) {
+    MemorySegment seg = arena.allocate(16);
+    // native calls use seg
+} // arena closed — segment invalid
+```
+
+Cross-thread use of confined arena is illegal—use `Arena.ofShared()` when multiple threads coordinate lifetime with explicit close protocol.
+
 ## 11. Design Trade-offs
 
 | Reflection | MethodHandle |
@@ -173,4 +204,4 @@ Method handles and VarHandles are low-level invocation and concurrency primitive
 ## Review Checklist
 
 - [x] Deep-dive L3–4; mechanism flows; preview labeled
-- [x] MH, VarHandle, FFM Verified Temurin 21.0.12.1
+- [x] MH, VarHandle, FFM Verified Temurin 21.0.12.1; deepen pass 2026-11-11

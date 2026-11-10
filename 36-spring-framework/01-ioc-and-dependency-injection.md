@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 36 — Spring Framework  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive  
 > **Depth target:** Level 3 + Level 4 on composition root, bean definitions, and constructor resolution  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [manual-di-container](../../examples/backend/manual-di-container/)
 
@@ -199,7 +200,29 @@ Industry default for Spring and plain Java: **constructor injection** for requir
 | **`ApplicationContext`** | `BeanFactory` plus application services (events, i18n, environment, resource loading, AOP integration). Most apps use a context. |
 | **Component scanning** | Classpath/package scan that finds stereotype-annotated classes and registers bean definitions. |
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### Context refresh to usable bean
+
+```mermaid
+sequenceDiagram
+  participant App as @Configuration / scan
+  participant Ctx as ApplicationContext
+  participant BF as BeanFactory
+  participant Bean as OrderService
+  App->>Ctx: register bean definitions
+  Ctx->>BF: refresh (eager singletons by default)
+  BF->>Bean: construct via chosen constructor
+  BF->>Bean: inject collaborators
+  BF->>Bean: init callbacks
+  Note over Ctx,Bean: getBean("orderService") returns same singleton
+```
+
+**Constructor resolution (simplified):** When multiple constructors exist, Spring prefers the one annotated with `@Autowired` if present; otherwise it may fail at startup if ambiguity remains. That failure is deliberate—better than guessing which dependency graph to build.
+
+**Scan vs explicit `@Bean`:** Component scanning registers classes annotated with `@Component` stereotypes. `@Configuration` classes additionally register `@Bean` factory methods. Both paths end as **bean definitions** in the same registry; only the registration mechanism differs.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -210,7 +233,7 @@ Industry default for Spring and plain Java: **constructor injection** for requir
 | Wiring | Connecting abstractions to implementations |
 | Service locator | Hidden global lookup of dependencies (usually an anti-pattern inside domain code) |
 
-## 6. Step-by-Step Examples
+## 7. Step-by-Step Examples
 
 ### 6.1 Manual composition (no container)
 
@@ -286,7 +309,7 @@ Stereotype annotations (`@Component`, `@Service`, `@Repository`, `@Controller` /
 
 Spring still ends up calling constructors with resolved dependencies. Scanning is discovery; it does not replace understanding the graph.
 
-## 7. Internal Behavior (Spring, labeled framework)
+## 8. Internal Behavior (Spring, labeled framework)
 
 This is **framework behavior**, not a JLS guarantee.
 
@@ -336,20 +359,20 @@ A **circular dependency** exists when A needs B and B needs A (directly or throu
 
 Setter or `@Lazy` injection can sometimes mask cycles by creating a partial object first. Prefer fixing the design over hiding the cycle. Chapter 02 revisits proxies and lazy references.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - Testable services: pass `Clock`, `PaymentService`, or repository fakes via constructors.
 - Profile-specific beans (`@Profile("prod")`) in Module 37—still DI, with environment choosing bindings.
 - Hexagonal / clean architecture: domain depends on ports (interfaces); infrastructure adapters are bound at the composition root (Module 40).
 
-## 9. Edge Cases and Limitations
+## 10. Edge Cases and Limitations
 
 - **Too many constructor parameters** — often a Single Responsibility problem (Module 41); split the type.
 - **Static singletons / service locators** — hide dependencies; harder to test than constructor injection.
 - **Request-scoped identity in singletons** — DI does not make this safe; see security note below and Modules 37–39.
 - **Field injection in tests** — encourages Spring-only tests; prefer constructors so plain unit tests work.
 
-## 10. Common Mistakes
+## 11. Common Mistakes
 
 ### Incorrect — service locator inside business code
 
@@ -390,7 +413,7 @@ Still tightly coupled to construction and vendor.
 
 ### Corrected — inject `PaymentService`; bind `StripePayment` only at the composition root.
 
-## 11. Design Trade-offs
+## 12. Design Trade-offs
 
 | Approach | Pros | Cons |
 |----------|------|------|
@@ -398,11 +421,11 @@ Still tightly coupled to construction and vendor.
 | DIY container (demo) | Teaches mechanics | Not production-grade (scopes, proxies, etc.) |
 | Spring / Micronaut / CDI | Mature lifecycle and ecosystem | Learning curve; startup cost; magic if misused |
 
-## 12. Security Considerations
+## 13. Security Considerations
 
 DI does not fix security. **Do not** inject request-scoped user identity into singleton beans without scoped proxies—risk of **cross-request data leakage**. Use explicit request/session scope and security context patterns (Modules 37–39).
 
-## 13. Best Practices
+## 14. Best Practices
 
 - Prefer **constructor injection** and `final` fields for required collaborators.
 - Depend on **abstractions** that match use cases; bind implementations at the composition root.
@@ -410,7 +433,7 @@ DI does not fix security. **Do not** inject request-scoped user identity into si
 - Keep `@Configuration` / scan base packages intentional—over-broad scanning pulls unexpected components.
 - Treat circular dependencies as design bugs first.
 
-## 14. Revision and Mastery
+## 15. Revision and Mastery
 
 **What you should already understand:** interfaces, polymorphism, why `new ConcreteX()` inside domain logic hurts tests.
 
@@ -430,27 +453,27 @@ DI does not fix security. **Do not** inject request-scoped user identity into si
 - Why does constructor injection expose circular dependencies earlier than setter injection?
 - How do `@Primary` and `@Qualifier` resolve ambiguity?
 
-## 15. Exercises
+## 16. Exercises
 
 1. Extend `MiniContainer` to cache **singleton** instances per type after first `get`.
 2. Add a second `GreetingService` implementation; rebind without changing `GreetingController`.
 3. Sketch a three-layer graph: Controller → Service → Repository interface; write a `main` composition root that wires fake vs JDBC-shaped implementations (interfaces only is fine).
 4. Deliberately create a constructor cycle between two classes and observe that a naive recursive container stack-overflows or fails—then redesign to remove the cycle.
 
-## 16. Chapter Summary
+## 17. Chapter Summary
 
 A **dependency** is a collaborator a type needs to do its job. **IoC** moves object-graph decisions to a **composition root** or container; **DI** passes collaborators in—especially via **constructors**. **Loose coupling** needs good abstractions **and** external wiring; interfaces alone are not enough. Spring’s `ApplicationContext` stores **bean definitions**, discovers types via **component scanning**, and builds instances with reflection—the same graph `MiniContainer` demonstrates in pure Java. Understand plain wiring first; annotations describe that wiring.
 
-## 17. Key Terminology
+## 18. Key Terminology
 
 IoC, DI, dependency/collaborator, composition root, bean, bean definition, `BeanFactory`, `ApplicationContext`, component scanning, stereotype, constructor/setter/field injection, circular dependency, `@Primary`, `@Qualifier`.
 
-## 18. References and Further Reading
+## 19. References and Further Reading
 
 - Spring Framework documentation — Core Technologies / IoC container (match the Spring version you use; Boot 3.x uses Spring Framework 6.x).
 - Handbook: Modules 05–08 (OOP/interfaces), Module 21/50 (reflection), Chapter 02 (lifecycle and AOP).
 
-## 19. Next Steps
+## 20. Next Steps
 
 [02-bean-lifecycle-and-aop.md](02-bean-lifecycle-and-aop.md) — when beans are created, initialized, proxied, and destroyed; how AOP and `@Transactional` use those proxies.
 

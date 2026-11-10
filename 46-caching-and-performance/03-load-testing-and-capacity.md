@@ -130,6 +130,25 @@ Measure **hit rate** during the test. Cold cache at start mimics deploy—docume
 | Single metric focus | CPU low but pool exhausted |
 | Skip cache metrics | Misattribute DB pain |
 
+### Saturation checklist (Java stack)
+
+| Symptom | Likely bottleneck | Confirm with |
+|---------|-------------------|--------------|
+| Rising p99, flat CPU | Pool wait (Hikari, Lettuce) | Pool pending metrics, thread dumps |
+| CPU pegged, flat RPS | GC or inefficient hot path | JFR, async-profiler |
+| 5xx spike, flat latency | Downstream timeout | Trace spans, circuit breaker state |
+| Cache hit ratio collapse | Deploy or TTL alignment | Micrometer cache stats |
+
+**Little's Law sketch:** `concurrency ≈ throughput × latency`. If mean service time is 200ms and you need 500 RPS, you need ~100 in-flight requests unless batching—size threads/pools accordingly, not "200 threads because 200 RPS."
+
+### Profiling under load (Temurin 21)
+
+1. Start JFR: `jcmd <pid> JFR.start duration=60s filename=load.jfr`
+2. Correlate GC pauses with p99 spikes.
+3. Compare **JIT warmed** vs **cold** windows—first-minute load after deploy is not steady state.
+
+Document **GC flags** and **heap size** in the test report; results are not portable across flag sets.
+
 ## 12. Design Trade-offs
 
 | Long soak in CI | Nightly / pre-release soak |
@@ -146,17 +165,39 @@ Measure **hit rate** during the test. Cold cache at start mimics deploy—docume
 - Why p99 for checkout SLO instead of mean?
 - Pool size vs thread count: what happens when threads > pool?
 
-## 14. Exercises
+## 14. Worked Example — Capacity Worksheet (Illustrative)
+
+Assume checkout API on Temurin 21:
+
+| Input | Value |
+|-------|-------|
+| Peak RPS | 400 |
+| p99 target | 300 ms |
+| Avg service time (warm) | 120 ms |
+| Cache hit ratio | 92% |
+
+**Rough in-flight:** 400 × 0.12 ≈ 48 concurrent requests if perfectly pipelined—plan thread pool ≥ 48 + headroom; Hikari max per instance often 20–30 with 4 replicas → verify DB `max_connections > 4 × 30`.
+
+**Load test script shape (k6/JMeter conceptual):**
+
+1. **Warm-up** 5 min at 50% RPS (JIT + cache fill).
+2. **Steady** 20 min at 100% RPS; record p50/p95/p99.
+3. **Spike** 2 min at 150% RPS; observe error budget burn.
+4. **Cool-down** 3 min; watch GC and pool recovery.
+
+Never compare runs with different heap flags or missing cache warm-up.
+
+## 15. Exercises
 
 1. Write load test scenario for `GET /products/{id}` with cache-aside; define warm-up and measurement windows.
 2. Capacity worksheet: RPS, p95 target, replicas, pool size, Redis hit ratio goal.
 3. List three JVM flags you would log alongside test results on Temurin 21.
 
-## 15. Chapter Summary
+## 16. Chapter Summary
 
 Load testing validates Java services against percentile latency and error SLOs with realistic drivers and environment parity—interpreting **pools, GC, cache hit rate, and saturation** together.
 
 ## Review Checklist
 
 - [x] Technical L2–3; test pipeline mechanism; no fabricated benchmark results
-- [x] Preserved test types, metrics, fidelity table, exercises
+- [x] Preserved test types, metrics, fidelity table, exercises; deepen pass 2026-11-11

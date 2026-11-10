@@ -75,6 +75,33 @@ Without such an edge, **no visibility guarantee**.
 2. Blocking I/O parks virtual thread; carrier may run other virtual threads.
 3. Pinning prevents unmount during `synchronized` block on some JDK builds.
 
+### Class loading interview sequence
+
+```mermaid
+flowchart LR
+  L[Loading] --> K[Linking verify prepare]
+  K --> I[Initializing clinit]
+  I --> U[First active use]
+```
+
+**Parent delegation:** custom classloader asks parent first so JDK classes load consistently. **Wrong:** "class loaders load bytecode from network only"—they also define packages and security.
+
+### GC talking points (collector-neutral)
+
+| Question | Safe answer shape |
+|----------|-------------------|
+| Young vs old gen | Most objects die young; minor collections cheaper |
+| GC pause vs throughput | G1/ZGC tune for pause targets; measure don't guess |
+| `System.gc()` | Hint only; production avoid explicit calls |
+
+### `java.util.concurrent` depth
+
+| API | Interview angle |
+|-----|-----------------|
+| `CompletableFuture` | Async chain; `orTimeout` (Java 9+); exceptional completion |
+| `Phaser` | Rare; mention only if asked |
+| `BlockingQueue` | Producer-consumer backpressure |
+
 ## 6. Scenario Questions
 
 **Q: Two threads increment static `int`?**  
@@ -82,6 +109,16 @@ Race unless `AtomicInteger` or synchronization.
 
 **Q: Detect deadlock?**  
 Thread dumps (`jcmd`/`jstack`), JFR; prevention via lock ordering.
+
+**Q: Is `ConcurrentHashMap` lock-free?**  
+Segment/bin synchronization evolved by JDK version—say **fine-grained locking / CAS**, not "fully lock-free map" without version.
+
+**Q: Virtual thread pin when using JDBC?**  
+Blocking JDBC parks carrier; ensure pool sized for carriers × platform threads, not "millions of platform threads."
+
+### Whiteboard: fixed thread pool saturation
+
+Given `core=2`, `max=2`, `queue=10`, `CallerRunsPolicy`: eleventh submit when queue full runs on **caller thread**—backpressure propagates to servlet thread (interview tests policy names).
 
 ## 7. Links to demos
 
@@ -106,9 +143,32 @@ Run on Temurin 21 when practicing.
 1. Explain Module 25 thesis in 90 seconds.
 2. Predict happens-before demo output before running.
 
+### Memory leak interview narrative
+
+| Leak pattern | Signal | Tool |
+|--------------|--------|------|
+| Static map grows | Old gen climbs, full GC ineffective | Heap histogram `jcmd GC.class_histogram` |
+| Thread leak | Thread count rises | Thread dump |
+| Classloader leak | Metaspace OOM | Duplicate loaded classes in dump |
+
+**Answer shape:** "I'd capture heap dump during growth, compare dominator tree, tie to redeploy cycle or cache without bounds."
+
+### Double-checked locking (classic)
+
+```java
+// Incorrect without volatile
+if (instance == null) {
+    synchronized (Lock.class) {
+        if (instance == null) instance = new Singleton();
+    }
+}
+```
+
+Without `volatile` on `instance`, another thread may see partially constructed object (JMM). Fix: `volatile` field or initialize-on-demand holder idiom (M24).
+
 ## 11. Chapter Summary
 
-JVM and concurrency interviews need JMM precision, collector vocabulary, and pool/virtual-thread awareness from Modules 24–28.
+JVM and concurrency interviews need JMM precision, collector vocabulary, pool/virtual-thread awareness, and leak-debugging vocabulary from Modules 24–28.
 
 ## Next Steps
 
@@ -116,4 +176,4 @@ JVM and concurrency interviews need JMM precision, collector vocabulary, and poo
 
 ## Review Checklist
 
-- [x] Technical L2–3; happens-before mechanism; JVM + JMM preserved
+- [x] Technical L2–3; happens-before mechanism; JVM + JMM preserved; deepen pass 2026-11-11

@@ -865,9 +865,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-ioc-and-dependency-injection.md](36-spring-framework/01-ioc-and-dependency-injection.md) | Completed | Depth L3+L4 pass 2026-11-10 | Composition root, bean definitions, constructor resolution |
-| [02-bean-lifecycle-and-aop.md](36-spring-framework/02-bean-lifecycle-and-aop.md) | Completed | Depth L3+L4 pass 2026-11-10 | Lifecycle stages, proxies, `@Transactional` |
-| [03-spring-data-mvc-security-overview.md](36-spring-framework/03-spring-data-mvc-security-overview.md) | Completed | Depth L3 pass 2026-11-10 | MVC pipeline, DTO/OSIV, security overview |
+| [01-ioc-and-dependency-injection.md](36-spring-framework/01-ioc-and-dependency-injection.md) | Completed | Headers + Mechanism §5 deepen 2026-11-11; Deep-dive L3+L4 | Composition root, bean definitions, constructor resolution |
+| [02-bean-lifecycle-and-aop.md](36-spring-framework/02-bean-lifecycle-and-aop.md) | Completed | Headers + Mechanism section titles deepen 2026-11-11; Deep-dive L3+L4 | Lifecycle stages, proxies, `@Transactional` |
+| [03-spring-data-mvc-security-overview.md](36-spring-framework/03-spring-data-mvc-security-overview.md) | Completed | Headers + Mechanism §5 deepen 2026-11-11; Deep-dive L3–4 preview | MVC pipeline, DTO/OSIV, security overview |
 | [Module assessment](assessments/module-assessments/36-spring-framework-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -877,7 +877,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `manual-di-container` | `greet=Hello, Lin`; `diContainer=ok` |
 | `jdk-dynamic-proxy-demo` | `before=greet`; `result=Hello, Ada`; `proxyAop=ok` |
 
-**Module 36 status:** Completed  
+**Module 36 status:** Completed (Chapter profile + Mechanism headings 2026-11-11; no full regenerate)  
 **Next recommended chapter:** Module 37 (Completed below)
 
 ---
@@ -886,10 +886,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-spring-boot-fundamentals.md](37-spring-boot/01-spring-boot-fundamentals.md) | Completed | Depth L3+L4 pass 2026-11-10 | `spring-boot-minimal` via `mvnw` |
-| [02-configuration-and-profiles.md](37-spring-boot/02-configuration-and-profiles.md) | Completed | Depth L3 pass 2026-11-10 | — |
-| [03-web-layer-and-validation.md](37-spring-boot/03-web-layer-and-validation.md) | Completed | Depth L3 pass 2026-11-10 | — |
-| [04-actuator-testing-and-production.md](37-spring-boot/04-actuator-testing-and-production.md) | Completed | Depth L3 pass 2026-11-10 | Testcontainers optional lab |
+| [01-spring-boot-fundamentals.md](37-spring-boot/01-spring-boot-fundamentals.md) | Completed | Chapter profile Deep-dive + Mechanism §5 title 2026-11-11 | `spring-boot-minimal` via `mvnw` |
+| [02-configuration-and-profiles.md](37-spring-boot/02-configuration-and-profiles.md) | Completed | Chapter profile Technical + Mechanism §5 title 2026-11-11 | — |
+| [03-web-layer-and-validation.md](37-spring-boot/03-web-layer-and-validation.md) | Completed | Chapter profile Technical + Mechanism §5 MVC 2026-11-11 | — |
+| [04-actuator-testing-and-production.md](37-spring-boot/04-actuator-testing-and-production.md) | Completed | Chapter profile Technical + Mechanism §5 probes 2026-11-11 | Testcontainers optional lab |
 | [Module assessment](assessments/module-assessments/37-spring-boot-assessment.md) | Completed | Solutions separate | — |
 
 **Examples verified (Temurin JDK 21.0.12.1):**
@@ -899,7 +899,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `rest-httpserver-demo` | `GET /users/1 status=200`; `POST /users status=201`; `restDemo=ok` |
 | `spring-boot-minimal` | `mvnw test`: 1 passed; fat JAR `GET /hello` → `{"message":"bootMinimal=ok"}` |
 
-**Module 37 status:** Completed (`spring-boot-minimal` verified with Maven Wrapper)  
+**Module 37 status:** Completed (`spring-boot-minimal` verified with Maven Wrapper; headers/Mechanism deepen 2026-11-11)  
 **Next recommended chapter:** Module 38 (Completed below)
 
 ---
@@ -1051,9 +1051,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-caching-strategies.md](46-caching-and-performance/01-caching-strategies.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
-| [02-redis-and-invalidation.md](46-caching-and-performance/02-redis-and-invalidation.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Redis lab optional |
-| [03-load-testing-and-capacity.md](46-caching-and-performance/03-load-testing-and-capacity.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [01-caching-strategies.md](46-caching-and-performance/01-caching-strategies.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 (~266 lines) | — |
+| [02-redis-and-invalidation.md](46-caching-and-performance/02-redis-and-invalidation.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 (~225 lines) | Redis lab optional |
+| [03-load-testing-and-capacity.md](46-caching-and-performance/03-load-testing-and-capacity.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 (~200 lines) | — |
 | [Module assessment](assessments/module-assessments/46-caching-performance-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -1062,7 +1062,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 |---------|--------|
 | `in-memory-cache-demo` | `user:2=miss`; `in-memory-cache=ok` |
 
-**Module 46 status:** Completed  
+**Module 46 status:** Completed (deepen pass 2 2026-11-11; demos re-verified)  
 **Next recommended chapter:** Module 47 (Completed below)
 
 ---
@@ -1071,9 +1071,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-logging-metrics-and-tracing.md](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
-| [02-opentelemetry-and-prometheus.md](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | OTel collector lab optional |
-| [03-slos-and-incidents.md](47-observability-and-monitoring/03-slos-and-incidents.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [01-logging-metrics-and-tracing.md](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [02-opentelemetry-and-prometheus.md](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | OTel collector lab optional |
+| [03-slos-and-incidents.md](47-observability-and-monitoring/03-slos-and-incidents.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/47-observability-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -1091,9 +1091,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-containers-and-the-jvm.md](48-devops-and-deployment/01-containers-and-the-jvm.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Live docker smoke optional |
-| [02-ci-cd.md](48-devops-and-deployment/02-ci-cd.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Sample Actions workflow file optional |
-| [03-deployment-strategies.md](48-devops-and-deployment/03-deployment-strategies.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [01-containers-and-the-jvm.md](48-devops-and-deployment/01-containers-and-the-jvm.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | Live docker smoke optional |
+| [02-ci-cd.md](48-devops-and-deployment/02-ci-cd.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | Sample Actions workflow file optional |
+| [03-deployment-strategies.md](48-devops-and-deployment/03-deployment-strategies.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/48-devops-deployment-assessment.md) | Completed | Solutions separate | — |
 
 **Module 48 status:** Completed  
@@ -1105,9 +1105,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-cloud-native-java.md](49-cloud-and-containerization/01-cloud-native-java.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
-| [02-kubernetes-basics-for-java.md](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | kind/minikube lab optional |
-| [03-graalvm-and-native-image-concepts.md](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Native build CI optional |
+| [01-cloud-native-java.md](49-cloud-and-containerization/01-cloud-native-java.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [02-kubernetes-basics-for-java.md](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | kind/minikube lab optional |
+| [03-graalvm-and-native-image-concepts.md](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | Native build CI optional |
 | [Module assessment](assessments/module-assessments/49-cloud-containerization-assessment.md) | Completed | Solutions separate | — |
 
 **Module 49 status:** Completed  
@@ -1119,9 +1119,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-reflection-proxies-and-annotations.md](50-advanced-java/01-reflection-proxies-and-annotations.md) | Completed | EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4 | — |
-| [02-method-handles-varhandles-and-ffm.md](50-advanced-java/02-method-handles-varhandles-and-ffm.md) | Completed | EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4 | FFM preview flags on JDK 21 |
-| [03-bytecode-and-agents.md](50-advanced-java/03-bytecode-and-agents.md) | Completed | EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4 | Transformer sample optional |
+| [01-reflection-proxies-and-annotations.md](50-advanced-java/01-reflection-proxies-and-annotations.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Deep-dive L3–4 | Demo re-verified |
+| [02-method-handles-varhandles-and-ffm.md](50-advanced-java/02-method-handles-varhandles-and-ffm.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Deep-dive L3–4 | FFM preview flags on JDK 21 |
+| [03-bytecode-and-agents.md](50-advanced-java/03-bytecode-and-agents.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Deep-dive L3–4 | `agentDemo=ok` re-verified |
 | [Module assessment](assessments/module-assessments/50-advanced-java-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -1142,9 +1142,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-large-codebases.md](51-enterprise-java/01-large-codebases.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | ArchUnit sample optional |
-| [02-compatibility-and-migrations.md](51-enterprise-java/02-compatibility-and-migrations.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
-| [03-production-readiness.md](51-enterprise-java/03-production-readiness.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [01-large-codebases.md](51-enterprise-java/01-large-codebases.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | ArchUnit sample optional |
+| [02-compatibility-and-migrations.md](51-enterprise-java/02-compatibility-and-migrations.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [03-production-readiness.md](51-enterprise-java/03-production-readiness.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/51-enterprise-java-assessment.md) | Completed | Solutions separate | — |
 
 **Module 51 status:** Completed  
@@ -1156,9 +1156,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-core-java-interviews.md](52-interview-preparation/01-core-java-interviews.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
-| [02-jvm-and-concurrency-interviews.md](52-interview-preparation/02-jvm-and-concurrency-interviews.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
-| [03-spring-and-system-design-interviews.md](52-interview-preparation/03-spring-and-system-design-interviews.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [01-core-java-interviews.md](52-interview-preparation/01-core-java-interviews.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [02-jvm-and-concurrency-interviews.md](52-interview-preparation/02-jvm-and-concurrency-interviews.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [03-spring-and-system-design-interviews.md](52-interview-preparation/03-spring-and-system-design-interviews.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/52-interview-preparation-assessment.md) | Completed | Solutions separate | — |
 
 **Module 52 status:** Completed  

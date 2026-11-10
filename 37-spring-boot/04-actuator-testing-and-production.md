@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 37 — Spring Boot  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
 > **Depth target:** Level 3 (actuator exposure, slice vs full tests, production pitfalls)  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [spring-boot-minimal](../../examples/backend/spring-boot-minimal/) (`@WebMvcTest`, `mvnw test`); Module 30 testing foundations
 
@@ -176,7 +177,23 @@ public class PaymentService {
 
 **Cardinality trap:** unbounded tags (`userId` as a tag on every counter) explode time-series cost—use logging or tracing for high-cardinality dimensions.
 
-## 5. Testing with Boot
+## 5. Mechanism and Execution Flow — Health and Liveness Probes
+
+```mermaid
+flowchart TD
+  K[Kubernetes kubelet] --> P{Probe type}
+  P -->|startup| S[Actuator /actuator/health startup group]
+  P -->|readiness| R[HealthContributor aggregate]
+  P -->|liveness| L[Minimal JVM up check]
+  R --> D[DatabaseHealthIndicator]
+  R --> C[Custom business indicator]
+  D -->|DOWN| B[Remove pod from Service endpoints]
+  L -->|fail N times| X[Restart container]
+```
+
+**Liveness vs readiness:** **Readiness** failing removes the pod from load balancing while the process keeps running—use for transient DB blips. **Liveness** failing restarts the container—use only for deadlocks or wedged JVM states, not for slow dependencies, or you amplify outages.
+
+## 6. Testing with Boot
 
 ### 5.1 Test pyramid with Spring
 
@@ -312,7 +329,7 @@ class SecurityIT {
 
 **Incorrect — no tests for security rules:** regressions ship easily.
 
-## 6. Production Checklist
+## 7. Production Checklist
 
 - **JVM/container memory:** align heap with cgroup limits (Module 27 ergonomics); avoid OOMKill loops in Kubernetes.
 - **Structured logging:** JSON logs with **correlation IDs** from a servlet filter; ship to centralized logging.
@@ -357,14 +374,14 @@ class SecurityIT {
 
 **Verified fat JAR:** [spring-boot-minimal](../../examples/backend/spring-boot-minimal/) `java -jar target/*.jar` serves Tomcat on configured port.
 
-## 7. Edge Cases
+## 8. Edge Cases
 
 - **Slow CI:** too many `@SpringBootTest` classes—rebalance toward slices.
 - **Context failure:** use `--debug` condition report; read `FailureAnalyzer` messages.
 - **Flaky health:** external dependency in liveness probe causes restart storms—move to readiness group.
 - **Mockito agent warnings on JDK 21+:** follow Mockito docs for inline mock maker agent if required in future JDKs (seen in minimal demo test log).
 
-## 8. Common Mistakes
+## 9. Common Mistakes
 
 ### Incorrect — exposing all actuator endpoints publicly
 
@@ -378,7 +395,7 @@ Minutes-long CI suites.
 
 Unnecessary pod restarts.
 
-## 9. Design Trade-offs
+## 10. Design Trade-offs
 
 | Many slice tests | Many full integration tests |
 |------------------|----------------------------|
@@ -388,7 +405,7 @@ Unnecessary pod restarts.
 |----------------------|---------------------------|
 | Simpler networking | Clearer security boundary |
 
-## 10. Revision and Mastery
+## 11. Revision and Mastery
 
 1. Liveness vs readiness for a payment API with external fraud scorer?
 2. When is `@MockBean` preferable to testing the controller with plain Mockito?
@@ -396,24 +413,24 @@ Unnecessary pod restarts.
 4. What does graceful shutdown change during a Kubernetes rollout?
 5. How does `MockMvc` differ from `TestRestTemplate` with `RANDOM_PORT`?
 
-## 11. Exercises
+## 12. Exercises
 
 1. List three Micrometer metrics you would alert on for a payment API (latency, error rate, …).
 2. Write a test plan: how many slice vs full tests for a new service with one controller and one repository?
 3. Document shutdown sequence for in-flight HTTP requests with `server.shutdown=graceful`.
 4. Design actuator security: roles, paths, and management port decision.
 
-## 12. References
+## 13. References
 
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/index.html)
 - [Spring Boot Testing](https://docs.spring.io/spring-boot/reference/testing/index.html)
 - [Micrometer](https://micrometer.io/docs)
 
-## 13. Chapter Summary
+## 14. Chapter Summary
 
 Actuator turns operational concerns into **HTTP endpoints**—with real **security** obligations. Boot test annotations implement a **test pyramid** over the same context machinery you use in production. Production readiness still depends on JVM tuning, configuration discipline, and security beyond what Boot automates.
 
-## 14. Next Steps
+## 15. Next Steps
 
 Module **38** — REST API design and contract testing.
 

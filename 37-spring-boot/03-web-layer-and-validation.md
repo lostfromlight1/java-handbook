@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 37 — Spring Boot  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
 > **Depth target:** Level 3 (MVC mapping, validation pipeline, error handling, REST semantics)  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [rest-httpserver-demo](../../examples/backend/rest-httpserver-demo/); [spring-boot-minimal](../../examples/backend/spring-boot-minimal/) (`@WebMvcTest` MockMvc)
 
@@ -166,7 +167,32 @@ Requires **`@Validated`** on the controller class for Spring to validate `@Reque
 
 `ResponseEntity` makes status explicit; return types without `ResponseEntity` default to **200** with serialized body.
 
-## 5. Error Handling
+## 5. Mechanism and Execution Flow — DispatcherServlet Pipeline
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant DS as DispatcherServlet
+  participant HM as HandlerMapping
+  participant HC as HandlerAdapter
+  participant Ctrl as @RestController
+  participant Val as Validator
+  Client->>DS: HTTP request
+  DS->>HM: resolve handler method
+  HM-->>DS: HandlerExecutionChain
+  DS->>HC: invoke controller
+  HC->>Val: validate @Valid body (if present)
+  alt validation fail
+    Val-->>DS: MethodArgumentNotValidException
+  else ok
+    HC->>Ctrl: invoke handler
+    Ctrl-->>Client: HttpMessageConverter writes JSON
+  end
+```
+
+**Binding vs validation:** Data binding maps JSON/form fields to Java types first; **validation** runs afterward on the populated object. A type mismatch during binding can surface as `400` before `@NotNull` constraints run—order matters in client error interpretation.
+
+## 6. Error Handling
 
 ### 5.0 Why centralized handling beats per-controller try/catch
 
@@ -239,7 +265,7 @@ problem.setProperty("fieldErrors", ex.getBindingResult().getFieldErrors().stream
 
 **Corrected — stable problem type, safe message, correlation id in logs only.
 
-## 6. Plain-Java Parallel (verified)
+## 7. Plain-Java Parallel (verified)
 
 [rest-httpserver-demo](../../examples/backend/rest-httpserver-demo/) implements routing and status without Spring:
 
@@ -279,7 +305,7 @@ GET /hello → {"message":"bootMinimal=ok"}
 
 It does **not** validate TLS termination, HTTP/2 prioritization, or real Tomcat thread pool exhaustion—those belong in load tests or full `@SpringBootTest(webEnvironment = RANDOM_PORT)` scenarios.
 
-## 7. Content Negotiation and JSON
+## 8. Content Negotiation and JSON
 
 ### 7.1 Default JSON path
 
@@ -342,14 +368,14 @@ public UserDto patch(@Validated(OnUpdate.class) @RequestBody UserPatchRequest re
 
 **Alternative pattern:** separate `CreateUserRequest` and `PatchUserRequest` records—clearer for public APIs than group-heavy single DTOs.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Signup API** with validated email/password DTOs and hashed password only in service layer.
 - **Admin CSV export** returning `text/csv` with different `produces`.
 - **File upload** with `MultipartFile` + size validation in service or DTO wrapper.
 - **Pagination** with `@RequestParam` defaults and max size caps to prevent abuse.
 
-## 9. Edge Cases
+## 10. Edge Cases
 
 ### 9.1 Binding edge cases
 
@@ -363,7 +389,7 @@ public UserDto patch(@Validated(OnUpdate.class) @RequestBody UserPatchRequest re
 - **CSRF:** browser form posts need tokens; stateless JSON APIs often disable CSRF for `/api/**` when using bearer tokens—misconfiguration yields 403 with empty body unless advice maps it.
 - **CORS preflight:** `OPTIONS` requests hit `DispatcherServlet` before `POST`; ensure security permits OPTIONS for cross-origin SPAs.
 
-## 10. Common Mistakes
+## 11. Common Mistakes
 
 ### Incorrect — client-only validation
 
@@ -377,7 +403,7 @@ Persistence annotations and API rules diverge; use DTOs.
 
 Breaks HTTP-aware clients and caches; use proper 4xx/5xx.
 
-## 11. Design Trade-offs
+## 12. Design Trade-offs
 
 | `@Controller` + `@ResponseBody` per method | `@RestController` |
 |--------------------------------------------|-------------------|
@@ -387,7 +413,7 @@ Breaks HTTP-aware clients and caches; use proper 4xx/5xx.
 |-----------------|-------------------|
 | Familiar servlet threads | Non-blocking when entire stack is reactive |
 
-## 12. Revision and Mastery
+## 13. Revision and Mastery
 
 1. What runs first: JSON binding or `@Valid`?
 2. When use `201 Created` vs `200 OK`?
@@ -395,24 +421,24 @@ Breaks HTTP-aware clients and caches; use proper 4xx/5xx.
 4. Which exception type signals `@RequestBody` field errors?
 5. How does `rest-httpserver-demo` mirror Boot status discipline?
 
-## 13. Exercises
+## 14. Exercises
 
 1. Design `CreateUserRequest` with three validation rules and explain failure response shape.
 2. Add handler narrative for `ConstraintViolationException` on `@RequestParam`.
 3. Compare demo `POST /users` 201 behavior to `ResponseEntity.created(...)`.
 4. Write a MockMvc test expectation for 400 on invalid email (conceptual or in spring-boot-minimal style).
 
-## 14. References
+## 15. References
 
 - [Spring Framework — Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
 - [Jakarta Bean Validation 3.0](https://jakarta.ee/specifications/bean-validation/3.0/)
 - [RFC 7807 — Problem Details](https://www.rfc-editor.org/rfc/rfc7807)
 
-## 15. Chapter Summary
+## 16. Chapter Summary
 
 Boot’s web layer binds HTTP to Java DTOs, validates input with **Bean Validation**, and maps outcomes to **status codes** and **ProblemDetail** errors. Understand raw HTTP from the JDK demo; use Boot for binding, validation, and consistent REST ergonomics. Module **38** deepens resource modeling and contract tests.
 
-## 16. Next Steps
+## 17. Next Steps
 
 [04-actuator-testing-and-production.md](04-actuator-testing-and-production.md)
 

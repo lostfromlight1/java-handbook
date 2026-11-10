@@ -90,6 +90,38 @@ flowchart TD
 3. Canary or rolling deploy (Module 48).
 4. Hypercare with elevated monitoring.
 
+### Error budget and release policy
+
+| SLO | Monthly error budget (99.9%) | Policy |
+|-----|------------------------------|--------|
+| Availability | ~43 minutes downtime | Freeze risky releases when budget burned |
+| Latency p99 | Burn via slow traces | Prioritize perf over features |
+
+**Java service signals during hypercare:**
+
+- JVM **GC pause** percentiles (Module 27).
+- **HikariCP** pool pending threads (Module 34).
+- **HTTP 5xx** rate excluding client 4xx (Module 47).
+- **Deployment annotation** on dashboards (`version`, `git_sha`).
+
+### Disaster recovery drill script
+
+1. Restore RDS snapshot to isolated VPC **T+0**.
+2. Point staging Boot app at restored endpoint; run smoke `@SpringBootTest`.
+3. Measure **RTO** (time to first successful transaction) and **RPO** (data loss window).
+4. Document JDBC URL swap and secret rotation steps in runbook.
+
+Quarterly drill; failing drill blocks major marketing launches.
+
+### Dependency and CVE gate
+
+```text
+CI stage: mvn org.owasp:dependency-check-maven:check
+         or Gradle dependencyCheckAnalyze
+```
+
+Block release on **CVSS ≥ 7** without exception ticket; Spring Boot BOM bumps often clear transitive CVEs—track parent POM version in readiness checklist.
+
 ## 6. Real-World Use Cases
 
 - Financial service: mandatory DR drill.
@@ -125,16 +157,35 @@ Alert fatigue.
 - Four golden signals?
 - Minimum three runbook sections for JDBC Spring service?
 
-## 11. Exercises
+## 11. On-Call and Runbook Template
+
+```markdown
+## Service: orders-api
+### Dependencies
+- PostgreSQL (primary), Redis cache, payment provider REST
+### Dashboards
+- Golden signals, JVM memory, pool pending, 5xx rate
+### Playbook: DB connection refused
+1. Check Hikari metrics; verify DB status page
+2. If failover in progress, scale reads to replica endpoint
+3. Roll back last deploy if migration mismatch suspected
+### Rollback
+- Image: ghcr.io/acme/orders-api@sha256:...
+- Migrations: forward-only; contact DBA for manual revert script
+```
+
+Rotate on-call with **shadow** week for new engineers—page only low-severity alerts first.
+
+## 12. Exercises
 
 1. Draft SLO table for a handbook REST demo at 1k RPS.
 2. Production readiness gap list from Modules 30–48.
 
-## 12. Chapter Summary
+## 13. Chapter Summary
 
-Production readiness unifies testing, observability, security, deploy strategy, and operational docs so Java services survive real traffic—not just compile.
+Production readiness unifies testing, observability, security, deploy strategy, error budgets, DR drills, and operational docs so Java services survive real traffic—not just compile.
 
 ## Review Checklist
 
-- [x] Technical L2–3; go-live mechanism; checklist preserved
-- [x] SLO; runbooks; security; capacity
+- [x] Technical L2–3; go-live mechanism; checklist preserved; deepen pass 2026-11-11
+- [x] SLO; runbooks; security; capacity; error budget + DR drill added

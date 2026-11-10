@@ -127,6 +127,22 @@ Rate limits, pool exhaustion, GC under load still apply.
 
 ### Corrected — load test (Module 46); pool sizing; horizontal scale.
 
+### Externalized configuration flow
+
+```mermaid
+flowchart LR
+  Vault[Secret store] --> K8s[Secret/ConfigMap]
+  K8s --> Pod[Spring Boot pod]
+  Pod --> Env[Environment + optional file mount]
+  Env --> Bind[@ConfigurationProperties]
+```
+
+**Mechanism:** Boot reads `SPRING_APPLICATION_JSON`, env vars, and mounted files with documented precedence (Module 37). Cloud-native apps never bake DB passwords into the image layer.
+
+### Health and metrics export
+
+Expose Actuator on management port or restricted network path; scrape metrics from outside user-facing Ingress. **Incorrect:** same public URL for `/actuator/env` and business API.
+
 ## 10. Design Trade-offs
 
 | Modular monolith (Module 40) | Microservices |
@@ -143,12 +159,23 @@ Rate limits, pool exhaustion, GC under load still apply.
 - Why should JVM processes be stateless at the HTTP layer?
 - What is an immutable release in CD terms?
 
-## 12. Exercises
+## 12. Twelve-Factor Mapping for Spring Boot
+
+| Factor | Java practice |
+|--------|----------------|
+| III. Config | `application-{profile}.yml` + env override |
+| IV. Backing services | JDBC URL as attached resource via env |
+| IX. Disposability | SIGTERM graceful shutdown (Module 48) |
+| XII. Admin processes | One-off `java -jar app.jar migrate` Job, not SSH |
+
+**Anti-pattern:** baking `spring.profiles.active=prod` into the image—use orchestrator env per environment.
+
+## 13. Exercises
 
 1. List env vars for a Boot app (DB URL, profile, `JAVA_TOOL_OPTIONS`).
 2. Compare lift-and-shift vs cloud-native for a single WAR.
 
-## 13. Chapter Summary
+## 14. Chapter Summary
 
 Cloud-native Java emphasizes stateless Spring Boot services in containers, externalized config, managed backing services, and automation from Module 48—not monolithic VMs with manual releases.
 
@@ -159,4 +186,4 @@ Cloud-native Java emphasizes stateless Spring Boot services in containers, exter
 ## Review Checklist
 
 - [x] Technical L2–3; mechanism flows; 12-factor preserved
-- [x] Cloud-native + managed services; mistakes
+- [x] Cloud-native + managed services; mistakes; deepen pass 2026-11-11

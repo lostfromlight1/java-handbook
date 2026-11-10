@@ -3,7 +3,8 @@
 > **Status:** Completed  
 > **Module:** 37 — Spring Boot  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
 > **Depth target:** Level 3 (property resolution, profiles, `@ConfigurationProperties`, operational pitfalls)  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — configuration concepts align with [spring-boot-minimal](../../examples/backend/spring-boot-minimal/) (`server.port=18080` in `application.properties`)
 
@@ -132,7 +133,7 @@ Spring maps properties to constructor parameters **before** the bean is used. **
 | No structural validation by default | Records + `@Validated` give clear errors |
 | Harder to test | Easy to unit-test binding with `@EnableConfigurationProperties` tests |
 
-## 5. Property Source Precedence
+## 5. Mechanism and Execution Flow — Property Source Precedence
 
 Boot 2.4+ uses a **config data API** with a documented order. Simplified mental model for **overriding** (later / higher precedence wins in the merge):
 

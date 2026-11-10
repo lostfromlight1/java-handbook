@@ -1,15 +1,19 @@
 # Module 12 — Collections Framework
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed — 2026-11-10 (Temurin JDK 21.0.12.1)
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Collection Hierarchy | Not started |
-| 02 | Lists | Not started |
-| 03 | Sets and Queues | Not started |
-| 04 | Maps and Hashing | Not started |
-| 05 | Internals and Choosing Structures | Not started |
+| 01 | [Collection Hierarchy](01-collection-hierarchy.md) | Completed |
+| 02 | [Lists](02-lists.md) | Completed |
+| 03 | [Sets and Queues](03-sets-and-queues.md) | Completed |
+| 04 | [Maps and Hashing](04-maps-and-hashing.md) | Completed |
+| 05 | [Internals and Choosing Structures](05-internals-and-choosing-structures.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 03 (loops), 06 Ch.04 (`equals`/`hashCode`), 10 (generics preview), 11 (arrays vs resizable lists).
 
-**Assessment:** Created after all module chapters are Completed.
+**Examples:** `examples/core-java/{collections-hierarchy-demo,lists-demo,sets-queues-demo,maps-hashing-demo,collections-choice-demo}/`
+
+**Assessment:** [12-collections-framework-assessment.md](../assessments/module-assessments/12-collections-framework-assessment.md) · [solutions](../assessments/module-assessments/12-collections-framework-assessment-solutions.md)
+
+**Next module:** [13 — Generics](../13-generics/README.md)

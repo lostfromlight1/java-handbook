@@ -18,4 +18,4 @@ built=012
 
 Concepts: supplementary characters, `StandardCharsets.UTF_8`, `getBytes` / `new String(byte[])`.
 
-**Note:** Console must use UTF-8 to display `é` in `roundtrip=`; source uses `\u00e9`.
+**Note:** Source uses `\u00e9`; output reports equality as `roundtripOk` so consoles without UTF-8 still verify correctly.

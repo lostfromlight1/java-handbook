@@ -114,5 +114,15 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Code unit (UTF-16)** | 16-bit `char` value stored in a `String`; one code point may use one or two code units. | [Module 11 Ch.04](11-arrays-and-strings/04-encoding-and-string-performance.md) |
 | **Code point** | Unicode scalar value (U+XXXX); may span one or two UTF-16 code units in a `String`. | Module 11 Ch.04 |
 | **Charset** | Named mapping between sequences of bytes and characters; e.g. `UTF-8` for interchange. | Module 11 Ch.04 |
+| **Collection (framework)** | Standard `java.util` interfaces and implementations for grouped data (`List`, `Set`, `Map`, …). | [Module 12 Ch.01](12-collections-framework/01-collection-hierarchy.md) |
+| **List** | Ordered `Collection` with positional access, duplicates allowed (`get`, `add`, indexed insert). | Module 12 Ch.02 |
+| **ArrayList** | Default `List` backed by a growable array; O(1) random access, amortized tail append. | Module 12 Ch.02 |
+| **LinkedList** | Doubly-linked `List` and `Deque`; fast head/tail ops, slow indexed `get`. | Module 12 Ch.02 |
+| **Set** | `Collection` with no duplicate elements (uniqueness by `equals`). | [Module 12 Ch.03](12-collections-framework/03-sets-and-queues.md) |
+| **Queue** | Collection for producer–consumer handoff; typically FIFO (`offer`, `poll`, `peek`). | Module 12 Ch.03 |
+| **Deque** | Double-ended queue; add/remove at both ends (`ArrayDeque`, `LinkedList`). | Module 12 Ch.03 |
+| **Map** | Key-to-value associations; not a `Collection` of elements. | [Module 12 Ch.04](12-collections-framework/04-maps-and-hashing.md) |
+| **HashMap** | Hash table map; bucket index from `hashCode`, key match via `equals`. | Module 12 Ch.04 |
+| **Fail-fast iterator** | Iterator that throws `ConcurrentModificationException` on detected structural change during iteration. | [Module 12 Ch.05](12-collections-framework/05-internals-and-choosing-structures.md) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

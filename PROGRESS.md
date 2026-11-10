@@ -330,10 +330,36 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `encoding-perf-demo` | `chars=4`; `utf8Bytes=5`; `roundtripOk=true`; `built=012` |
 
 **Module 11 status:** Completed
-**Next recommended chapter:** [12-collections-framework/](12-collections-framework/) (lists, sets, maps)
+**Next recommended chapter:** Module 12 (Completed below)
 
 ---
 
-## Modules 12–53
+## Module 12 — Collections Framework
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-collection-hierarchy.md](12-collections-framework/01-collection-hierarchy.md) | Completed | Quality pass 2026-11-10 | Generics depth in M13 |
+| [02-lists.md](12-collections-framework/02-lists.md) | Completed | Quality pass 2026-11-10 | Concurrent lists in JUC modules |
+| [03-sets-and-queues.md](12-collections-framework/03-sets-and-queues.md) | Completed | Quality pass 2026-11-10 | `BlockingQueue` in concurrency track |
+| [04-maps-and-hashing.md](12-collections-framework/04-maps-and-hashing.md) | Completed | Quality pass 2026-11-10 | `ConcurrentHashMap` later |
+| [05-internals-and-choosing-structures.md](12-collections-framework/05-internals-and-choosing-structures.md) | Completed | Quality pass 2026-11-10 | External cache libs out of scope |
+| [Module assessment](assessments/module-assessments/12-collections-framework-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `collections-hierarchy-demo` | `collectionSize=2`; `listSize=2`; `setSize=2`; `containsY=true` |
+| `lists-demo` | `arrayList=[one, 1.5, two]`; `get1=1.5`; `linked=[head, tail]`; `poll=head`; `linkedAfter=[tail]` |
+| `sets-queues-demo` | `hashSize=2`; `linkedOrder=[b, a]`; `treeOrder=[a, b]`; `peek=1`; `poll=1`; `queue=[2]` |
+| `maps-hashing-demo` | `Ada=37`; `size=2`; `containsLin=true`; `keyedSize=1`; `keyedA=two` |
+| `collections-choice-demo` | `index2=3`; `kb=5`; `odds=[1, 3]` |
+
+**Module 12 status:** Completed
+**Next recommended chapter:** [13-generics/](13-generics/) (generic types, bounds, erasure)
+
+---
+
+## Modules 13–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Modules 19–23 completed)
+**Last updated:** 2026-11-10 (Modules 24–28 completed)
 
 ## Status values
 
@@ -599,10 +599,128 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `java-regex-api-demo` | `namedId=42`; `fullMatch=false` |
 
 **Module 23 status:** Completed  
-**Next recommended chapter:** [24-concurrency-and-multithreading/](24-concurrency-and-multithreading/) (index only; not started)
+**Next recommended chapter:** Module 24 (Completed below)
 
 ---
 
-## Modules 24–53
+## Module 24 — Concurrency and Multithreading
 
-Remaining modules: **Not started** (indexes only), except Modules 00–23 completed as tracked above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-threads-and-runnables.md](24-concurrency-and-multithreading/01-threads-and-runnables.md) | Completed | Quality pass 2026-11-10 | Structured concurrency preview detail in Module 19 |
+| [02-synchronization-and-atomics.md](24-concurrency-and-multithreading/02-synchronization-and-atomics.md) | Completed | Quality pass 2026-11-10 | `java.util.concurrent.locks` depth later |
+| [03-executors-and-futures.md](24-concurrency-and-multithreading/03-executors-and-futures.md) | Completed | Quality pass 2026-11-10 | `CompletableFuture` patterns in backend modules |
+| [04-concurrent-collections.md](24-concurrency-and-multithreading/04-concurrent-collections.md) | Completed | Quality pass 2026-11-10 | BlockingQueue hands-on in projects |
+| [05-virtual-threads-and-structured-concurrency.md](24-concurrency-and-multithreading/05-virtual-threads-and-structured-concurrency.md) | Completed | Quality pass 2026-11-10 | Carrier pinning ops tuning in production notes |
+| [Module assessment](assessments/module-assessments/24-concurrency-multithreading-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `threads-runnable-demo` | `mainThread=main`; `afterJoinAlive=false` |
+| `synchronization-atomics-demo` | `unsafeCounter=12188`; `atomicCounter=40000`; `syncCounter=40000` |
+| `executors-futures-demo` | `futureResult=42`; `poolShutdown=ok` |
+| `concurrent-collections-demo` | `Ada=2`; `Lin=2` |
+| `virtual-threads-demo` | `isVirtual=true`; `platformIsVirtual=false` |
+
+**Module 24 status:** Completed  
+**Next recommended chapter:** Module 25 (Completed below)
+
+---
+
+## Module 25 — Java Memory Model
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-stack-heap-and-references.md](25-java-memory-model/01-stack-heap-and-references.md) | Completed | Quality pass 2026-11-10 | Off-heap / FFM in advanced modules |
+| [02-happens-before-and-visibility.md](25-java-memory-model/02-happens-before-and-visibility.md) | Completed | Quality pass 2026-11-10 | `VarHandle` in advanced concurrency |
+| [03-safe-publication.md](25-java-memory-model/03-safe-publication.md) | Completed | Quality pass 2026-11-10 | — |
+| [Module assessment](assessments/module-assessments/25-java-memory-model-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `stack-heap-references-demo` | `sameRef=false`; `equalContent=true` |
+| `happens-before-demo` | `payload=42` |
+| `safe-publication-demo` | `finalFieldValue=99` |
+
+**Module 25 status:** Completed  
+**Next recommended chapter:** Module 26 (Completed below)
+
+---
+
+## Module 26 — JVM Internals
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-jvm-architecture.md](26-jvm-internals/01-jvm-architecture.md) | Completed | Quality pass 2026-11-10 | JPMS deep dive in module 30+ |
+| [02-class-loading-and-linking.md](26-jvm-internals/02-class-loading-and-linking.md) | Completed | Quality pass 2026-11-10 | Custom class loaders in framework modules |
+| [03-bytecode-and-execution.md](26-jvm-internals/03-bytecode-and-execution.md) | Completed | Quality pass 2026-11-10 | ASM/bytebuddy in advanced tooling |
+| [04-runtime-data-areas.md](26-jvm-internals/04-runtime-data-areas.md) | Completed | Quality pass 2026-11-10 | — |
+| [05-diagnostics-and-agents.md](26-jvm-internals/05-diagnostics-and-agents.md) | Completed | Quality pass 2026-11-10 | Full JFR lab exercises later |
+| [Module assessment](assessments/module-assessments/26-jvm-internals-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `jvm-architecture-demo` | `javaVersion=21`; `jvmName=OpenJDK 64-Bit Server VM` |
+| `class-loading-demo` | `stringLoader=null`; `demoLoaded=true` |
+| `bytecode-demo` | `sum=42`; `javap` output recorded in Ch.03 |
+| `runtime-data-areas-demo` | `stackDepth=100` |
+| `diagnostics-demo` | `threadCount=7`; `threadsListed=7` |
+
+**Module 26 status:** Completed  
+**Next recommended chapter:** Module 27 (Completed below)
+
+---
+
+## Module 27 — Garbage Collection
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-gc-fundamentals.md](27-garbage-collection/01-gc-fundamentals.md) | Completed | Quality pass 2026-11-10 | Unified logging cookbook |
+| [02-collectors-g1-zgc-shenandoah.md](27-garbage-collection/02-collectors-g1-zgc-shenandoah.md) | Completed | Quality pass 2026-11-10 | Compare ZGC vs G1 with measured logs |
+| [03-tuning-and-memory-leaks.md](27-garbage-collection/03-tuning-and-memory-leaks.md) | Completed | Quality pass 2026-11-10 | Heap dump walkthrough |
+| [Module assessment](assessments/module-assessments/27-garbage-collection-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `gc-fundamentals-demo` | `gcBeanCount=3`; G1 collector MXBean names |
+| `collectors-overview-demo` | `vmVendor=Eclipse Adoptium`; `UseG1GC=true` flag verified |
+| `memory-leak-pattern-demo` | `leakListAfter=1`; `reachable=true` |
+
+**Module 27 status:** Completed  
+**Next recommended chapter:** Module 28 (Completed below)
+
+---
+
+## Module 28 — JIT and Performance
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-hotspot-and-tiered-compilation.md](28-jit-and-performance/01-hotspot-and-tiered-compilation.md) | Completed | Quality pass 2026-11-10 | `PrintCompilation` walkthrough optional |
+| [02-jmh-and-benchmarking.md](28-jit-and-performance/02-jmh-and-benchmarking.md) | Completed | Quality pass 2026-11-10 | Runnable JMH sample in build module |
+| [03-profiling.md](28-jit-and-performance/03-profiling.md) | Completed | Quality pass 2026-11-10 | JFR event catalog |
+| [Module assessment](assessments/module-assessments/28-jit-performance-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `tiered-compilation-demo` | `result=124750`; `elapsedMs=6` (machine-specific) |
+| `jmh-awareness-demo` | `warmedSample=1806` |
+| `profiling-awareness-demo` | `cpuTimeSupported=true` |
+
+**Module 28 status:** Completed  
+**Next recommended chapter:** [29-build-tools-and-dependency-management/](29-build-tools-and-dependency-management/) (index only; not started)
+
+---
+
+## Modules 29–53
+
+Remaining modules: **Not started** (indexes only), except Modules 00–28 completed as tracked above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

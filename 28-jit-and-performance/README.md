@@ -1,13 +1,13 @@
 # Module 28 — JIT and Performance
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | HotSpot and Tiered Compilation | Not started |
-| 02 | JMH and Benchmarking | Not started |
-| 03 | Profiling | Not started |
+| 01 | [HotSpot and Tiered Compilation](01-hotspot-and-tiered-compilation.md) | Completed |
+| 02 | [JMH and Benchmarking](02-jmh-and-benchmarking.md) | Completed |
+| 03 | [Profiling](03-profiling.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 26–27.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [28-jit-performance-assessment.md](../assessments/module-assessments/28-jit-performance-assessment.md)

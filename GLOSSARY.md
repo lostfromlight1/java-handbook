@@ -168,5 +168,30 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Pattern** | Compiled, immutable regular expression (`java.util.regex.Pattern`). | [Module 23 Ch.02](23-regular-expressions/02-java-regex-api.md) |
 | **Matcher** | Stateful regex engine for a `Pattern` against an input `CharSequence`. | Module 23 Ch.02 |
 | **ReDoS** | Regular expression denial of service via catastrophic backtracking on crafted input. | Module 23 Ch.02 |
+| **Runnable** | Functional interface with `run()`; task body executed on a thread. | [Module 24 Ch.01](24-concurrency-and-multithreading/01-threads-and-runnables.md) |
+| **Platform thread** | `Thread` backed by an OS thread; traditional Java concurrency unit. | Module 24 Ch.01 |
+| **Data race** | Concurrent unsynchronized conflicting accesses to the same variable (JLS). | [Module 24 Ch.02](24-concurrency-and-multithreading/02-synchronization-and-atomics.md) |
+| **Monitor (intrinsic lock)** | Lock associated with an object; entered by `synchronized`. | Module 24 Ch.02 |
+| **Atomic variable** | `java.util.concurrent.atomic` type updated with hardware CAS loops. | Module 24 Ch.02 |
+| **ExecutorService** | Task execution engine managing thread lifecycle and submission queue. | [Module 24 Ch.03](24-concurrency-and-multithreading/03-executors-and-futures.md) |
+| **Future** | Handle to a pending result of an asynchronous computation. | Module 24 Ch.03 |
+| **ConcurrentHashMap** | Thread-safe hash map with segmented/concurrent internal structure. | [Module 24 Ch.04](24-concurrency-and-multithreading/04-concurrent-collections.md) |
+| **Carrier thread** | HotSpot platform thread that mounts a virtual thread (implementation term). | [Module 24 Ch.05](24-concurrency-and-multithreading/05-virtual-threads-and-structured-concurrency.md) |
+| **Java Memory Model (JMM)** | JLS rules defining happens-before and visibility across threads. | [Module 25 Ch.02](25-java-memory-model/02-happens-before-and-visibility.md) |
+| **Happens-before** | Partial order; if a hb b, then a’s effects are visible to b (JLS §17.4). | Module 25 Ch.02 |
+| **Volatile variable** | Field whose reads/writes participate in happens-before ordering. | Module 25 Ch.02 |
+| **Safe publication** | Publishing a reference so other threads see fully constructed object state. | [Module 25 Ch.03](25-java-memory-model/03-safe-publication.md) |
+| **Class loading** | Finding bytecode and defining a `Class` object in the JVM. | [Module 26 Ch.02](26-jvm-internals/02-class-loading-and-linking.md) |
+| **Bootstrap class loader** | Core JDK classes; represented as `null` `ClassLoader` in the API. | Module 26 Ch.02 |
+| **Bytecode** | JVMS instruction set executed by the JVM (stack machine). | [Module 26 Ch.03](26-jvm-internals/03-bytecode-and-execution.md) |
+| **Metaspace** | HotSpot region holding class metadata (replaces PermGen). | Module 26 Ch.04 |
+| **JMX** | Java Management Extensions; MXBeans expose JVM metrics. | [Module 26 Ch.05](26-jvm-internals/05-diagnostics-and-agents.md) |
+| **Reachability** | Object is collectible when no GC root path references it. | [Module 27 Ch.01](27-garbage-collection/01-gc-fundamentals.md) |
+| **G1 GC** | Regional, generational collector; default on many HotSpot Java 21 builds. | [Module 27 Ch.02](27-garbage-collection/02-collectors-g1-zgc-shenandoah.md) |
+| **ZGC** | Low-latency regional collector (`-XX:+UseZGC` on supported builds). | Module 27 Ch.02 |
+| **Memory leak (Java)** | Unintended strong references keeping objects reachable. | [Module 27 Ch.03](27-garbage-collection/03-tuning-and-memory-leaks.md) |
+| **JIT compilation** | HotSpot runtime compilation of hot bytecode to native code. | [Module 28 Ch.01](28-jit-and-performance/01-hotspot-and-tiered-compilation.md) |
+| **Tiered compilation** | HotSpot policy mixing interpreter, C1, and C2 compilers. | Module 28 Ch.01 |
+| **JMH** | Java Microbenchmark Harness for controlled microbenchmarks. | [Module 28 Ch.02](28-jit-and-performance/02-jmh-and-benchmarking.md) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 13 — Generics  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical
+> **Depth target:** Level 3 (PECS in APIs, type tokens, bounded utilities)
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -79,7 +95,27 @@ Do not slap `? extends Object` on everything—it defeats useful **`add`** on th
 
 Returning **`List<T>`** from a getter while exposing internal **`ArrayList<T>`** lets callers mutate your state. Return **`List.copyOf(backing)`** or **unmodifiable** views—type argument preserved.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### 5.1 Method signature vs caller inference
+
+Public utilities like **`Optional<T> findById(List<T>, Predicate<T>)`**:
+
+1. Call site type-checks **`Predicate`** against **`T`**.
+2. Erasure still uses **`Object`**/`Predicate` raw at bytecode—casts inserted at boundaries.
+3. **`GenericsApiDemo`** **`found=Ada`** shows inferred **`T=String`** for domain list.
+
+### 5.2 PECS at API boundaries
+
+- **Return / read paths** expose **`? extends T`** (covariant producers).
+- **Input / sink parameters** accept **`? super T`** when appending to caller lists.
+- Mixing both in one parameter list without generics helper methods causes capture errors—design APIs to one role per parameter.
+
+### 5.3 Type tokens when erasure leaves gaps
+
+When runtime needs **`Class<T>`** or **`TypeReference`**, caller passes **explicit token**—compiler cannot recover `T` alone at runtime (Ch.03).
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -89,7 +125,7 @@ Returning **`List<T>`** from a getter while exposing internal **`ArrayList<T>`**
 | **Type token** | `Class<T>` or reflective `Type` carrying erased argument |
 | **Facade** | Simplified API hiding generic-heavy internals |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 // Good — concrete, stable API
@@ -109,14 +145,13 @@ List<? extends Payment> recentPayments() { }
 
 **Record generic types** — `record Pair<A,B>(A first, B second)` generate accessors with type parameters preserved.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — `GenericsApiDemo`
+### 8.1 Minimal — `GenericsApiDemo`
 
 Path: [examples/core-java/generics-api-demo/](../examples/core-java/generics-api-demo/)
 
-**Verified output:**
-
+**Verified output (Temurin 21.0.12.1):**
 ```text
 found=Ada
 missing=false
@@ -127,7 +162,7 @@ count=1
 - **`find("1").map(User::name)`** — **`Optional`** chain without casting.
 - **`missing=false`** — `Optional.isPresent()` for absent key `"9"`.
 
-### 7.2 Realistic — layered DTO
+### 8.2 Realistic — layered DTO
 
 ```java
 public record Page<T>(List<T> items, int total) {
@@ -139,7 +174,7 @@ public record Page<T>(List<T> items, int total) {
 
 Callers receive **`Page<Order>`** with immutable **`List<Order>`**.
 
-### 7.3 Advanced — passing type token for erasure gap
+### 8.3 Advanced — passing type token for erasure gap
 
 ```java
 static <T> T parse(String json, Class<T> type) {
@@ -149,25 +184,25 @@ static <T> T parse(String json, Class<T> type) {
 
 Use library **`Type`** when `T` is **`List<User>`**, not merely **`User`**.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Spring Data `JpaRepository<T, ID>`** — CRUD surface parameterized by entity.
 - **`java.util` collections** — factories `List.of`, maps `ConcurrentHashMap<K,V>`.
 - **`Stream<T>`** — entire pipeline typed to element type.
 - **Reactive APIs** — `Flux<T>` / `Mono<T>` (frameworks) carry element type through operators.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 Callers compile against **generic signatures**; shipped **`.class`** files carry **Signature** attributes for reflection (`Signature` is not the same as reification—arguments appear in metadata but bytecode bodies remain erased).
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Wildcard capture** in public APIs—prefer **named type parameters** when callers must supply values back into your structures.
 - **Self-bounded generics** (`Enum<E extends Enum<E>>`) in framework enums—copy pattern, do not invent ad hoc.
 - **`Optional<?>`** — rarely useful; loses compile-time map operations.
 - **Binary compatibility** — changing type parameters on public classes can break source (not always binary) clients—semver carefully.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — raw repository map in public getter
 
@@ -193,7 +228,7 @@ Callers cannot pass result to another method expecting `List<User>` without fric
 
 Return `List<T>` copy or immutable interface with clear Javadoc.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Parameterize **both** keys and values on maps in domain code: **`Map<String, OrderLine>`**.
 - Use **`Optional<T>`** for “maybe absent” lookups; not for collections, not for fields.
@@ -201,7 +236,7 @@ Return `List<T>` copy or immutable interface with clear Javadoc.
 - Match Module 12 guidance: **interface type + generics** on signatures, concrete class at **`new`**.
 - Re-read **PECS** when a method accepts **two** collections (source vs destination).
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -210,29 +245,29 @@ Return `List<T>` copy or immutable interface with clear Javadoc.
 | Wildcard parameters | Flexible call sites | Harder for callers to reuse returned values |
 | `Class<T>` parameter | Runtime type for `T` | Callers must supply token; easy to get wrong |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Generics do not dictate algorithmic cost; **`HashMap`** lookups remain O(1) average. **`Optional`** adds object allocation when present—acceptable for lookups; avoid in tight numeric loops.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Typed APIs do not sanitize data. **`Repository<Object>`** accepting any deserialized type is dangerous—bind **`T`** to known entity types and validate inbound maps at trust boundaries.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 **`Optional`** since Java 8. **`record`** generic declarations since Java 16. **`Map.copyOf`** since Java 10. **Java 21** path unchanged for patterns here.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Go uses **generics** (1.18+) with constraints; Java’s **wildcards** remain more prominent at API edges. Rust **monomorphization** compiles per `T`; Java shares one bytecode.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** using **`Optional`** as fields; exposing **`ArrayList`** through getters.
 - **You should answer:** Why `missing=false` for id `"9"` in `GenericsApiDemo`?
 - **Advanced:** design **`Cache<K,V>`** with `get`/`put` and PECS on bulk import methods.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -248,13 +283,13 @@ Go uses **generics** (1.18+) with constraints; Java’s **wildcards** remain mor
 
 5. Add `void importAll(Collection<? extends T> incoming)` to `Repository`—why is `extends` correct?
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. How do you expose a typed in-memory store without raw types?
 2. Why not return `null` instead of `Optional<T>`?
 3. PECS example on a method that copies into an existing list parameter.
 
-## 21. Solutions
+## 22. Solutions
 
 1. `Ada`; `1`.
 2. `return store.remove(id) != null;`
@@ -262,28 +297,52 @@ Go uses **generics** (1.18+) with constraints; Java’s **wildcards** remain mor
 4. Interface documents contract; generic repo is reusable teaching pattern—real apps may split per aggregate.
 5. Method only **reads** from `incoming` — producer **`extends T`**.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Generic API design** carries type arguments through **classes**, **methods**, **maps**, and **optionals** so callers never guess casts. **`Repository<T>`** with **`Optional<T>`** lookups models persistence-style services; **`GenericsApiDemo`** verifies naming and presence checks. Combine **Module 12** collection types, **PECS** at boundaries, and **erasure-aware** patterns (`Class<T>`, copies, no raw exports) for maintainable libraries.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Repository pattern · `Optional<T>` · defensive copy · type token · PECS · type-safe API
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - Effective Java, 3rd ed. — Items 29–33 (generics and collections APIs)
 - [Java SE `Optional`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html)
 - [Module 12 Ch.04 — `Map<K,V>`](../12-collections-framework/04-maps-and-hashing.md)
 - [Ch.02 — bounds and wildcards](02-bounds-and-wildcards.md)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [Module 14 — Exceptions and Error Handling](../14-exceptions-and-error-handling/README.md) — typed failures at API boundaries
 - Concurrency modules — generic concurrent collections later
 
 ## Review Checklist
 
-- [x] API patterns, Optional, Map, PECS integration
-- [x] `GenericsApiDemo` verified; M12 `HashMap` tie-in
-- [x] Depth gate, exercises, references
+**Mandatory Depth Review:** Technical profile; generic repository-style APIs at **Level 3**.
+
+- [x] Learning objectives covered
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **Framework-specific DAO templates** — deferred to persistence modules.
+
+**Verification note:** `GenericsApiDemo` (`found=Ada`; `missing=false`; `count=1`) on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

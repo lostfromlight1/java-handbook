@@ -1,6 +1,7 @@
 # Module 13 — Generics
 
-**Status:** Completed — 2026-11-10 (Temurin JDK 21.0.12.1)
+**Status:** Completed (2026-11-11)  
+**Standards alignment:** 2026-11-11 pass — Technical profile **L3**; Ch.02–03 **Deep-dive L3–4** (wildcards, erasure), §5 Mechanism and Execution Flow, master checklist + verification labels, demos re-verified on **Temurin JDK 21.0.12.1**.
 
 | # | Chapter | Status |
 |---|---------|--------|

@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 13 — Generics  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive
+> **Depth target:** Levels 3–4 (bounds, wildcards, PECS, capture)
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -91,7 +107,31 @@ The compiler does not know whether the list is `List<Integer>`, `List<Double>`, 
 
 Inside `copy`, the type of elements read from `src` is a **captured** unknown subtype of `T`. The enhanced `for` binds `T item` because the **method** declares `<T>` and ties `src`’s extends bound to `T`. Without the method type parameter, `dest.add(item)` would not type-check—this is **wildcard capture** ([JLS capture conversion](https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html#jls-5.1.10)).
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+Wildcards are resolved in **`javac`** with **capture conversion**—runtime still sees erased bounds.
+
+### 5.1 Upper bound read (`? extends Number`)
+
+For `double sum(List<? extends Number> nums)`:
+
+1. Compiler treats elements as **read-only `Number`** (except `null`).
+2. **`nums.add(1)`** is rejected—could break caller's `List<Integer>`.
+3. Loop in **`GenericsBoundsDemo`** reads and widens to **`double`** safely.
+
+### 5.2 Lower bound write (`? super Integer`)
+
+For `void copy(List<? super Integer> dest, List<Integer> src)`:
+
+1. **`dest.add`** accepts **`Integer`** (and supertypes' slots).
+2. Reading from `dest` without bound yields **`Object`**—capture limits known element type.
+3. PECS: **Producer `extends`, Consumer `super`.**
+
+### 5.3 Capture conversion (Level 4)
+
+When a wildcard appears in a method body, the compiler may introduce a **fresh type variable** so multiple reads share a consistent upper bound—explains why two `? extends T` parameters are not always interchangeable without helper generics.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -102,7 +142,7 @@ Inside `copy`, the type of elements read from `src` is a **captured** unknown su
 | **PECS** | Producer **extends**, Consumer **super** |
 | **Wildcard capture** | Compiler introducing fresh type variables to type-check wildcard bodies |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 // Bounded type parameter
@@ -120,9 +160,9 @@ void fill(List<? super Integer> sink) { }
 
 **`get`** from `List<? extends T>` yields **`T`**. **`add`** to `List<? super T>` accepts **`T`** (and supertypes of `T` where applicable).
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — `GenericsBoundsDemo`
+### 8.1 Minimal — `GenericsBoundsDemo`
 
 Path: [examples/core-java/generics-bounds-demo/](../examples/core-java/generics-bounds-demo/)
 
@@ -138,8 +178,7 @@ List<? extends Number> producer = ints;
 System.out.println("producer0=" + producer.get(0));
 ```
 
-**Verified output:**
-
+**Verified output (Temurin 21.0.12.1):**
 ```text
 sum=6.0
 nums=[1, 2, 3]
@@ -150,7 +189,7 @@ producer0=1
 - **`copy`** is the textbook **PECS** pair: `? extends T` / `? super T`.
 - **`producer`** assignment shows **covariant read** position without widening `ints` to `List<Number>`.
 
-### 7.2 Realistic — `Collections.addAll` shape
+### 8.2 Realistic — `Collections.addAll` shape
 
 ```java
 public static <T> boolean addAll(Collection<? super T> c, T... elements) {
@@ -166,7 +205,7 @@ public static <T> boolean addAll(Collection<? super T> c, T... elements) {
 
 The collection **consumes** `T`; varargs **produce** concrete `T` instances.
 
-### 7.3 Advanced — `Comparator` contravariance
+### 8.3 Advanced — `Comparator` contravariance
 
 ```java
 Comparator<Object> cmp = (a, b) -> a.toString().compareTo(b.toString());
@@ -176,25 +215,25 @@ names.sort(cmp);  // Comparator<? super String> accepts Comparator<Object>
 
 **Comparator** is **contravariant** on its type parameter: you may pass a comparator that compares **wider** types.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Bulk APIs** — `addAll`, `containsAll`, `retainAll` on `Collection<? extends E>`.
 - **Stream pipelines** — `Stream<? extends Number>` mapped to `double` statistics.
 - **Copy-on-write** — copying DTO lists between layers with different declared element supertypes.
 - **Guava / JDK** — `Function<? super T, ? extends R>` in `map` operations.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 Wildcards exist only in **type-checking**; erasure replaces them with bounds (Ch.03). The compiler inserts **capture conversions** so bodies type-check as if they used fresh type variables. **Spec** (JLS) defines assignability; **javac** implements capture in attribution.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **`List<?>`** cannot receive `add` of arbitrary objects (except `null`).
 - **Neither extends nor super** on both parameters for the same `T` in naive APIs—pick read vs write role per parameter.
 - **Arrays** still covariant—do not confuse `Number[] x = new Integer[3]` with generic lists.
 - **Recursive bounds** — `static <T extends Comparable<T>> T max(T a, T b)` requires a total order compatible with `T`.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — `List<Number>` for “any number list”
 
@@ -225,14 +264,14 @@ void goodDest(List<? super String> dest) {
 }
 ```
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Apply **PECS** when designing **public** methods over collections.
 - Use **bounded type parameters** when a single coherent type `T` must flow through multiple parameters.
 - Prefer **`List.copyOf`** / **`List.of`** for immutable snapshots after transformations.
 - In APIs that both read and write the same `T`, declare **`<T>`** with unbounded or bounded `T`, not wildcards on both sides unless roles differ (src/dst).
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -241,29 +280,29 @@ void goodDest(List<? super String> dest) {
 | `List<? super T>` | Flexible sinks | `get` returns `Object` or bound |
 | Bounded `<T extends X>` | Call methods on `X` inside body | Callers must match bound |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Wildcards do not add runtime dispatch. Enhanced `for` over lists still uses **Iterator**; choosing structure (`ArrayList` vs `LinkedList`) dominates (Module 12 Ch.05).
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Accepting **`List<?>`** from untrusted code and reflecting on elements still runs your handlers on **Object** references—validate before privileged operations. PECS does not sanitize content.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Wildcards and bounds since **Java 5**; rules stable in **Java 21**.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Kotlin **declaration-site variance** (`out T`, `in T`) contrasts with Java’s **use-site** wildcards. Scala has **variance annotations** on type parameters at declaration. Java chose wildcards for JDK binary compatibility.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** memorizing **extends/super** without producer/consumer story; reversing PECS.
 - **You should answer:** Why does `copy` compile for `List<Integer>` → `List<Number>`?
 - **Advanced:** `Enum<E extends Enum<E>>`; typing `Class<? extends Enum<?>>`.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -279,13 +318,13 @@ Kotlin **declaration-site variance** (`out T`, `in T`) contrasts with Java’s *
 
 5. Sketch capture conversion for `copy` as a fresh type variable `CAP#1`.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. State **PECS** and give a collections example.
 2. Difference between `<T extends Number>` and `List<? extends Number>`?
 3. Why is `Comparator<? super T>` the right bound for `List.sort`?
 
-## 21. Solutions
+## 22. Solutions
 
 1. `6.0`; `[1, 2, 3]`.
 2. Loop, track best via `Comparable.compareTo`.
@@ -293,28 +332,51 @@ Kotlin **declaration-site variance** (`out T`, `in T`) contrasts with Java’s *
 4. Single `T` throughout source list; callers pass `List<User>` etc.
 5. Compiler treats `src` as `List<? extends CAP#1>` where `CAP#1 extends T`, enabling `dest.add` with type `T`.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Bounds** constrain type parameters; **wildcards** loosen parameter types using **upper** and **lower** bounds at the use site. **PECS** maps **read** paths to **`? extends T`** and **write** paths to **`? super T`**, unlocking Module 12 **`List<Integer>`** and **`List<Number>`** interop in utilities like **`GenericsBoundsDemo`**. **Wildcard capture** ties the loop variable to the destination’s super bound. Next: **erasure** and language restrictions.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Upper bound · lower bound · wildcard · PECS · producer · consumer · capture conversion
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS 4.5 — Parameterized types](https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html#jls-4.5)
 - Effective Java, 3rd ed. — Item 31 (PECS)
 - [Module 10 Ch.03 — preview](../10-java-type-system/03-variance-wildcards-and-erasure-preview.md)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [03-type-erasure-and-restrictions.md](03-type-erasure-and-restrictions.md) — runtime reality and compiler restrictions
 - [04-generic-api-design.md](04-generic-api-design.md) — applying PECS in public APIs
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Deep-dive profile; wildcard capture and PECS at **Level 4** where APIs mix producers and consumers.
+
 - [x] Learning objectives covered
-- [x] Deep PECS + capture; `GenericsBoundsDemo` verified
-- [x] M10 preview deepened; M12 `copy`/`sum` patterns
-- [x] Depth gate, exercises, references
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **Declaration-site variance (Kotlin `out`/`in`)** — comparison only in §17.
+
+**Verification note:** `GenericsBoundsDemo` (`sum=6.0`; `nums=[1, 2, 3]`; `producer0=1`) on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

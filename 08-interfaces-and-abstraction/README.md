@@ -1,25 +1,21 @@
 # Module 08 — Interfaces and Abstraction
 
-**Status:** Completed (2026-11-10)
+**Status:** Completed (all chapters + module assessment)
 
-| # | Chapter | Status |
-|---|---------|--------|
-| 01 | [Interface Fundamentals](01-interface-fundamentals.md) | Completed |
-| 02 | [Default, Static, and Private Methods](02-default-static-and-private-methods.md) | Completed |
-| 03 | [Functional and Marker Interfaces](03-functional-and-marker-interfaces.md) | Completed |
-| 04 | [API Design with Interfaces](04-api-design-with-interfaces.md) | Completed |
+| # | Chapter | Profile | Depth | Status |
+|---|---------|---------|-------|--------|
+| 01 | [Interface Fundamentals](01-interface-fundamentals.md) | Technical | Levels 2–3 | Completed |
+| 02 | [Default, Static, and Private Methods](02-default-static-and-private-methods.md) | Technical | Levels 2–3 | Completed |
+| 03 | [Functional and Marker Interfaces](03-functional-and-marker-interfaces.md) | Technical | Levels 2–3 | Completed |
+| 04 | [API Design with Interfaces](04-api-design-with-interfaces.md) | Technical | Levels 2–3 | Completed |
 
-**Prerequisites:** Module 07 (inheritance, abstract classes, dynamic dispatch).
+**Prerequisites:** [Module 07](../07-inheritance-and-polymorphism/README.md) (inheritance, abstract classes, dynamic dispatch).
 
-**Examples (Temurin JDK 21.0.12.1):**
+**Verification:** Chapter examples labeled **Verified** against **Temurin JDK 21.0.12.1** (standards-alignment pass 2026-11-11).
 
-| Demo | Chapter |
-|------|---------|
-| [interfaces-fundamentals-demo](../examples/core-java/interfaces-fundamentals-demo/) | 01 |
-| [interface-methods-demo](../examples/core-java/interface-methods-demo/) | 02 |
-| [functional-marker-demo](../examples/core-java/functional-marker-demo/) | 03 |
-| [api-interfaces-demo](../examples/core-java/api-interfaces-demo/) | 04 |
+**Examples:** `interfaces-fundamentals-demo`, `interface-methods-demo`, `functional-marker-demo`, `api-interfaces-demo` in [examples/core-java/](../examples/core-java/)
 
-**Assessment:** [08-interfaces-and-abstraction-assessment.md](../assessments/module-assessments/08-interfaces-and-abstraction-assessment.md)
+**Assessment:** [08-interfaces-and-abstraction-assessment.md](../assessments/module-assessments/08-interfaces-and-abstraction-assessment.md)  
+**Solutions:** separate solutions file alongside assessment.
 
-**Next recommended module:** [10-java-type-system](../10-java-type-system/README.md) — after [09-encapsulation-and-design](../09-encapsulation-and-design/README.md) (completed)
+**Next recommended module:** [09-encapsulation-and-design](../09-encapsulation-and-design/README.md) — then [10-java-type-system](../10-java-type-system/README.md)

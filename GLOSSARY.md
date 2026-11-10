@@ -220,5 +220,54 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **EntityManager** | JPA interface for persistence operations (`persist`, `find`, `merge`). | Module 35 Ch.01 |
 | **LazyInitializationException** | Error accessing uninitialized lazy association outside an active persistence context. | [Module 35 Ch.02](35-hibernate-and-jpa/02-relationships-and-fetching.md) |
 | **Persistence context** | First-level cache of managed entities scoped to an `EntityManager` session. | [Module 35 Ch.03](35-hibernate-and-jpa/03-transactions-caching-and-performance.md) |
+| **Inversion of Control (IoC)** | Object-graph and lifecycle decisions moved to a container or composition root instead of each class calling `new`. | [Module 36 Ch.01](36-spring-framework/01-ioc-and-dependency-injection.md) |
+| **Dependency Injection (DI)** | Collaborators supplied from outside, usually via constructor, rather than created inside the consumer. | Module 36 Ch.01 |
+| **Bean (Spring)** | Object instance managed by the Spring `ApplicationContext` with defined scope and lifecycle. | Module 36 Ch.01 |
+| **Aspect-Oriented Programming (AOP)** | Modularizing cross-cutting behavior (logging, transactions) via advice on join points, often through proxies. | [Module 36 Ch.02](36-spring-framework/02-bean-lifecycle-and-aop.md) |
+| **Autoconfiguration** | Spring Boot conditional `@Configuration` activated from classpath to register default beans. | [Module 37 Ch.01](37-spring-boot/01-spring-boot-fundamentals.md) |
+| **Spring profile** | Named configuration slice (`dev`, `prod`) selecting beans and property files. | [Module 37 Ch.02](37-spring-boot/02-configuration-and-profiles.md) |
+| **DTO (Data Transfer Object)** | Type shaping an API or boundary contract, separate from persistence entities. | [Module 38 Ch.02](38-rest-api-development/02-dtos-errors-and-versioning.md) |
+| **ProblemDetail** | RFC 7807-style structured HTTP error payload (`title`, `status`, `detail`, …). | Module 38 Ch.02 |
+| **OpenAPI** | Machine-readable HTTP API description (paths, schemas, operations) for docs and contract tests. | [Module 38 Ch.03](38-rest-api-development/03-openapi-and-api-testing.md) |
+| **Authentication (AuthN)** | Verifying who the caller is. | [Module 39 Ch.01](39-authentication-and-authorization/01-authentication-and-authorization-basics.md) |
+| **Authorization (AuthZ)** | Deciding whether an authenticated caller may perform an action on a resource. | Module 39 Ch.01 |
+| **JWT (JSON Web Token)** | Signed (optionally encrypted) token with claims; integrity from signature verification. | [Module 39 Ch.02](39-authentication-and-authorization/02-sessions-jwt-and-oauth.md) |
+| **OAuth 2.0** | Authorization framework issuing access tokens via flows such as authorization code + PKCE. | Module 39 Ch.02 |
+| **Hexagonal architecture** | Ports (interfaces) in the core; adapters (HTTP, JPA) plug in from outside. | [Module 40 Ch.01](40-backend-architecture/01-layered-and-hexagonal-architecture.md) |
+| **Bounded context** | DDD boundary where a domain model and ubiquitous language are consistent. | [Module 40 Ch.02](40-backend-architecture/02-ddd-basics.md) |
+| **Aggregate root** | Single entry point for consistency changes inside an aggregate cluster. | Module 40 Ch.02 |
+| **Modular monolith** | One deployable with enforced internal module boundaries. | [Module 40 Ch.03](40-backend-architecture/03-modular-monolith-versus-microservices.md) |
+| **SOLID** | Five OOP design principles (SRP, OCP, LSP, ISP, DIP). | [Module 41 Ch.01](41-design-patterns/01-solid-and-principles.md) |
+| **Anti-pattern** | Common structural response that creates more problems than it solves. | [Module 42 Ch.03](42-clean-code-and-solid/03-anti-patterns.md) |
+| **OWASP Top 10** | Catalog of prevalent application security risk categories with mitigation focus. | [Module 43 Ch.01](43-security/01-secure-coding-and-owasp.md) |
+| **PBKDF2** | Password-based key derivation function; slow hashing with salt for stored passwords. | [Module 43 Ch.02](43-security/02-crypto-tls-and-secrets.md) |
+| **SAST** | Static application security testing—source/b bytecode analysis without full execution. | [Module 43 Ch.03](43-security/03-security-testing.md) |
+| **CAP theorem** | During a partition, distributed systems trade off availability vs strong consistency. | [Module 44 Ch.01](44-microservices-and-distributed-systems/01-distributed-fundamentals.md) |
+| **Saga** | Multi-step workflow of local transactions with compensations instead of global 2PC. | [Module 44 Ch.03](44-microservices-and-distributed-systems/03-consistency-and-sagas.md) |
+| **Bulkhead** | Resource isolation pattern limiting blast radius of slow or failing dependencies. | [Module 44 Ch.02](44-microservices-and-distributed-systems/02-resilience-patterns.md) |
+| **Transactional outbox** | Store outbound events in the same DB transaction as domain data; relay publishes later. | [Module 45 Ch.03](45-messaging-and-event-driven-systems/03-delivery-guarantees-and-outbox.md) |
+| **At-least-once delivery** | Messages may duplicate but are not silently dropped; consumers must be idempotent. | Module 45 Ch.03 |
+| **Cache-aside** | Application loads cache on miss from authoritative store; app controls fill/evict. | [Module 46 Ch.01](46-caching-and-performance/01-caching-strategies.md) |
+| **Thundering herd** | Many concurrent cache misses hammering the backing store on hot keys. | Module 46 Ch.01 |
+| **SLI** | Service level indicator—a measured reliability/latency signal for an experience. | [Module 47 Ch.03](47-observability-and-monitoring/03-slos-and-incidents.md) |
+| **SLO** | Service level objective—a target value for an SLI over a time window. | Module 47 Ch.03 |
+| **Error budget** | Allowed unreliability derived from SLO; guides release vs reliability investment. | Module 47 Ch.03 |
+| **OpenTelemetry (OTel)** | Vendor-neutral APIs and OTLP export for traces, metrics, and logs. | [Module 47 Ch.02](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) |
+| **Structured logging** | Logs as parseable fields (JSON or key=value) for search and correlation. | [Module 47 Ch.01](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) |
+| **OCI container image** | Layered, immutable filesystem template used to run isolated JVM processes. | [Module 48 Ch.01](48-devops-and-deployment/01-containers-and-the-jvm.md) |
+| **Continuous Delivery (CD)** | Pipeline keeps artifacts deployable; promotion may still be manual. | [Module 48 Ch.02](48-devops-and-deployment/02-ci-cd.md) |
+| **Rolling deployment** | Gradually replaces old application instances with new ones. | [Module 48 Ch.03](48-devops-and-deployment/03-deployment-strategies.md) |
+| **Blue/green deployment** | Two environments; traffic switches wholesale between versions. | Module 48 Ch.03 |
+| **Canary deployment** | Sends a small traffic share to a new version before full rollout. | Module 48 Ch.03 |
+| **Twelve-factor app** | Heroku-style cloud app principles (config, logs, stateless processes, …). | [Module 49 Ch.01](49-cloud-and-containerization/01-cloud-native-java.md) |
+| **Kubernetes Deployment** | Declarative desired state for replicated Pods and rolling updates. | [Module 49 Ch.02](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) |
+| **Native Image (GraalVM)** | Ahead-of-time compiled binary from closed-world Java analysis. | [Module 49 Ch.03](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) |
+| **MethodHandle** | JVM typed callable reference obtained via `MethodHandles.Lookup`. | [Module 50 Ch.02](50-advanced-java/02-method-handles-varhandles-and-ffm.md) |
+| **VarHandle** | Typed variable accessor supporting volatile and atomic operations. | Module 50 Ch.02 |
+| **Foreign Function & Memory (FFM)** | `java.lang.foreign` API for off-heap memory and native interop (preview on JDK 21). | Module 50 Ch.02 |
+| **Java agent** | JAR loaded with `-javaagent` using `Instrumentation` to transform classes. | [Module 50 Ch.03](50-advanced-java/03-bytecode-and-agents.md) |
+| **Strangler pattern** | Incrementally replace legacy system behind a routing facade. | [Module 51 Ch.01](51-enterprise-java/01-large-codebases.md) |
+| **Expand/contract migration** | Backward-compatible schema change in multiple release steps. | [Module 51 Ch.02](51-enterprise-java/02-compatibility-and-migrations.md) |
+| **Production readiness review** | Pre-launch checklist covering reliability, security, ops, and data. | [Module 51 Ch.03](51-enterprise-java/03-production-readiness.md) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

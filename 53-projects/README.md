@@ -1,14 +1,19 @@
 # Module 53 — Practical Projects
 
-Progressive project track. Project specs appear under `projects/` when written—not as empty stubs here.
+**Status:** Completed  
+**Last reviewed:** 2026-11-10
 
-| Level | Location | Status |
-|-------|----------|--------|
-| Beginner | [projects/beginner](../projects/beginner/) | Not started |
-| Intermediate | [projects/intermediate](../projects/intermediate/) | Not started |
-| Advanced | [projects/advanced](../projects/advanced/) | Not started |
-| Expert | [projects/expert](../projects/expert/) | Not started |
+Hands-on specs live under [projects/](../projects/). Complete chapters first; use projects to integrate skills across CLI, JDBC, HTTP, concurrency, and Spring-shaped layering.
 
-**Prerequisites:** Complete Core Java through testing for intermediate projects; Spring/HTTP/SQL for advanced backend projects.
+| Level | Specs | Status |
+|-------|-------|--------|
+| Beginner | [01 CLI expense tracker](../projects/beginner/01-cli-expense-tracker.md), [02 Gradebook CLI](../projects/beginner/02-student-gradebook-cli.md) | Completed |
+| Intermediate | [01 Library JDBC](../projects/intermediate/01-library-catalog-jdbc.md), [02 Bookmark API](../projects/intermediate/02-bookmark-api-jdk-http.md) | Completed |
+| Advanced | [01 Download scheduler](../projects/advanced/01-concurrent-download-scheduler.md), [02 Layered inventory](../projects/advanced/02-layered-inventory-service.md) | Completed |
+| Expert | [01 Modular orders](../projects/expert/01-modular-order-platform.md), [02 Production capstone](../projects/expert/02-production-readiness-capstone.md) | Completed |
 
-**Next:** Use assessments and interview modules alongside projects.
+**Prerequisites:** See each project; generally Modules 00–38 before advanced backend projects.
+
+**Portfolio assessment:** [53-projects-assessment.md](../assessments/module-assessments/53-projects-assessment.md)
+
+**After Module 53:** Revisit module assessments, diagnostic, and expert projects; expand appendix and Modules 42–47 when authored.

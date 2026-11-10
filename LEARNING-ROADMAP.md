@@ -132,7 +132,7 @@ Authors: give a usable explanation at first appearance; later modules must **add
 
 ## Module index
 
-Each module folder contains a `README.md` with planned chapters. Chapters are created only when content is ready.
+Each module folder contains a `README.md` with chapter status. **Modules 00–53** have written chapters or (Module 53) full project specifications—see [PROGRESS.md](PROGRESS.md) for validation notes.
 
 | Module | Title | Beginners | Experienced may |
 |--------|-------|-----------|-----------------|

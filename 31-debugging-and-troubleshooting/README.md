@@ -1,13 +1,13 @@
 # Module 31 — Debugging and Troubleshooting
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | IDE Debugging | Not started |
-| 02 | Dumps and Flight Recorder | Not started |
-| 03 | Production Incidents | Not started |
+| 01 | [IDE Debugging](01-ide-debugging.md) | Completed |
+| 02 | [Dumps and Flight Recorder](02-dumps-and-flight-recorder.md) | Completed |
+| 03 | [Production Incidents](03-production-incidents.md) | Completed |
 
 **Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [31-debugging-assessment.md](../assessments/module-assessments/31-debugging-assessment.md)

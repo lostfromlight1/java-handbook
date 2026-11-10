@@ -4,7 +4,9 @@
 > **Module:** 00 — Programming Foundations  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Oracle JDK 21.0.9 (`javac 21.0.9`)
+> **Chapter profile:** Conceptual  
+> **Depth target:** Levels 1–2 (CPU, OS, JVM execution model)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
 
 ## 1. Learning Objectives
 
@@ -121,7 +123,46 @@ Process: java HelloWorld
 
 **Threads:** A process may have many threads (parallel execution paths). Until you use concurrency APIs, assume **one thread** runs your statements in order. Module **24** covers Java threads; Module **25** maps stack/heap to Java variables and object lifetimes in detail.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+This section ties the **numbered prints** in `ExecutionOrder` to JVM execution—stack growth, calls, and returns.
+
+### 5.1 Statement order vs call nesting
+
+A single thread in `main` runs statements top to bottom until a **method call** suspends the caller:
+
+1. Print `1. main starts` (`main` frame active).
+2. Enter `greet`: push a **stack frame**, print `2. inside greet`, pop frame, return to `main`.
+3. Print `3. main continues…` (`main` still has locals from before the call).
+4. Enter `add`: push frame, print `4. inside add`, compute `a + b`, pop frame, return `5` to `main`.
+5. Print `5.` and `6.` then `main` returns.
+
+The caller never “skips ahead” while a callee runs—control is strictly nested.
+
+### 5.2 Stack, heap, and thread (execution view)
+
+```text
+Thread "main" (one sequential stream of bytecode)
+  JVM call stack:
+    | greet frame  |  <- executing while print 2 runs
+    | main frame   |
+  Heap: String "Ada", constant strings, any allocated objects
+```
+
+| Location | During `greet("Ada")` |
+|----------|-------------------------|
+| **Stack (per thread)** | `main` frame kept underneath; `greet` frame holds parameter `name` and local bookkeeping |
+| **Heap** | `String` content for `"Ada"` and message fragments |
+| **Thread** | One **program counter** per thread advancing through bytecode |
+
+Primitives such as `int` in `add` usually live in stack slots; reference types store a **handle in the frame** pointing at heap objects.
+
+### 5.3 Why `static` helpers sit beside `main`
+
+`main` is `static`, so the JVM can start without constructing an `ExecutionOrder` object. **`static` methods** on the same class (`greet`, `add`) are invoked with `invokestatic`—no instance required. That keeps this chapter about **call order and frames**, not object construction (Module **05**). When you later call **instance** methods, the receiver object also lives on the heap and a reference to it typically appears in the callee frame.
+
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -134,7 +175,7 @@ Process: java HelloWorld
 | Heap | Storage for objects and arrays at run time |
 | Instruction pointer / PC | “Which instruction is next?” (JVM has a PC per thread—JVMS concept) |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 This chapter is mostly conceptual. The Java rules you need:
 
@@ -142,7 +183,7 @@ This chapter is mostly conceptual. The Java rules you need:
 - A method must be **called** to run; defining it is not enough.
 - `return` ends a method and (for non-`void`) provides a value to the caller.
 
-### 6.1 Helper methods and `static`
+### 7.1 Helper methods and `static`
 
 The example below defines `greet` and `add` beside `main` in the same class:
 
@@ -161,9 +202,9 @@ static int add(int a, int b) { ... }
 
 Module **04** (methods) covers overloads, instance methods, and `return` semantics in full. Here, `static` helpers keep the focus on **call order and the stack**, not object construction.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — ordered prints and calls
+### 8.1 Minimal — ordered prints and calls
 
 Runnable: [examples/beginner/execution-order/](../examples/beginner/execution-order/)
 
@@ -189,7 +230,7 @@ public class ExecutionOrder {
 }
 ```
 
-**Verified output (JDK 21.0.9):**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 1. main starts
@@ -202,7 +243,7 @@ public class ExecutionOrder {
 
 Notice numbers 2 and 4 happen *inside* called methods. The caller does not continue until the callee returns.
 
-### 7.2 Realistic — mental stack frames
+### 8.2 Realistic — mental stack frames
 
 While `greet` runs, `main` is still “in progress” underneath. Sketch:
 
@@ -214,7 +255,7 @@ While `greet` runs, `main` is still “in progress” underneath. Sketch:
 
 When `greet` returns, its frame pops; `main` resumes.
 
-### 7.3 Advanced for this level — peek at bytecode with `javap`
+### 8.3 Advanced for this level — peek at bytecode with `javap`
 
 After `javac ExecutionOrder.java`:
 
@@ -222,32 +263,32 @@ After `javac ExecutionOrder.java`:
 javap -c ExecutionOrder
 ```
 
-Verified excerpt from `main` (JDK 21.0.9): calls appear as `invokestatic` to `greet` and `add`, and prints as `invokevirtual` on `PrintStream.println`. You do not need to memorize opcodes yet—Module 26 treats bytecode seriously. The point: **your source becomes a sequence of JVM instructions**.
+Verified excerpt from `main` (Temurin JDK 21.0.12.1): calls appear as `invokestatic` to `greet` and `add`, and prints as `invokevirtual` on `PrintStream.println`. You do not need to memorize opcodes yet—Module 26 treats bytecode seriously. The point: **your source becomes a sequence of JVM instructions**.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - Reading stack traces in production (“which method called which?”).
 - Understanding why infinite recursion crashes with `StackOverflowError`.
 - Reasoning about performance: CPU-bound vs waiting on disk/network.
 - Operating containers: process memory limits affect the JVM process.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
-### 9.1 JVM execution engine (overview)
+### 10.1 JVM execution engine (overview)
 
 Per the JVM Specification, each thread has its own JVM stack and a program counter. The execution engine carries out bytecode. **HotSpot** commonly interprets first and JIT-compiles hot paths—implementation strategy, not a language requirement that every JVM must JIT.
 
-### 9.2 Why portability works
+### 10.2 Why portability works
 
 The same `.class` file can run on JVMs for Windows, Linux, or macOS because each JVM translates/executes bytecode on that platform. Caveats from Chapter 01 still apply (native code, OS assumptions, class-file version).
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - Multiple threads break the “one step after another” story globally—each thread has its own order (Module 24).
 - Asynchronous I/O and callbacks can make “what runs next?” harder; foundations first.
 - `javap` output depends on compiler version and source constructs (for example string concatenation may use `invokedynamic` on modern JDKs).
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect
 
@@ -265,13 +306,13 @@ The CPU runs machine code. For Java, a JVM process executes bytecode derived fro
 
 Methods run only when called (or when the JVM invokes `main` at startup).
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Trace execution on paper for small programs before using a debugger.
 - Learn to read the top of a stack trace early—it names the active call chain.
 - Keep a clear picture of process vs thread vs JVM vs your classes.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | Benefit | Cost |
 |----------|---------|------|
@@ -279,28 +320,28 @@ Methods run only when called (or when the JVM invokes `main` at startup).
 | Direct native compilation (other languages) | Simple deployment story sometimes | Rebuild per OS/CPU; different tooling |
 | Deep hardware knowledge for every app | Optimal low-level control | Slow delivery; rarely needed for business apps |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 - Waiting on disk/network often dominates CPU for beginners’ programs.
 - HotSpot optimization over time means short microbenchmarks mislead (Module 28).
 - Stack depth has limits; deep recursion is a design choice with risk.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 - The OS enforces permissions: your process may not read arbitrary files.
 - Bytecode verification is part of the JVM’s safety story (Module 26).
 - Do not run untrusted bytecode/programs with your full user privileges.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
-- Concepts apply across modern Java; examples validated on **Java 21.0.9**.
+- Concepts apply across modern Java; examples validated on **Java 21.0.12.1**.
 - `javap -c` details can change with compiler improvements; treat listings as snapshots.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Native-compiled languages skip a JVM bytecode step and emit machine code ahead of time (with their own runtimes sometimes embedded). Java’s model emphasizes a portable intermediate form. Details belong in appendix comparisons later—not required to proceed.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 ### What you should already understand
 
@@ -322,7 +363,7 @@ Process vs thread; bytecode vs machine code; that `main` is an entry point.
 
 Run `javap -c` on HelloWorld and ExecutionOrder; explain three instructions in your own words.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -339,14 +380,14 @@ Run `javap -c` on HelloWorld and ExecutionOrder; explain three instructions in y
 5. Use `javap -c -p ExecutionOrder` and map each `println` in source to an `invokevirtual`.
 6. Research (docs only): what the JVMS says a thread’s PC register is for.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What is bytecode?** — Portable JVM instructions in class files.  
 2. **Process vs thread?** — Process: OS program instance; thread: execution path within it.  
 3. **Does the CPU execute Java source?** — No; ultimately machine code, via JVM execution of bytecode (often JIT).  
 4. **What is a stack frame?** — Data for one active method call (locals, return info).  
 
-## 21. Solutions
+## 22. Solutions
 
 1. CPU executes; RAM holds working data; storage keeps files; OS manages resources/processes.  
 2. Depth at least 2: `main` + `greet` (exact counting depends whether you count only Java frames).  
@@ -355,34 +396,45 @@ Run `javap -c` on HelloWorld and ExecutionOrder; explain three instructions in y
 5. Match `ldc`/`getstatic`/`invokevirtual` sequences to each print.  
 6. Cite JVMS: PC holds address of JVM instruction being executed (per thread).
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Computers run processes under an OS; CPUs execute machine instructions; Java inserts a bytecode + JVM layer for portability and safety. Single-threaded programs run step by step, with method calls nesting on a call stack. Peeking with `javap` makes that layer visible.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 CPU · RAM · process · thread · machine code · bytecode · call stack · stack frame · JVM execution engine · HotSpot
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JVM Specification](https://docs.oracle.com/javase/specs/)
 - [Java SE Documentation](https://docs.oracle.com/en/java/javase/)
 - `javap` tool docs in the JDK Tool Specifications
 - Next depth: Modules [26](../26-jvm-internals/README.md), [25](../25-java-memory-model/README.md)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - Next in Module 00: [03-algorithms-and-problem-solving.md](03-algorithms-and-problem-solving.md)
 - Later: Module 01 tooling; Module 04 methods and stack frames in Java detail
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Levels 1–2 for Conceptual profile — execution order and stack intuition.
+
 - [x] Learning objectives covered
-- [x] Prerequisites identified
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile **Conceptual** and depth target **Levels 1–2** recorded
 - [x] Depth gate passed
-- [x] Terminology defined
-- [x] Examples verified on JDK 21.0.9
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow (Section 5) tied to ExecutionOrder
+- [x] Stack/heap/thread illustrated in §4.6 and §5.2
+- [x] `static` helpers explained in §6.1 and §5.3
+- [x] ExecutionOrder output **Verified** on Temurin JDK 21.0.12.1
 - [x] Spec vs HotSpot labeled
 - [x] Revision and Mastery included
 - [x] Exercises/solutions separated
 - [x] References valid
+- [x] Conditional omissions recorded below
+
+**Omissions (section → reason):**
+
+- **Full JVMS stack frame layout** — conceptual frames only; Module 04/25 deepen.

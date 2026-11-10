@@ -4,7 +4,9 @@
 > **Module:** 00 — Programming Foundations  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Oracle JDK 21.0.9 (`javac 21.0.9`)
+> **Chapter profile:** Conceptual  
+> **Depth target:** Levels 1–2 (algorithms before syntax fluency)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
 
 ## 1. Learning Objectives
 
@@ -21,7 +23,7 @@ After completing this chapter, you should be able to:
 
 - [01-what-is-programming-and-what-is-java.md](01-what-is-programming-and-what-is-java.md)
 - [02-how-computers-execute-programs.md](02-how-computers-execute-programs.md)
-- Willingness to use basic `for` / `if` (explained in §6 below; the **Control Flow** module `03-control-flow` deepens every branching and looping form)
+- Willingness to use basic `for` / `if` (explained in §7 below; the **Control Flow** module `03-control-flow` deepens every branching and looping form)
 
 ## 3. Why This Concept Exists
 
@@ -105,7 +107,33 @@ flowchart TD
 
 You will mostly write imperative Java at first. Algorithms exist independently of paradigm.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+This section walks the **find-max** algorithm as executed by the JVM—connecting pseudocode to frames, loops, and conditionals.
+
+### 5.1 From pseudocode to bytecode path
+
+| Pseudocode step | Java location | When it runs |
+|-----------------|---------------|--------------|
+| `best = first score` | `int best = values[0];` | Once on entry to `findMax` |
+| `for each remaining score` | `for (int i = 1; i < values.length; i++)` | Condition checked before each iteration; `i++` after body |
+| `if s > best` | `if (values[i] > best)` | Each iteration; branch only when condition true |
+| `return best` | `return best;` | After loop completes |
+
+The **entry frame** for `findMax` holds `values` (reference on heap), `best`, and loop index `i`. `main`'s frame waits underneath with `maximum` unchanged until `findMax` returns.
+
+### 5.2 How `for` and `if` execute (in-chapter control flow)
+
+**`for` loop mechanics:** initialization (`int i = 1`) runs once. Before each body execution, the JVM evaluates the condition (`i < values.length`). If false, jump past the loop. After a body run, the update (`i++`) runs, then the condition is checked again.
+
+**`if` mechanics:** evaluate the boolean condition. If true, run the block; if false, skip the block with no `else` required. In `findMax`, when `values[i] > best`, the assignment updates local `best` in the current frame only—`main` does not see the new value until the method returns.
+
+### 5.3 Trace to observable output
+
+Calling `findMax(scores)` with `{72, 91, 85, 91, 60}` performs one linear pass (§8.2). The JVM prints `Maximum score: 91` because the last assignment to `best` happened when reading `91` at index `1`; later equal values do not replace `best` under a strict `>` test.
+
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -116,11 +144,11 @@ You will mostly write imperative Java at first. Algorithms exist independently o
 | Decomposition | Breaking a problem into parts |
 | Correctness | Produces the right result for required cases |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 This chapter uses a small subset of Java. Each construct is enough to read `findMax` without opening another chapter first.
 
-### 6.1 Arrays and indexing
+### 7.1 Arrays and indexing
 
 - `int[] scores = { 72, 91, 85 };` — creates an **array** of `int` with three elements.
 - `scores.length` — element **count** (here `3`). Not a method: no parentheses.
@@ -128,7 +156,7 @@ This chapter uses a small subset of Java. Each construct is enough to read `find
 
 **Pitfall:** The first index is `0`, not `1`. Off-by-one errors are classic ([Chapter 05](05-complexity-and-debugging-mindset.md)).
 
-### 6.2 The `for` loop (counted repetition)
+### 7.2 The `for` loop (counted repetition)
 
 ```java
 for (int i = 1; i < scores.length; i++) {
@@ -145,7 +173,7 @@ for (int i = 1; i < scores.length; i++) {
 
 Equivalent English: “For each index from `1` up to but not including `length`, run the body.”
 
-### 6.3 The `if` statement (conditional action)
+### 7.3 The `if` statement (conditional action)
 
 ```java
 if (values[i] > best) {
@@ -155,7 +183,7 @@ if (values[i] > best) {
 
 When the **condition** (`values[i] > best`) is **true**, the block runs. There is no `else` here—when the condition is false, Java simply skips the block and continues. Parentheses around the condition are required.
 
-### 6.4 Method call and `return`
+### 7.4 Method call and `return`
 
 ```java
 static int findMax(int[] values) {
@@ -166,9 +194,9 @@ static int findMax(int[] values) {
 
 `findMax(scores)` passes the array reference into the method; `return best` sends the final `int` back to the caller. Module **04** covers methods, parameters, and return types in depth.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — hand trace
+### 8.1 Minimal — hand trace
 
 Scores: `72, 91, 85`
 
@@ -179,7 +207,7 @@ Scores: `72, 91, 85`
 | 2 | 91 | 85 | 85 > 91? no |
 | done | 91 | | return 91 |
 
-### 7.2 Realistic — Java implementation
+### 8.2 Realistic — Java implementation
 
 Runnable: [examples/beginner/find-max/](../examples/beginner/find-max/)
 
@@ -203,7 +231,7 @@ public class FindMax {
 }
 ```
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 Maximum score: 91
@@ -211,13 +239,13 @@ Maximum score: 91
 
 Duplicates (`91` twice) are fine: “greater than” does not require unique values.
 
-### 7.3 Advanced for this level — empty input
+### 8.3 Advanced for this level — empty input
 
 The code above **assumes** a non-empty array. Empty input would throw when reading `values[0]`. A production algorithm must define behavior: throw a clear exception, return an `Optional`, or document the precondition. Module 14 covers exceptions; Module 18 covers `Optional`.
 
 **Design trade-off:** preconditions vs defensive checks—document one and test it.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - Pricing: find minimum eligible rate
 - Monitoring: maximum latency in a sample window
@@ -226,11 +254,11 @@ The code above **assumes** a non-empty array. Empty input would throw when readi
 
 Same algorithmic pattern; different domains.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 A linear scan visits each element about once. On typical JVMs this is a simple loop in bytecode (`goto`/`if_icmpgt` patterns). Exact bytecode is not required yet; complexity thinking deepens in Chapter 05.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 | Case | Issue |
 |------|--------|
@@ -240,7 +268,7 @@ A linear scan visits each element about once. On typical JVMs this is a simple l
 | Negatives | `>` still works for signed integers |
 | Unsorted vs sorted | Scan works unsorted; sorted data allows faster strategies later |
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect
 
@@ -266,14 +294,14 @@ Confuse “algorithm” with “whatever code compiled.”
 
 Many programs compile and still implement the wrong algorithm.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Hand-trace before and after coding.
 - Name methods after the problem (`findMax`), not vague verbs (`doStuff`).
 - Test edges: empty (if allowed), one element, duplicates, negatives.
 - Prefer clear loops over clever tricks while learning.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -281,23 +309,23 @@ Many programs compile and still implement the wrong algorithm.
 | Sort then take last | Uses library sort | Extra work if you only need max |
 | Keep a running max as data arrives | Online/streaming friendly | Must handle first value carefully |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 For `n` elements, linear max is proportional to `n` (Chapter 05: big-O intuition). For classroom sizes, clarity beats micro-optimization.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 If scores come from users/files/network, validate size and ranges before trusting them. Algorithms on hostile input need limits (Module 43).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
-Array loops and `if` used here are long-standing Java. Validated on **21.0.9**.
+Array loops and `if` used here are long-standing Java. Validated on **21.0.12.1**.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Pseudocode → code is universal. Python might express the same algorithm with `max(scores)`; Java’s standard library also has utilities later—learning the loop builds transferable skill.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 ### What you should already understand
 
@@ -315,7 +343,7 @@ How to specify preconditions; how to prove a loop invariant informally (“`best
 2. How do you handle empty input in an API you design?
 3. When is sorting before finding max justified?
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -332,14 +360,14 @@ How to specify preconditions; how to prove a loop invariant informally (“`best
 5. Write two algorithms for “are all elements unique?”—one nested loop, one with a strategy you’ll learn later (`Set`). Compare clarity.
 6. Specify and implement behavior for empty arrays without crashing unexpectedly.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What is an algorithm?** — Finite unambiguous steps to solve a problem.  
 2. **Why pseudocode?** — Design without language noise.  
 3. **How do you find a max in an unsorted array?** — Linear scan; track best-so-far.  
 4. **What is an edge case?** — Unusual but valid input that often breaks naive code.  
 
-## 21. Solutions
+## 22. Solutions
 
 1. Initialize `count = 0`; for each score, if `score >= 60` increment; return count.  
 2. best starts -3; -9 no; -1 yes → answer -1.  
@@ -348,29 +376,40 @@ How to specify preconditions; how to prove a loop invariant informally (“`best
 5. Nested compare all pairs O(n²); `HashSet` add-and-check later in Module 12.  
 6. e.g. throw `IllegalArgumentException` if `values.length == 0`, documented in Javadoc.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Algorithms are clear step sequences. Use pseudocode, hand traces, and decomposition before Java syntax. Linear scan for maximum is a foundational pattern with important edge cases.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Algorithm · pseudocode · flowchart · trace · edge case · decomposition · precondition · correctness
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - Any standard intro CS text on algorithms (conceptual)
 - Next: [04-data-and-basic-structures.md](04-data-and-basic-structures.md); deeper branching/loops: [03-control-flow](../03-control-flow/README.md)
 - Later: Module 12 collections; Module 52 interview algorithms
 
-## 25. Next Steps
+## 26. Next Steps
 
 Continue to data representation: [04-data-and-basic-structures.md](04-data-and-basic-structures.md)
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Levels 1–2 for Conceptual profile — algorithm design before control-flow module.
+
 - [x] Learning objectives covered
 - [x] Prerequisites identified
+- [x] Chapter profile **Conceptual** and depth target **Levels 1–2** recorded
 - [x] Depth gate passed
-- [x] FindMax verified on JDK 21.0.9
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow (Section 5) for findMax/for/if
+- [x] In-chapter `for`/`if` teaching in §7
+- [x] FindMax **Verified** on Temurin JDK 21.0.12.1
 - [x] Revision and Mastery included
 - [x] Exercises/solutions separated
+- [x] Conditional omissions recorded below
+
+**Omissions (section → reason):**
+
+- **Internal Behavior** — no JVM-specific algorithm internals at this level.

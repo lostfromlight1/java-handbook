@@ -51,14 +51,14 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-what-is-programming-and-what-is-java.md](00-programming-foundations/01-what-is-programming-and-what-is-java.md) | Completed | Quality pass 2026-11-10 | Deeper `main`/bytecode/GC intros |
-| [02-how-computers-execute-programs.md](00-programming-foundations/02-how-computers-execute-programs.md) | Completed | Quality pass 2026-11-10 | Stack/heap/thread + `static` helpers |
-| [03-algorithms-and-problem-solving.md](00-programming-foundations/03-algorithms-and-problem-solving.md) | Completed | Quality pass 2026-11-10 | In-chapter `for`/`if` teaching |
-| [04-data-and-basic-structures.md](00-programming-foundations/04-data-and-basic-structures.md) | Completed | Quality pass 2026-11-10 | References, casting, class preview |
-| [05-complexity-and-debugging-mindset.md](00-programming-foundations/05-complexity-and-debugging-mindset.md) | Completed | Quality pass 2026-11-10 | Stronger debugging vocabulary |
+| [01-what-is-programming-and-what-is-java.md](00-programming-foundations/01-what-is-programming-and-what-is-java.md) | Completed | Standards-alignment pass 2026-11-10 (Temurin re-verify) | — |
+| [02-how-computers-execute-programs.md](00-programming-foundations/02-how-computers-execute-programs.md) | Completed | Standards-alignment pass 2026-11-10 (Temurin re-verify) | — |
+| [03-algorithms-and-problem-solving.md](00-programming-foundations/03-algorithms-and-problem-solving.md) | Completed | Standards-alignment pass 2026-11-10 (Temurin re-verify) | — |
+| [04-data-and-basic-structures.md](00-programming-foundations/04-data-and-basic-structures.md) | Completed | Standards-alignment pass 2026-11-10 (Temurin re-verify) | — |
+| [05-complexity-and-debugging-mindset.md](00-programming-foundations/05-complexity-and-debugging-mindset.md) | Completed | Standards-alignment pass 2026-11-10 (Temurin re-verify) | — |
 | [Module assessment](assessments/module-assessments/00-programming-foundations-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Oracle JDK 21.0.9):**
+**Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|

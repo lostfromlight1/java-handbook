@@ -4,7 +4,9 @@
 > **Module:** 00 — Programming Foundations  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Oracle JDK 21.0.9 (`javac 21.0.9`)
+> **Chapter profile:** Conceptual→Technical  
+> **Depth target:** Levels 2–3 (data, references, arrays intro)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
 
 ## 1. Learning Objectives
 
@@ -126,7 +128,39 @@ class Player {
 
 Then one `Player[]` or list holds both name and score per row—no fragile “index 2 means the same person in two arrays” convention. Classes also attach **methods** to that data (`player.addPoints(5)`). Module **05** defines classes, constructors, and objects; Module **12** shows resizable `List<Player>`. Parallel arrays are a teaching scaffold, not how production domain models stay consistent.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+This section shows **how array and reference operations play out in memory** when the scoreboard runs.
+
+### 5.1 Array creation and indexing
+
+Executing `int[] scores = {95, 88, 92};`:
+
+1. The JVM allocates one **array object** on the heap (length 3).
+2. The local variable `scores` in `main`'s frame stores a **reference** to that object.
+3. Each read `scores[i]` or write `scores[i] = …` uses the reference to locate the heap array, then bounds-checks index `i` against `length` (runtime failure if out of range).
+
+Indexing always starts at **0**; valid indexes are `0 … length - 1`.
+
+### 5.2 Reference assignment vs primitive copy
+
+```java
+int[] two = one;  // copies the reference, not elements
+two[0] = 99;      // mutates the single shared array object
+```
+
+Mechanism: assignment copies **bits of the reference** from `one` to `two`. Both names denote the same heap object until reassigned. Contrast `int b = a;`, which copies the **value** because primitives are stored directly in the frame slot.
+
+### 5.3 Casting in the average calculation
+
+`double average = (double) total / scores.length;` forces **numeric promotion** before division: `total` is widened to `double`, so `/` uses floating-point division instead of truncating **integer division**. Casts are compile-time checked where possible; invalid reference casts fail at runtime with `ClassCastException` (deeper rules in Module **02**). Here the cast is a deliberate type change on a primitive to preserve fractional averages.
+
+### 5.4 Parallel arrays → class-shaped data (preview)
+
+The scoreboard loop pairs `names[i]` with `scores[i]` by **convention**, not language law. A `Player` **class** (Module **05**) would store `name` and `score` in one object per row, so indexes cannot drift between parallel arrays—a single reference `players[i]` implies one cohesive record.
+
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -138,7 +172,7 @@ Then one `Player[]` or list holds both name and score per row—no fragile “in
 | Index | Integer position starting at 0 |
 | Reference | Handle pointing to an array/object in memory |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 int[] scores = new int[3];     // length 3, values default to 0
@@ -153,9 +187,9 @@ Rules to remember:
 - `length` is a field for arrays, not a method (`scores.length`, not `scores.length()`)
 - Enhanced for-loop: `for (int score : scores) { ... }` reads each element
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — index mental model
+### 8.1 Minimal — index mental model
 
 ```text
 names:  [ "Ada", "Grace", "Alan" ]
@@ -165,7 +199,7 @@ scores: [  95,    88,      92  ]
 
 `names[2]` and `scores[2]` both refer to Alan’s row **by convention**—the language does not enforce the pairing.
 
-### 7.2 Realistic — scoreboard
+### 8.2 Realistic — scoreboard
 
 Runnable: [examples/beginner/scoreboard/](../examples/beginner/scoreboard/)
 
@@ -190,7 +224,7 @@ public class Scoreboard {
 }
 ```
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 Scoreboard:
@@ -204,7 +238,7 @@ Average: 91.66666666666667
 
 `(double) total` is a **cast**: it tells the compiler to treat `total` as a `double` for this expression. The division then uses floating-point rules, so you get a decimal average. Casts can lose precision in other contexts; here the goal is simply to avoid silent truncation. Module **02** covers numeric types, promotion, and casting rules systematically.
 
-### 7.3 Toward better structure (preview)
+### 8.3 Toward better structure (preview)
 
 Better long-term model (not required to compile yet):
 
@@ -215,7 +249,7 @@ Player { name: "Grace", score: 88 }
 
 That is why classes exist (Module 05–06). Parallel arrays are a teaching scaffold.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - Tables of measurements (time series samples)
 - Image pixels as 2D arrays (later)
@@ -224,18 +258,18 @@ That is why classes exist (Module 05–06). Parallel arrays are a teaching scaff
 
 Production Java usually prefers collections and domain objects over raw parallel arrays.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 Arrays are objects on the heap (JVMS/Java SE model). A variable of array type stores a reference. Passing an array to a method passes the reference—callee can modify element contents. Details: Modules 04 and 25.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - Fixed length
 - Single element type (unless you use `Object[]`, which loses type safety—avoid for now)
 - `null` array reference vs empty array length 0 — different ideas
 - Multidimensional arrays exist (`int[][]`) but add complexity—Module 11
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect
 
@@ -263,14 +297,14 @@ Use one structure that keeps related fields together (objects/lists of objects).
 
 `scores.length` for arrays; `list.size()` for `List` later.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Name arrays after what they hold (`scores`, not `arr`).
 - Keep length checks consistent.
 - Comment when parallel arrays are temporary teaching tools.
 - Prefer enhanced for-loop when you do not need the index.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Structure | Pros | Cons |
 |-----------|------|------|
@@ -278,23 +312,23 @@ Use one structure that keeps related fields together (objects/lists of objects).
 | Parallel arrays | Easy demo | Fragile alignment |
 | List of objects | Cohesive, scalable design | Needs OOP knowledge |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Array index access is typically very fast. Prematurely avoiding arrays “for performance” is misguided—choose structures for clarity first. Module 12 discusses complexity of collections.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Never use unvalidated user input as an array index. Huge requested sizes can exhaust memory (Module 43).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
-Arrays are foundational since early Java. Example validated on **21.0.9**.
+Arrays are foundational since early Java. Example validated on **21.0.12.1**.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Many languages have arrays/lists/maps with different mutability defaults. Java’s arrays are fixed-length; resizable lists are separate (`ArrayList`). Learn Java’s distinctions rather than assuming another language’s rules.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 ### Should already know
 
@@ -312,7 +346,7 @@ Reference semantics for arrays; `Clone` pitfalls; why `Arrays.equals` vs `==`.
 2. Why are parallel arrays considered a design smell?
 3. Empty array vs `null`—when does each appear?
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -329,14 +363,14 @@ Reference semantics for arrays; `Clone` pitfalls; why `Arrays.equals` vs `==`.
 5. Redesign scoreboard as a single array of a small class (after peeking Module 05) or document why you cannot yet.
 6. Show a method that swaps two scores by index; discuss whether names must swap too.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **Array vs list?** — Array fixed length; list typically resizable abstraction.  
 2. **Why 0-based indexing?** — Historical/address arithmetic convenience; Java follows that convention.  
 3. **What is program state?** — Current data values held during execution.  
 4. **Reference vs primitive?** — Primitive holds value; reference points to object/array.  
 
-## 21. Solutions
+## 22. Solutions
 
 1. Two separate arrays; indexes align by convention.  
 2. Loop with `if (scores[i] >= 90) print names[i]`.  
@@ -345,27 +379,37 @@ Reference semantics for arrays; `Clone` pitfalls; why `Arrays.equals` vs `==`.
 5. Class `Player { String name; int score; }` + `Player[]` or `List<Player>`.  
 6. Swap both arrays’ elements at those indexes—or swap one object containing both fields.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Data is information; state is data-now. Variables hold typed values; arrays hold fixed-length sequences with 0-based indexes. Parallel arrays teach indexing but objects/collections are the professional path.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Data · state · variable · type · primitive · reference · array · index · parallel arrays
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JDK 21 API — java.lang](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/package-summary.html) (arrays as objects conceptually via reflection/docs)
 - Next: [05-complexity-and-debugging-mindset.md](05-complexity-and-debugging-mindset.md)
 - Later: Module 02 types; Module 11 arrays/strings; Module 12 collections
 
-## 25. Next Steps
+## 26. Next Steps
 
 [05-complexity-and-debugging-mindset.md](05-complexity-and-debugging-mindset.md) — thinking about cost and finding bugs systematically.
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Levels 2–3 at Conceptual→Technical edge — references and arrays.
+
 - [x] Learning objectives covered
-- [x] Scoreboard verified on JDK 21.0.9
+- [x] Chapter profile **Conceptual→Technical** and depth **Levels 2–3** recorded
 - [x] Depth gate passed
+- [x] Mandatory Depth Review passed for this topic
+- [x] Mechanism and execution flow (Section 5): references, casting, class preview
+- [x] Scoreboard **Verified** on Temurin JDK 21.0.12.1 (average 91.66666666666667)
 - [x] Revision and Mastery included
+- [x] Conditional omissions recorded below
+
+**Omissions (section → reason):**
+
+- **Performance tuning** — array access cost noted lightly only.

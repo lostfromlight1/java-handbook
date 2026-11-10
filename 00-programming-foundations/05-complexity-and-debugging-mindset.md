@@ -4,7 +4,9 @@
 > **Module:** 00 — Programming Foundations  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Oracle JDK 21.0.9 (`javac 21.0.9`)
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (complexity intuition and debugging process)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
 
 ## 1. Learning Objectives
 
@@ -117,7 +119,39 @@ Debugging is scientific method applied to code.
 
 A **regression** is when a change fixes one thing but breaks behavior that used to work—hence rerunning old tests after each fix. **Reproduce** means you can trigger the bug reliably; without reproduction, you are guessing.
 
-## 5. Terminology
+When a program **throws**, read the **stack trace** from the top: the first frame in *your* code (not only JDK frames) is usually where the bad access happened—for example `ArrayIndexOutOfBoundsException` at a specific line. For **logic bugs** with no exception, **breakpoints** and selective `println` traces (show `i` and running `sum` each iteration) replace guesswork. Teams often attach a **minimal reproducer** to bug tickets so another engineer can see failure in under a minute.
+
+## 5. Mechanism and Execution Flow
+
+### 5.1 Counting work for growth rates
+
+For input size `n`:
+
+| Pattern | Loop structure | Comparisons / updates (order of magnitude) |
+|---------|----------------|--------------------------------------------|
+| Constant | Read one field | O(1) |
+| Linear | Single loop `0 … n-1` | O(n) |
+| Quadratic | Nested loops over all pairs | O(n²) |
+
+The JVM may **optimize** a specific loop, but **algorithm shape** remains: comparing every pair still requires Θ(n²) pair examinations unless you change the algorithm (for example with a `HashSet`).
+
+### 5.2 Debugging as an execution trace
+
+Treat debugging like tracing a faulty program counter:
+
+1. **Reproduce** — same inputs, same build (re-run `javac` if source changed).
+2. **Reduce** — shrink `n` until the failure is obvious (`n=1` for the sum bug).
+3. **Observe** — print `i` and partial `sum`, or read the **stack trace** top frame on exceptions.
+4. **Hypothesize boundary** — if the loop stops before `n`, inspect whether the condition uses `i < n` or `i <= n`.
+5. **Fix and verify** — one intentional change; compare **Verified** outputs before/after.
+
+Vocabulary that shows up in teams: **regression** (old behavior breaks again), **root cause** (the wrong bound, not the print statement), **minimal reproducer** (smallest program that still fails).
+
+### 5.3 Off-by-one mechanism
+
+`for (int i = 1; i < n; i++)` evaluates the condition **before** each body run. For `n=5`, values `1…4` enter the sum, but `5` never does—the loop exits when `i` becomes `5` because `5 < 5` is false. Changing to `i <= n` includes the final addend—see §8.2 **Verified** outputs.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -127,8 +161,12 @@ A **regression** is when a change fixes one thing but breaks behavior that used 
 | Off-by-one | Loop/index wrong by a single boundary |
 | Reproduce | Make the bug happen again on purpose |
 | Regression | A fix (or change) that reintroduces an old bug |
+| Root cause | The underlying mistake (wrong bound), not the symptom (wrong print) |
+| Minimal reproducer | Smallest program/input that still shows the bug |
+| Stack trace | Runtime list of active method frames when an exception is thrown |
+| Breakpoint | Debugger pause at a line so you can inspect variables (Module 31) |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 Loop bounds are where off-by-one errors live:
 
@@ -142,9 +180,9 @@ for (int i = 0; i < n; i++) { ... }
 
 Mixing these patterns without care causes logic bugs that still compile.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — growth intuition
+### 8.1 Minimal — growth intuition
 
 For `findMax` on `n` elements: about `n` comparisons → linear.  
 For nested `for i / for j` over all pairs: about `n²` comparisons → quadratic.
@@ -156,13 +194,13 @@ If `n` goes from 1,000 to 10,000:
 
 That is why nested loops over huge data hurt.
 
-### 7.2 Realistic — the lying sum
+### 8.2 Realistic — the lying sum
 
 Runnable buggy program: [examples/beginner/debug-off-by-one/OffByOneBug.java](../examples/beginner/debug-off-by-one/OffByOneBug.java)
 
 Intent: sum `1 + 2 + ... + n`. For `n = 5`, correct answer is **15**.
 
-**Verified buggy output:**
+**Verified output — buggy (Temurin JDK 21.0.12.1):**
 
 ```text
 sumUpTo(5) = 10
@@ -172,7 +210,7 @@ Why? Loop used `i < n`, so it added `1+2+3+4` and skipped `5`.
 
 Fixed version: [OffByOneFixed.java](../examples/beginner/debug-off-by-one/OffByOneFixed.java)
 
-**Verified fixed output:**
+**Verified output — fixed (Temurin JDK 21.0.12.1):**
 
 ```text
 sumUpTo(5) = 15
@@ -184,7 +222,7 @@ for (int i = 1; i <= n; i++) {
 }
 ```
 
-### 7.3 Debugging transcript (how to think)
+### 8.3 Debugging transcript (how to think)
 
 | Step | Action | Result |
 |------|--------|--------|
@@ -197,24 +235,24 @@ for (int i = 1; i <= n; i++) {
 
 Alternative closed form `n * (n + 1) / 2` avoids the loop—but watch integer overflow for large `n` (later numeric topics).
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - Choosing nested loops vs maps for deduplication
 - Explaining latency spikes when input size grows
 - Production incidents: reproduce with the same request payload
 - Code review: spot accidental O(n²) in hot paths
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 Complexity counts abstract steps. JVM JIT may optimize loops heavily, but **quadratic algorithms remain quadratic**—JIT does not turn “compare all pairs” into a free lunch. Label performance folklore carefully (Module 28).
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - Big-O hides constants: O(n) with huge constants can lose to O(n²) for tiny `n`.
 - Worst/average/best cases differ (sorting algorithms later).
 - I/O and network dominate many backend costs more than CPU loops.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect
 
@@ -240,14 +278,14 @@ Optimize to O(1) before the program is correct.
 
 Correct → clear → then fast if needed.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Write the expected result before running.
 - Keep a small notebook of failing inputs.
 - Prefer meaningful print messages: `System.out.println("i=" + i + ", sum=" + sum);` while debugging; remove or use a logger later.
 - Add regression tests once you know Module 30 tooling.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | Benefit | Cost |
 |----------|---------|------|
@@ -255,23 +293,23 @@ Correct → clear → then fast if needed.
 | Clever one-liners | Short | Harder to debug |
 | Simpler O(n²) for small n | Clear | Won’t scale |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Measure before blaming the JVM. For foundations: count loops mentally. For production: profilers and JMH (Module 28).
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Debug logs can leak passwords, tokens, or personal data. Never log secrets. In production incidents, follow data-handling rules (Module 43).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
-Loop semantics shown are stable across modern Java. Validated on **21.0.9**.
+Loop semantics shown are stable across modern Java. Validated on **21.0.12.1**.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Off-by-one and O(n²) nested loops appear in every C-family language. The debugging process transfers; APIs and tooling differ.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 ### Should already know
 
@@ -289,7 +327,7 @@ Amortized complexity; difference between big-O / Theta / Omega; how to read flam
 2. Is `findMax` O(n) time and O(1) extra space? Why?
 3. When is quadratic code acceptable in production?
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -306,14 +344,14 @@ Amortized complexity; difference between big-O / Theta / Omega; how to read flam
 5. Fix the bug using the formula `n*(n+1)/2`; test `n=0` and `n=5`. Discuss overflow risk for large `n`.
 6. Write a debugging journal for a bug you invent in Scoreboard (mismatched lengths).
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What does O(n) mean?** — Work grows proportionally to input size.  
 2. **Compile-time vs logic bug?** — Compiler catches the first; wrong answers mark the second.  
 3. **How do you debug?** — Reproduce, reduce, hypothesize, fix, verify, prevent.  
 4. **Example of off-by-one?** — Using `i < n` when `1..n` inclusive was required.  
 
-## 21. Solutions
+## 22. Solutions
 
 1. Bug prints 10; fixed prints 15.  
 2. Missing `;` → compile-time.  
@@ -322,29 +360,40 @@ Amortized complexity; difference between big-O / Theta / Omega; how to read flam
 5. For `n=5` → 15; `n=0` → 0; large `n` may overflow `int`.  
 6. Journal should include reproduction, hypothesis, fix, verification.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Complexity describes how cost grows with input size; start with O(1)/O(n)/O(n²) intuition. Debugging is a disciplined loop from reproduction to prevention. Off-by-one errors show how tiny boundary mistakes become wrong answers without crashing.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Time complexity · space complexity · big-O · off-by-one · logic bug · reproduce · regression
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - Module 12 (collection complexity tables)
 - Module 28 (measurement and JMH)
 - Module 31 (debuggers, dumps)
 - Module 52 (algorithm interviews)
 
-## 25. Next Steps
+## 26. Next Steps
 
 Module 00 complete → begin Module 01: [../01-java-getting-started/README.md](../01-java-getting-started/README.md)  
 Assessment: [../assessments/module-assessments/00-programming-foundations-assessment.md](../assessments/module-assessments/00-programming-foundations-assessment.md)
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Levels 2–3 for Technical profile — complexity intuition and debugging vocabulary.
+
 - [x] Learning objectives covered
-- [x] OffByOneBug/Fixed verified on JDK 21.0.9
+- [x] Chapter profile **Technical** and depth **Levels 2–3** recorded
 - [x] Depth gate passed
+- [x] Mandatory Depth Review passed for this topic
+- [x] Mechanism and execution flow (Section 5): work counting + debug trace
+- [x] OffByOneBug/Fixed **Verified** on Temurin JDK 21.0.12.1 (bug 10, fixed 15)
+- [x] Stronger debugging vocabulary in §4.6 and §5.2
 - [x] Revision and Mastery included
+- [x] Conditional omissions recorded below
+
+**Omissions (section → reason):**
+
+- **Formal big-O proofs** — intuition only; Module 52 deepens.

@@ -26,4 +26,6 @@ After committing prior WIP: begin Module 00 standards alignment (profiles, mecha
 
 ## Completed this overnight run
 
-_(updated as work proceeds)_
+- Committed+pushed prior WIP: standards (`ddf6b3e`), M17 pilot (`80aa3eb`), M36–37 (`e6e7efa`), checkpoint (`c759652`)
+- Module 00 standards alignment (profiles, Mechanism, Temurin Verified labels); expand-preserve
+- Resume next: Module 01 alignment same pattern

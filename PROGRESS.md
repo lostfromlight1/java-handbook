@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Modules 48–53 completed; curriculum through M53)
+**Last updated:** 2026-11-11 (Modules 29–32 EXPAND-PRESERVE; curriculum through M53)
 
 ## Status values
 
@@ -655,11 +655,11 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-jvm-architecture.md](26-jvm-internals/01-jvm-architecture.md) | Completed | Quality pass 2026-11-10 | JPMS deep dive in module 30+ |
-| [02-class-loading-and-linking.md](26-jvm-internals/02-class-loading-and-linking.md) | Completed | Quality pass 2026-11-10 | Custom class loaders in framework modules |
-| [03-bytecode-and-execution.md](26-jvm-internals/03-bytecode-and-execution.md) | Completed | Quality pass 2026-11-10 | ASM/bytebuddy in advanced tooling |
-| [04-runtime-data-areas.md](26-jvm-internals/04-runtime-data-areas.md) | Completed | Quality pass 2026-11-10 | — |
-| [05-diagnostics-and-agents.md](26-jvm-internals/05-diagnostics-and-agents.md) | Completed | Quality pass 2026-11-10 | Full JFR lab exercises later |
+| [01-jvm-architecture.md](26-jvm-internals/01-jvm-architecture.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~347 lines; was ~61) | JPMS deep dive in module 30+ |
+| [02-class-loading-and-linking.md](26-jvm-internals/02-class-loading-and-linking.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~332 lines; was ~58) | Custom class loaders in framework modules |
+| [03-bytecode-and-execution.md](26-jvm-internals/03-bytecode-and-execution.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~342 lines; was ~85) | ASM/bytebuddy in advanced tooling |
+| [04-runtime-data-areas.md](26-jvm-internals/04-runtime-data-areas.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~318 lines; was ~48) | — |
+| [05-diagnostics-and-agents.md](26-jvm-internals/05-diagnostics-and-agents.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~329 lines; was ~59) | Full JFR lab exercises later |
 | [Module assessment](assessments/module-assessments/26-jvm-internals-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -681,9 +681,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-gc-fundamentals.md](27-garbage-collection/01-gc-fundamentals.md) | Completed | Quality pass 2026-11-10 | Unified logging cookbook |
-| [02-collectors-g1-zgc-shenandoah.md](27-garbage-collection/02-collectors-g1-zgc-shenandoah.md) | Completed | Quality pass 2026-11-10 | Compare ZGC vs G1 with measured logs |
-| [03-tuning-and-memory-leaks.md](27-garbage-collection/03-tuning-and-memory-leaks.md) | Completed | Quality pass 2026-11-10 | Heap dump walkthrough |
+| [01-gc-fundamentals.md](27-garbage-collection/01-gc-fundamentals.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~326 lines; was ~71) | Unified logging cookbook |
+| [02-collectors-g1-zgc-shenandoah.md](27-garbage-collection/02-collectors-g1-zgc-shenandoah.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~298 lines; was ~65) | Compare ZGC vs G1 with measured logs |
+| [03-tuning-and-memory-leaks.md](27-garbage-collection/03-tuning-and-memory-leaks.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~289 lines; was ~58) | Heap dump walkthrough |
 | [Module assessment](assessments/module-assessments/27-garbage-collection-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -703,9 +703,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-hotspot-and-tiered-compilation.md](28-jit-and-performance/01-hotspot-and-tiered-compilation.md) | Completed | Quality pass 2026-11-10 | `PrintCompilation` walkthrough optional |
-| [02-jmh-and-benchmarking.md](28-jit-and-performance/02-jmh-and-benchmarking.md) | Completed | Quality pass 2026-11-10 | Runnable JMH sample in build module |
-| [03-profiling.md](28-jit-and-performance/03-profiling.md) | Completed | Quality pass 2026-11-10 | JFR event catalog |
+| [01-hotspot-and-tiered-compilation.md](28-jit-and-performance/01-hotspot-and-tiered-compilation.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~290 lines; was ~56) | `PrintCompilation` walkthrough optional |
+| [02-jmh-and-benchmarking.md](28-jit-and-performance/02-jmh-and-benchmarking.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~297 lines; was ~68) | Runnable JMH sample in build module |
+| [03-profiling.md](28-jit-and-performance/03-profiling.md) | Completed | Deep-dive EXPAND-PRESERVE 2026-11-11 (~267 lines; was ~58) | JFR event catalog |
 | [Module assessment](assessments/module-assessments/28-jit-performance-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -725,10 +725,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-classpath-jars-and-modules.md](29-build-tools-and-dependency-management/01-classpath-jars-and-modules.md) | Completed | Quality pass 2026-11-10 | Gradle wrapper lab optional |
-| [02-maven.md](29-build-tools-and-dependency-management/02-maven.md) | Completed | Quality pass 2026-11-10 | Multi-module POM later |
-| [03-gradle.md](29-build-tools-and-dependency-management/03-gradle.md) | Completed | Quality pass 2026-11-10 | Runnable Gradle project when wrapper added |
-| [04-java-platform-module-system.md](29-build-tools-and-dependency-management/04-java-platform-module-system.md) | Completed | Quality pass 2026-11-10 | jlink exercise later |
+| [01-classpath-jars-and-modules.md](29-build-tools-and-dependency-management/01-classpath-jars-and-modules.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~263 lines; was ~78) | Gradle wrapper lab optional |
+| [02-maven.md](29-build-tools-and-dependency-management/02-maven.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~219 lines; was ~72) | Multi-module POM later |
+| [03-gradle.md](29-build-tools-and-dependency-management/03-gradle.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~215 lines; was ~71) | Runnable Gradle project when wrapper added |
+| [04-java-platform-module-system.md](29-build-tools-and-dependency-management/04-java-platform-module-system.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~214 lines; was ~58) | jlink exercise later |
 | [Module assessment](assessments/module-assessments/29-build-tools-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -739,7 +739,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `maven-awareness-demo` | `mavenCompiled=ok`; `javaVersion=21.0.12.1` (Maven 3.9.6) |
 | `jpms-hello-demo` | `greeting=jpms-ok`; `module=app` |
 
-**Module 29 status:** Completed  
+**Module 29 status:** Completed (EXPAND-PRESERVE L2–3, 2026-11-11)  
 **Next recommended chapter:** Module 30 (Completed below)
 
 ---
@@ -748,9 +748,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-testing-fundamentals.md](30-testing-and-quality/01-testing-fundamentals.md) | Completed | Quality pass 2026-11-10 | Parameterized tests expanded later |
-| [02-junit-and-mockito.md](30-testing-and-quality/02-junit-and-mockito.md) | Completed | Quality pass 2026-11-10 | Dedicated Mockito runnable module optional |
-| [03-static-analysis-and-ci.md](30-testing-and-quality/03-static-analysis-and-ci.md) | Completed | Quality pass 2026-11-10 | Sonar sample pipeline later |
+| [01-testing-fundamentals.md](30-testing-and-quality/01-testing-fundamentals.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~205 lines; was ~59) | Parameterized tests expanded later |
+| [02-junit-and-mockito.md](30-testing-and-quality/02-junit-and-mockito.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~254 lines; was ~77) | Dedicated Mockito runnable module optional |
+| [03-static-analysis-and-ci.md](30-testing-and-quality/03-static-analysis-and-ci.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~202 lines; was ~62) | Sonar sample pipeline later |
 | [Module assessment](assessments/module-assessments/30-testing-quality-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -758,9 +758,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | Example | Result |
 |---------|--------|
 | `testing-fundamentals-demo` | three `pass:` lines; `allTests=ok` |
-| `h2-jdbc-demo` (JUnit) | `mvn -q test` BUILD SUCCESS |
+| `h2-jdbc-demo` (exec) | `name=Ada`; `rowCount=1`; `jdbcH2=ok` (2026-11-11) |
+| `h2-jdbc-demo` (JUnit) | `mvn -q test` BUILD SUCCESS (Maven 3.9.6 validation host) |
 
-**Module 30 status:** Completed  
+**Module 30 status:** Completed (EXPAND-PRESERVE L2–3, 2026-11-11)  
 **Next recommended chapter:** Module 31 (Completed below)
 
 ---
@@ -769,9 +770,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-ide-debugging.md](31-debugging-and-troubleshooting/01-ide-debugging.md) | Completed | Quality pass 2026-11-10 | Remote JDWP lab |
-| [02-dumps-and-flight-recorder.md](31-debugging-and-troubleshooting/02-dumps-and-flight-recorder.md) | Completed | Quality pass 2026-11-10 | Capture live `jcmd` excerpt in appendix |
-| [03-production-incidents.md](31-debugging-and-troubleshooting/03-production-incidents.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-ide-debugging.md](31-debugging-and-troubleshooting/01-ide-debugging.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~189 lines; was ~56) | Remote JDWP lab |
+| [02-dumps-and-flight-recorder.md](31-debugging-and-troubleshooting/02-dumps-and-flight-recorder.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~184 lines; was ~67) | Capture live `jcmd` excerpt in appendix |
+| [03-production-incidents.md](31-debugging-and-troubleshooting/03-production-incidents.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~178 lines; was ~51) | — |
 | [Module assessment](assessments/module-assessments/31-debugging-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -781,7 +782,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `debug-target-demo` | `count=1`; `expectedCorrect=1` |
 | `diagnostics-awareness-demo` | `threadCount=7`; `jvmName=OpenJDK 64-Bit Server VM` |
 
-**Module 31 status:** Completed  
+**Module 31 status:** Completed (EXPAND-PRESERVE L2–3, 2026-11-11)  
 **Next recommended chapter:** Module 32 (Completed below)
 
 ---
@@ -790,9 +791,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-sockets-and-tcp.md](32-networking-and-http/01-sockets-and-tcp.md) | Completed | Quality pass 2026-11-10 | NIO selector module later |
-| [02-http-and-httpclient.md](32-networking-and-http/02-http-and-httpclient.md) | Completed | Quality pass 2026-11-10 | HTTP/2 push notes optional |
-| [03-tls-and-resilience-basics.md](32-networking-and-http/03-tls-and-resilience-basics.md) | Completed | Quality pass 2026-11-10 | Resilience4j hands-on in backend track |
+| [01-sockets-and-tcp.md](32-networking-and-http/01-sockets-and-tcp.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~195 lines; was ~55) | NIO selector module later |
+| [02-http-and-httpclient.md](32-networking-and-http/02-http-and-httpclient.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~210 lines; was ~57) | HTTP/2 push notes optional |
+| [03-tls-and-resilience-basics.md](32-networking-and-http/03-tls-and-resilience-basics.md) | Completed | EXPAND-PRESERVE 2026-11-11 (~205 lines; was ~66) | Resilience4j hands-on in backend track |
 | [Module assessment](assessments/module-assessments/32-networking-http-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -802,7 +803,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `tcp-loopback-demo` | `echo=echo:ping`; `port=19042` |
 | `http-client-demo` | `status=200`; `bodyStartsWith=true`; `headerServer=cloudflare` |
 
-**Module 32 status:** Completed  
+**Module 32 status:** Completed (EXPAND-PRESERVE L2–3, 2026-11-11)  
 **Next recommended chapter:** Module 33 (Completed below)
 
 ---
@@ -811,18 +812,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-relational-and-sql-basics.md](33-databases-and-jdbc/01-relational-and-sql-basics.md) | Completed | Quality pass 2026-11-10 | Testcontainers note in Spring modules |
-| [02-jdbc-fundamentals.md](33-databases-and-jdbc/02-jdbc-fundamentals.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-transactions-and-pooling.md](33-databases-and-jdbc/03-transactions-and-pooling.md) | Completed | Quality pass 2026-11-10 | HikariCP numeric tuning lab |
+| [01-relational-and-sql-basics.md](33-databases-and-jdbc/01-relational-and-sql-basics.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | Testcontainers note in Spring modules |
+| [02-jdbc-fundamentals.md](33-databases-and-jdbc/02-jdbc-fundamentals.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | — |
+| [03-transactions-and-pooling.md](33-databases-and-jdbc/03-transactions-and-pooling.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | HikariCP numeric tuning lab |
 | [Module assessment](assessments/module-assessments/33-databases-jdbc-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1; H2 2.3.232):**
+**Examples compiled (Temurin JDK 21.0.12.1; H2 2.3.232; re-run 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
 | `h2-jdbc-demo` | `name=Ada`; `rowCount=1`; `jdbcH2=ok` |
 
-**Module 33 status:** Completed  
+**Module 33 status:** Completed (EXPAND-PRESERVE L3 depth 2026-11-11)  
 **Next recommended chapter:** Module 34 (Completed below)
 
 ---
@@ -831,11 +832,11 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-sql-for-java-developers.md](34-sql-and-data-access/01-sql-for-java-developers.md) | Completed | Quality pass 2026-11-10 | Window function exercises |
-| [02-query-design-and-migrations.md](34-sql-and-data-access/02-query-design-and-migrations.md) | Completed | Quality pass 2026-11-10 | Flyway sample in project track |
+| [01-sql-for-java-developers.md](34-sql-and-data-access/01-sql-for-java-developers.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | Window function exercises |
+| [02-query-design-and-migrations.md](34-sql-and-data-access/02-query-design-and-migrations.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | Flyway sample in project track |
 | [Module assessment](assessments/module-assessments/34-sql-data-access-assessment.md) | Completed | Solutions separate | — |
 
-**Module 34 status:** Completed (SQL verification via Module 33 `h2-jdbc-demo` count query)  
+**Module 34 status:** Completed (EXPAND-PRESERVE L3 depth 2026-11-11; SQL via `h2-jdbc-demo` count query)  
 **Next recommended chapter:** Module 35 (Completed below)
 
 ---
@@ -844,18 +845,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-orm-and-entities.md](35-hibernate-and-jpa/01-orm-and-entities.md) | Completed | Quality pass 2026-11-10 | Spring Data in Module 36 |
-| [02-relationships-and-fetching.md](35-hibernate-and-jpa/02-relationships-and-fetching.md) | Completed | Quality pass 2026-11-10 | Relationship demo module optional |
-| [03-transactions-caching-and-performance.md](35-hibernate-and-jpa/03-transactions-caching-and-performance.md) | Completed | Quality pass 2026-11-10 | 2LC tuning out of scope |
+| [01-orm-and-entities.md](35-hibernate-and-jpa/01-orm-and-entities.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | Spring Data in Module 36 |
+| [02-relationships-and-fetching.md](35-hibernate-and-jpa/02-relationships-and-fetching.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | Relationship demo module optional |
+| [03-transactions-caching-and-performance.md](35-hibernate-and-jpa/03-transactions-caching-and-performance.md) | Completed | EXPAND-PRESERVE L3 depth 2026-11-11 | 2LC tuning out of scope |
 | [Module assessment](assessments/module-assessments/35-hibernate-jpa-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1; Hibernate 6.6.4.Final):**
+**Examples compiled (Temurin JDK 21.0.12.1; Hibernate 6.6.4.Final; re-run 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
 | `jpa-h2-demo` | `name=Lin`; `idNotNull=true`; `jpaH2=ok` |
 
-**Module 35 status:** Completed  
+**Module 35 status:** Completed (EXPAND-PRESERVE L3 depth 2026-11-11)  
 **Next recommended chapter:** Module 36 (Completed below)
 
 ---

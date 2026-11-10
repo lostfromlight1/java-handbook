@@ -2,7 +2,7 @@
 
 **Target Java version:** 21 LTS  
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
-**Last updated:** 2026-11-10 (Module 01 completed)
+**Last updated:** 2026-11-10 (Module 02 completed)
 
 ## Status values
 
@@ -92,10 +92,34 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `examples/beginner/classpath-demo` | `Hello, Handbook!` with `-d out` / `-cp out` |
 
 **Module 01 status:** Completed  
-**Next recommended chapter:** `02-java-fundamentals/01-variables-and-types.md`
+**Next recommended chapter after M01:** Module 02 (Completed below)
 
 ---
 
-## Modules 02–53
+## Module 02 — Java Fundamentals
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-variables-and-types.md](02-java-fundamentals/01-variables-and-types.md) | Completed | Self-review 2026-11-10 | — |
+| [02-operators-and-expressions.md](02-java-fundamentals/02-operators-and-expressions.md) | Completed | Self-review 2026-11-10 | — |
+| [03-scope-naming-and-comments.md](02-java-fundamentals/03-scope-naming-and-comments.md) | Completed | Self-review 2026-11-10 | — |
+| [04-type-conversion-and-inference.md](02-java-fundamentals/04-type-conversion-and-inference.md) | Completed | Self-review 2026-11-10 | — |
+| [Module assessment](assessments/module-assessments/02-java-fundamentals-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Oracle JDK 21.0.9):**
+
+| Example | Result |
+|---------|--------|
+| `examples/core-java/primitives-demo` | All primitive samples + String printed |
+| `examples/core-java/operators-demo` | `10/3=3`, precedence 14/20, `++` behavior |
+| `examples/core-java/scope-demo` | Block/loop scope as documented |
+| `examples/core-java/conversion-demo` | widen 42.0; narrow 3; `5/2=2`; `5/2.0=2.5`; var |
+
+**Module 02 status:** Completed  
+**Next recommended chapter:** `03-control-flow/01-conditionals.md`
+
+---
+
+## Modules 03–53
 
 Remaining modules: **Not started** (indexes only). See each module `README.md` for planned chapter lists. Do not treat indexes as written chapters.

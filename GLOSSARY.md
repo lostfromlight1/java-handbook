@@ -31,5 +31,13 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Package** | Namespace for Java types; usually mirrors directories. | [Module 01 Ch.05](01-java-getting-started/05-project-structure-and-jshell.md) |
 | **Classpath** | Locations where the JVM searches for user classes. | Module 01 Ch.05 |
 | **JShell** | Official Java REPL included with the JDK. | Module 01 Ch.05 |
+| **Primitive type** | One of Java’s eight built-in non-reference value types. | [Module 02 Ch.01](02-java-fundamentals/01-variables-and-types.md) |
+| **Literal** | Source-code representation of a fixed value (e.g. `42`, `"hi"`). | Module 02 Ch.01 |
+| **Expression** | Code that produces a value. | [Module 02 Ch.02](02-java-fundamentals/02-operators-and-expressions.md) |
+| **Short-circuit** | Skipping evaluation of the right operand when the result is already known. | Module 02 Ch.02 |
+| **Scope** | Region of a program where a declared name is visible. | [Module 02 Ch.03](02-java-fundamentals/03-scope-naming-and-comments.md) |
+| **Widening** | Numeric conversion to a wider type without a cast. | [Module 02 Ch.04](02-java-fundamentals/04-type-conversion-and-inference.md) |
+| **Narrowing** | Numeric conversion that may lose information; requires a cast. | Module 02 Ch.04 |
+| **var** | Local-variable type inference (Java 10+); still statically typed. | Module 02 Ch.04 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

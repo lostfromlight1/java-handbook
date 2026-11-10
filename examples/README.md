@@ -5,7 +5,7 @@ Runnable Java examples validated on JDK 21 when possible.
 | Area | Path |
 |------|------|
 | Beginner | [beginner/](beginner/) |
-| Core Java | [core-java/](core-java/) |
+| Core Java | [core-java/](core-java/) (Module 02+ demos) |
 | Collections | [collections/](collections/) |
 | Concurrency | [concurrency/](concurrency/) |
 | JVM | [jvm/](jvm/) |

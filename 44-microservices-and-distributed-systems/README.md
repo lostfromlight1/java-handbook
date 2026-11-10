@@ -1,13 +1,15 @@
 # Module 44 — Microservices and Distributed Systems
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Distributed Fundamentals | Not started |
-| 02 | Resilience Patterns | Not started |
-| 03 | Consistency and Sagas | Not started |
+| 01 | [Distributed Fundamentals](01-distributed-fundamentals.md) | Completed |
+| 02 | [Resilience Patterns](02-resilience-patterns.md) | Completed |
+| 03 | [Consistency and Sagas](03-consistency-and-sagas.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 32, 40.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [44-microservices-assessment.md](../assessments/module-assessments/44-microservices-assessment.md)
+
+**Examples:** [circuit-breaker-demo](../examples/resilience/circuit-breaker-demo/)

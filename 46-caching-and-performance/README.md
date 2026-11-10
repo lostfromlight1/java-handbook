@@ -1,13 +1,15 @@
 # Module 46 — Caching and Performance Engineering
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Caching Strategies | Not started |
-| 02 | Redis and Invalidation | Not started |
-| 03 | Load Testing and Capacity | Not started |
+| 01 | [Caching Strategies](01-caching-strategies.md) | Completed |
+| 02 | [Redis and Invalidation](02-redis-and-invalidation.md) | Completed |
+| 03 | [Load Testing and Capacity](03-load-testing-and-capacity.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 33–35, 44–45 helpful.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [46-caching-performance-assessment.md](../assessments/module-assessments/46-caching-performance-assessment.md)
+
+**Examples:** [in-memory-cache-demo](../examples/caching/in-memory-cache-demo/)

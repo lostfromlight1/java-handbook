@@ -1,13 +1,13 @@
 # Module 25 — Java Memory Model
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Stack, Heap, and References | Not started |
-| 02 | Happens-Before and Visibility | Not started |
-| 03 | Safe Publication | Not started |
+| 01 | [Stack, Heap, and References](01-stack-heap-and-references.md) | Completed |
+| 02 | [Happens-Before and Visibility](02-happens-before-and-visibility.md) | Completed |
+| 03 | [Safe Publication](03-safe-publication.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Module 24; stack/heap from Module 00–04.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [25-java-memory-model-assessment.md](../assessments/module-assessments/25-java-memory-model-assessment.md)

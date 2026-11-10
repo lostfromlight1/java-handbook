@@ -379,10 +379,32 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `generics-api-demo` | `found=Ada`; `missing=false`; `count=1` |
 
 **Module 13 status:** Completed
-**Next recommended chapter:** [14-exceptions-and-error-handling/](14-exceptions-and-error-handling/) (throw, catch, design)
+**Next recommended chapter:** [15-enums-records-and-sealed-types/](15-enums-records-and-sealed-types/) (enums, records, sealed)
 
 ---
 
-## Modules 14–53
+## Module 14 — Exceptions and Error Handling
 
-Remaining modules: **Not started** (indexes only), except Module 13 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-throwable-hierarchy.md](14-exceptions-and-error-handling/01-throwable-hierarchy.md) | Completed | Quality pass 2026-11-10 | Virtual threads and structured concurrency cite later modules |
+| [02-try-catch-finally-and-try-with-resources.md](14-exceptions-and-error-handling/02-try-catch-finally-and-try-with-resources.md) | Completed | Quality pass 2026-11-10 | try-with-resources on custom types only |
+| [03-custom-exceptions-and-design.md](14-exceptions-and-error-handling/03-custom-exceptions-and-design.md) | Completed | Quality pass 2026-11-10 | Bean Validation / framework handlers in later modules |
+| [Module assessment](assessments/module-assessments/14-exceptions-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `throwable-demo` | `caughtUnchecked=bad-arg`; `caughtChecked=missing-file`; `runtimeIsUnchecked=true`; `errorIsThrowable=true` |
+| `try-with-resources-demo` | `ok-path`; `finally-ran`; `catch2=boom`; `finally2-ran`; `open=R1`; `data-R1`; `close=R1` |
+| `custom-exceptions-demo` | `balance=60`; `error=need 40 more`; `shortfall=40` |
+
+**Module 14 status:** Completed  
+**Next recommended chapter:** [15-enums-records-and-sealed-types/](15-enums-records-and-sealed-types/) (enums, records, sealed)
+
+---
+
+## Modules 15–53
+
+Remaining modules: **Not started** (indexes only), except Modules 13–14 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

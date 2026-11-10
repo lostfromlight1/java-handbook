@@ -131,5 +131,11 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Map** | Key-to-value associations; not a `Collection` of elements. | [Module 12 Ch.04](12-collections-framework/04-maps-and-hashing.md) |
 | **HashMap** | Hash table map; bucket index from `hashCode`, key match via `equals`. | Module 12 Ch.04 |
 | **Fail-fast iterator** | Iterator that throws `ConcurrentModificationException` on detected structural change during iteration. | [Module 12 Ch.05](12-collections-framework/05-internals-and-choosing-structures.md) |
+| **Throwable** | Root type for all errors and exceptions in Java; carries message, optional cause, and stack trace. | [Module 14 Ch.01](14-exceptions-and-error-handling/01-throwable-hierarchy.md) |
+| **Checked exception** | `Exception` subtype that is not a `RuntimeException`; callers must catch or declare `throws`. | Module 14 Ch.01 |
+| **Unchecked exception** | `RuntimeException` or `Error`; no compile-time requirement to catch or declare on callers. | Module 14 Ch.01 |
+| **Try-with-resources** | `try` declaring `AutoCloseable` resources; `close()` runs automatically in defined order. | [Module 14 Ch.02](14-exceptions-and-error-handling/02-try-catch-finally-and-try-with-resources.md) |
+| **Suppressed exception** | Secondary failure recorded on a primary throwable (e.g. `close()` after body throws) via `getSuppressed()`. | Module 14 Ch.02 |
+| **Stack trace** | Ordered list of call frames captured when a throwable is created, used for debugging. | Module 14 Ch.01 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

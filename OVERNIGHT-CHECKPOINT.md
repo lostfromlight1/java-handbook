@@ -1,27 +1,28 @@
 # Overnight autonomous work checkpoint
 
-**Started:** 2026-11-10  
-**Branch:** `master` (tracks `origin/master`)  
+**Last updated:** 2026-11-10  
+**Branch:** `master` → `origin/master`  
 **JDK:** Temurin 21.0.12.1  
-**Reference quality:** Module 17 Streams pilot + master chapter template
+**Reference:** Module 17 Streams pilot + master chapter template
 
-## Assessment snapshot
+## Resume here next session
 
-- Early modules (00–05) have substantial content but lacked new profile/Mechanism/verification-label metadata.
-- Module 17 is the reference Technical/Deep-dive structure.
-- Strategy: expand-preserve standards alignment per module; deepen only where PROGRESS outstanding notes require; commit+push after each module.
+**Next module:** `04-methods-and-functions` — same expand-preserve standards alignment (profiles, Mechanism, Verified labels, Temurin re-verify demos, PROGRESS update), then commit+push.
+
+Do **not** regenerate strong chapters. Continue numerical order through the curriculum. Prefer quality over speed.
 
 ## Completed this overnight run
 
-| Commit | Summary |
-|--------|---------|
-| `ddf6b3e` | Master template + standards + Cursor config |
-| `80aa3eb` | Module 17 Streams pilot |
-| `e6e7efa` | Modules 36–37 depth + spring-boot-minimal |
-| `c759652` | Overnight checkpoint file |
+| Commit | What |
+|--------|------|
+| `ddf6b3e` | Master template + DOCUMENTATION-STANDARDS + Cursor config |
+| `80aa3eb` | Module 17 Streams pilot (Technical + Deep-dive) |
+| `e6e7efa` | Modules 36–37 textbook depth + spring-boot-minimal |
+| `c759652` | Overnight checkpoint tracking file |
 | `30ac170` | Module 00 standards alignment |
-| `30ac170`+ | Module 01 standards alignment (pending this update) |
+| `4f1fa82` | Module 01 standards alignment |
+| *(M02/M03)* | Modules 02–03 standards alignment (this batch) |
 
-## Resume point
+## Method
 
-After Module 01 push: continue Module 02, then 03, same expand-preserve pattern. Do not rush handbook-wide regenerations.
+Expand-preserve per module: add profile/depth, Mechanism section, verification labels, checklist/omissions; light deepen for PROGRESS outstanding notes only; re-verify demos; commit+push; stop cleanly.

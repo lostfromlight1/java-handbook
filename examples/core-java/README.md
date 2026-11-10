@@ -14,3 +14,6 @@
 | [abstract-classes-demo/](abstract-classes-demo/) | 07 | Validated Temurin 21.0.12.1 |
 | [dispatch-lsp-demo/](dispatch-lsp-demo/) | 07 | Validated Temurin 21.0.12.1 |
 | [sealed-classes-demo/](sealed-classes-demo/) | 07 | Validated Temurin 21.0.12.1 |
+| [access-control-demo/](access-control-demo/) | 09 | Validated Temurin 21.0.12.1 |
+| [coupling-cohesion-demo/](coupling-cohesion-demo/) | 09 | Validated Temurin 21.0.12.1 |
+| [composition-vs-inheritance-demo/](composition-vs-inheritance-demo/) | 09 | Validated Temurin 21.0.12.1 |

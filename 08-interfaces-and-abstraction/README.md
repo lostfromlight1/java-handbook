@@ -22,4 +22,4 @@
 
 **Assessment:** [08-interfaces-and-abstraction-assessment.md](../assessments/module-assessments/08-interfaces-and-abstraction-assessment.md)
 
-**Next recommended module:** [09-encapsulation-and-design](../09-encapsulation-and-design/README.md)
+**Next recommended module:** [10-java-type-system](../10-java-type-system/README.md) — after [09-encapsulation-and-design](../09-encapsulation-and-design/README.md) (completed)

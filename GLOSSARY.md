@@ -88,5 +88,12 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Single abstract method (SAM)** | The one abstract instance method a functional interface exposes to lambda implementations. | Module 08 Ch.03 |
 | **Marker interface** | Interface declaring no methods; tags a type for frameworks or domain rules (e.g. `Serializable`). | Module 08 Ch.03 |
 | **Dependency Inversion Principle (DIP)** | High-level modules depend on abstractions; concrete details implement those abstractions at wiring time. | [Module 08 Ch.04](08-interfaces-and-abstraction/04-api-design-with-interfaces.md) |
+| **Public API** | Types and members intended for use outside the owning library or package; stable dependency surface. | [Module 09 Ch.01](09-encapsulation-and-design/01-access-control-and-api-boundaries.md) |
+| **Information hiding** | Concealing internal representation so callers cannot bypass invariants. | Module 09 Ch.01 |
+| **Coupling** | Degree of interdependence between software units; lower is usually easier to change. | [Module 09 Ch.02](09-encapsulation-and-design/02-coupling-and-cohesion.md) |
+| **Cohesion** | Degree to which elements inside one module belong to a single, focused purpose. | Module 09 Ch.02 |
+| **Single Responsibility Principle (SRP)** | A class should have one reason to change—one axis of responsibility at its abstraction level. | Module 09 Ch.02 |
+| **Delegation** | An object forwards a request to a collaborator that performs the work. | [Module 09 Ch.03](09-encapsulation-and-design/03-composition-versus-inheritance.md) |
+| **Fragile base class** | Superclass change that breaks subclasses without edits to subclass code. | Module 09 Ch.03 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

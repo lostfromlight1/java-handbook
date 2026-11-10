@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 08 completed)
+**Last updated:** 2026-11-10 (Module 09 completed)
 
 ## Status values
 
@@ -262,10 +262,32 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `api-interfaces-demo` | created:ada; exists:ada; find=ada |
 
 **Module 08 status:** Completed  
-**Next recommended chapter:** [09-encapsulation-and-design/](09-encapsulation-and-design/) (SOLID, packaging)
+**Next recommended chapter:** Module 09 (Completed below)
 
 ---
 
-## Modules 09–53
+## Module 09 — Encapsulation and Design
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-access-control-and-api-boundaries.md](09-encapsulation-and-design/01-access-control-and-api-boundaries.md) | Completed | Quality pass 2026-11-10 | JPMS deep dive in later modules |
+| [02-coupling-and-cohesion.md](09-encapsulation-and-design/02-coupling-and-cohesion.md) | Completed | Quality pass 2026-11-10 | Architectural metrics optional later |
+| [03-composition-versus-inheritance.md](09-encapsulation-and-design/03-composition-versus-inheritance.md) | Completed | Quality pass 2026-11-10 | Decorator pattern examples in M15+ |
+| [Module assessment](assessments/module-assessments/09-encapsulation-and-design-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `access-control-demo` | `balance=150`; `entries=2` |
+| `coupling-cohesion-demo` | `total=1050`; `ORD-9 => 1050 cents` |
+| `composition-vs-inheritance-demo` | `Sedan / 180hp`; `start=true`; audit log lines; `done:save` |
+
+**Module 09 status:** Completed  
+**Next recommended chapter:** [10-java-type-system/](10-java-type-system/) (static typing, `instanceof`, variance preview)
+
+---
+
+## Modules 10–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

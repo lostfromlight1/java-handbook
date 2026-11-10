@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 49 — Cloud and Containerization  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -91,6 +93,21 @@ spec:
 ```
 
 **Teaching notes:** `initialDelaySeconds` must exceed typical Spring Boot startup on cold JVM; tune with real metrics.
+
+## 5. Mechanism and Execution Flow
+
+**Rolling update:** Deployment controller creates new ReplicaSet pods; removes old pods when `maxUnavailable`/`maxSurge` allow. **Service** kube-proxy (or dataplane) only routes to pods passing **readiness**.
+
+```mermaid
+sequenceDiagram
+  participant D as Deployment controller
+  participant P as New JVM pod
+  participant S as Service endpoints
+  D->>P: start container
+  P->>P: Spring context + JVM warm
+  P->>S: endpoints add when readiness OK
+  Note over S: JDBC URL still points to managed DB hostname
+```
 
 ### Networking
 

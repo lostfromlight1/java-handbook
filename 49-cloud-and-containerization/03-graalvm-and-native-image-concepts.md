@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 49 — Cloud and Containerization  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -15,12 +17,12 @@
 ## 2. Prerequisites
 
 - **Module 26** — JIT compilation overview.
-- **Module 36–37** — Spring DI, proxies, reflection-heavy frameworks.
-- **Module 50 Ch.01** — reflection and annotations (for native metadata).
+- **Modules 36–37** — Spring DI, proxies, reflection-heavy frameworks.
+- **Module 50 Ch.01** — reflection and annotations (native metadata).
 
 ## 3. Why This Concept Exists
 
-Serverless and dense Kubernetes charge for **memory** and **startup time**. A conventional JVM warms up JIT and uses more RSS. **GraalVM Native Image** compiles a closed-world subset of the app to a **native binary** with faster startup and smaller footprint—at the cost of build complexity and dynamic-language restrictions.
+Serverless and dense Kubernetes charge for **memory** and **startup time**. A conventional Temurin JVM warms up JIT and uses more RSS. **GraalVM Native Image** compiles a closed-world subset to a **native binary** with faster cold start and smaller footprint—at build complexity and dynamic-language cost.
 
 ## 4. Conceptual Explanation
 
@@ -29,11 +31,11 @@ Serverless and dense Kubernetes charge for **memory** and **startup time**. A co
 | Mode | Startup | Peak throughput | Dynamic reflection |
 |------|---------|-----------------|---------------------|
 | **HotSpot** (Temurin 21) | Slower warm | Excellent after warmup | Full |
-| **Native Image** | Fast cold | Good; differs by workload | Must be declared at build time |
+| **Native Image** | Fast cold | Workload-dependent | Declared at build time |
 
 ### Closed-world assumption
 
-Native Image **analyzes** reachability at build time. Code paths not reachable may be stripped. **Reflection**, **JNI**, **classpath resources**, **dynamic proxies**, and **serialization** need **metadata** (`reflect-config.json`, `resource-config.json`, Spring AOT processing in Boot 3).
+Native Image **analyzes reachability at build time**. Unreachable code may be stripped. **Reflection**, **JNI**, **classpath resources**, **dynamic proxies**, and **serialization** need **metadata** (`reflect-config.json`, Spring AOT in Boot 3).
 
 ### Spring Boot 3 + native (conceptual)
 
@@ -41,66 +43,101 @@ Native Image **analyzes** reachability at build time. Code paths not reachable m
 ./mvnw -Pnative native:compile
 ```
 
-Build uses **Spring AOT** to generate bean definitions without full classpath scan at runtime. Still requires testing every integration (JPA, WebClient, etc.).
+Build uses **Spring AOT** to generate bean definitions without full classpath scan at runtime. Still requires integration testing (JPA, WebClient, etc.).
 
 ### When to choose native
 
 | Good fit | Poor fit |
 |----------|----------|
-| CLI tools, small APIs, functions | Heavy JIT workloads, lots of dynamic codegen |
+| CLI tools, small APIs, functions | Heavy JIT workloads, dynamic codegen |
 | Strict memory limits | Extensive reflection without config |
 | Fast scale-from-zero | Java agents, deep JVMTI (Module 50) |
 
 ### GraalVM vs Temurin
 
-**Temurin** — reference OpenJDK HotSpot for handbook primary path. **GraalVM** distribution provides `native-image` tool and optional same JDK bits. Production teams often use **GraalVM CE** or vendor builds for native; runtime JVM services may stay on Temurin.
+**Temurin** — handbook primary HotSpot path. **GraalVM** distribution provides `native-image`. Many teams run **JVM services on Temurin** and adopt native only for specific workloads.
 
-## 5. Internal Behavior (labeled)
+## 5. Mechanism and Execution Flow
 
-Native Image includes **Substrate VM** (not HotSpot). No traditional JIT; some JIT-like optimizations at build time. **GC** (e.g. G1-like serializers) differs—profile memory under load.
+### Build-time vs run-time (HotSpot vs native)
 
-## 6. Edge Cases
+```mermaid
+flowchart TB
+  subgraph hotspot [HotSpot Temurin]
+    B1[bytecode] --> L[class loading]
+    L --> J[JIT compile hot methods]
+    J --> R[run]
+  end
+  subgraph native [Native Image AOT]
+    B2[bytecode + closed world] --> A[AOT compile]
+    A --> N[native binary]
+    N --> R2[run without JIT]
+  end
+```
 
-- **Class.forName** in libraries without reachability config → `ClassNotFoundException` at runtime.
-- **CGLIB** proxies vs JDK proxies — Spring native prefers different code paths.
-- **Preview features** (FFM on 21) — native support lags; verify release notes.
+### Reflection reachability failure path
 
-## 7. Common Mistakes
+1. Code calls `Class.forName("com.example.Hidden")` at runtime.
+2. Build-time analysis did not see constant → class not included.
+3. Runtime: `ClassNotFoundException` or missing resource.
+
+**Fix:** `reflect-config.json`, Spring AOT hints, or eliminate dynamic `forName` in hot paths.
+
+## 6. Internal Behavior (labeled)
+
+Native Image includes **Substrate VM** (not HotSpot). No traditional HotSpot JIT; optimizations largely at **build time**. GC choices differ—profile RSS and pause under load; do not assume G1 tuning flags transfer.
+
+## 7. Terminology
+
+| Term | Meaning |
+|------|---------|
+| **Reachability analysis** | Build-time graph of classes/methods |
+| **Spring AOT** | Generated bean factories for native |
+| **Closed world** | No unseen classes at runtime |
+
+## 8. Edge Cases
+
+- **Class.forName** in libraries without config → runtime failure.
+- **CGLIB** vs JDK proxies — Spring native prefers different paths (Module 50).
+- **Preview features** (FFM on 21) — verify native support for target GraalVM version.
+
+## 9. Common Mistakes
 
 ### Incorrect — native build once, never integration-test
 
-Passes smoke test; fails on first reflective Hibernate path.
+Passes smoke; fails on reflective Hibernate path.
 
-### Corrected — full regression suite on native binary in CI.
+### Corrected — full regression on native binary in CI.
 
-### Incorrect — expecting identical JVM tuning flags
+### Incorrect — expecting identical HotSpot `-XX:*` flags
 
-Many `-XX:*` HotSpot flags do not apply.
+Many flags do not apply to Substrate VM.
 
-### Corrected — native-specific docs and monitoring.
+### Corrected — native-specific monitoring and tuning docs.
 
-## 8. Design Trade-offs
+## 10. Design Trade-offs
 
 | JVM container | Native binary |
 |---------------|---------------|
-| Familiar ops | Smaller image, faster start |
-| Agents/FFM easier | Build minutes, metadata maintenance |
+| Familiar ops, agents, FFM | Smaller image, faster start |
+| Peak throughput after warm | Metadata maintenance |
 
-## 9. Revision and Mastery
+## 11. Revision and Mastery
 
 - Why does reflection need configuration in native image?
 - Name two workloads better on HotSpot.
 - How does Spring AOT relate to closed-world assumption?
 
-## 10. Exercises
+## 12. Exercises
 
-1. List handbook demos that would need reflection config (proxy demo, JPA).
+1. List handbook demos needing reflection config (proxy demo, JPA).
 2. Compare startup goals for API vs batch job.
 
-## 11. Chapter Summary
+## 13. Chapter Summary
 
-GraalVM Native Image trades dynamic flexibility for startup and size; Java 21 services usually stay on HotSpot unless requirements drive native. Plan reflection metadata (Module 50) and Spring AOT when adopting.
+GraalVM Native Image trades dynamic flexibility for startup and size; Java 21 services usually stay on Temurin unless requirements drive native. Plan reflection metadata (Module 50) and Spring AOT when adopting.
 
 ## Review Checklist
 
-- [x] HotSpot vs AOT; closed world; Spring; when to use
+- [x] Technical L2–3; AOT mechanism diagram; HotSpot vs AOT preserved
+- [x] Closed world; Spring; when to use

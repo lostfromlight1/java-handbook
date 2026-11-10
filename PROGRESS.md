@@ -477,9 +477,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-null-and-nullpointerexception.md](18-optional-and-null-handling/01-null-and-nullpointerexception.md) | Completed | Quality pass 2026-11-10 | JSpecify/nullness annotations in advanced tooling module |
-| [02-optional-api.md](18-optional-and-null-handling/02-optional-api.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-optional-design-and-misuse.md](18-optional-and-null-handling/03-optional-design-and-misuse.md) | Completed | Quality pass 2026-11-10 | Jackson Optional config in web modules |
+| [01-null-and-nullpointerexception.md](18-optional-and-null-handling/01-null-and-nullpointerexception.md) | Completed | Master-template align 2026-11-11 (Technical L2–3) | JSpecify/nullness annotations in advanced tooling module |
+| [02-optional-api.md](18-optional-and-null-handling/02-optional-api.md) | Completed | Master-template align 2026-11-11 (Technical L3) | — |
+| [03-optional-design-and-misuse.md](18-optional-and-null-handling/03-optional-design-and-misuse.md) | Completed | Master-template align 2026-11-11 (Technical L3) | Jackson Optional config in web modules |
 | [Module assessment](assessments/module-assessments/18-optional-null-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -487,10 +487,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | Example | Result |
 |---------|--------|
 | `null-npe-demo` | `safe=unknown`; `npe=NullPointerException`; `user=Ada`; `display=<anonymous>` |
-| `optional-api-demo` | `present=Ada`; `upper=ADA`; `fromEmpty=fallback`; `len=2` |
+| `optional-api-demo` | `present=Ada`; `emptyIsEmpty=true`; `upper=ADA`; `fromEmpty=fallback`; `len=2` |
 | `optional-design-demo` | `good=Ada`; `missing=unknown`; `hasUser1=true` |
 
-**Module 18 status:** Completed  
+**Module 18 status:** Completed (master-template align: profile + mechanism + Review Checklist; demos re-Verified Temurin 21.0.12.1)  
 **Next recommended chapter:** Module 19 (Completed below)
 
 ---
@@ -499,20 +499,20 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-java-21-feature-tour.md](19-modern-java-features/01-java-21-feature-tour.md) | Completed | Quality pass 2026-11-10 | Carrier pinning ops detail in concurrency module |
-| [02-features-after-java-21.md](19-modern-java-features/02-features-after-java-21.md) | Completed | Quality pass 2026-11-10 | Expand JEP table when appendix history grows |
-| [03-preview-and-incubator-features.md](19-modern-java-features/03-preview-and-incubator-features.md) | Completed | Quality pass 2026-11-10 | Re-verify JEP phase on JDK upgrades |
+| [01-java-21-feature-tour.md](19-modern-java-features/01-java-21-feature-tour.md) | Completed | Master-template align 2026-11-11 (Technical L3) | Carrier pinning ops detail in concurrency module |
+| [02-features-after-java-21.md](19-modern-java-features/02-features-after-java-21.md) | Completed | Master-template align 2026-11-11 (Technical L2–3) | Expand JEP table when appendix history grows |
+| [03-preview-and-incubator-features.md](19-modern-java-features/03-preview-and-incubator-features.md) | Completed | Master-template align 2026-11-11 (Technical L3) | Re-verify JEP phase on JDK upgrades |
 | [Module assessment](assessments/module-assessments/19-modern-java-features-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|
-| `java21-features-demo` | `virtualThread=vt-ready`; `recordPattern=3+4=7`; `textBlockLines=2` |
-| `features-after-21-demo` | `feature=21`; `handbookPrimary=21-LTS` |
+| `java21-features-demo` | `virtualThread=vt-ready`; `sequenced=head/tail`; `recordPattern=3+4=7`; `switchExpr=default`; `textBlockLines=2` |
+| `features-after-21-demo` | `feature=21`; `interim=0`; `update=12`; `handbookPrimary=21-LTS` |
 | `preview-incubator-demo` | `structuredConcurrency=scoped-result` (with `--enable-preview --release 21`) |
 
-**Module 19 status:** Completed  
+**Module 19 status:** Completed (master-template align; preview flags documented; demos re-Verified Temurin 21.0.12.1)  
 **Next recommended chapter:** Module 20 (Completed below)
 
 ---
@@ -521,20 +521,20 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-java-lang-and-java-util.md](20-java-standard-library/01-java-lang-and-java-util.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-io-nio-net-and-time-overview.md](20-java-standard-library/02-io-nio-net-and-time-overview.md) | Completed | Quality pass 2026-11-10 | HTTP client depth in networking modules |
-| [03-reflection-annotations-and-process-apis.md](20-java-standard-library/03-reflection-annotations-and-process-apis.md) | Completed | Quality pass 2026-11-10 | Annotation processors in build module |
+| [01-java-lang-and-java-util.md](20-java-standard-library/01-java-lang-and-java-util.md) | Completed | Master-template align 2026-11-11 (Technical L3) | — |
+| [02-io-nio-net-and-time-overview.md](20-java-standard-library/02-io-nio-net-and-time-overview.md) | Completed | Master-template align 2026-11-11 (Technical L2–3) | HTTP client depth in networking modules |
+| [03-reflection-annotations-and-process-apis.md](20-java-standard-library/03-reflection-annotations-and-process-apis.md) | Completed | Master-template align 2026-11-11 (Deep-dive L3–4) | Annotation processors in build module |
 | [Module assessment](assessments/module-assessments/20-java-standard-library-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|
-| `java-lang-util-demo` | `strip=Ada Lovelace`; `join=Bob-Ada-Lin`; `first=Bob` |
-| `stdlib-overview-demo` | `pathFileName=notes.txt`; `uriHost=example.com` |
-| `reflection-annotations-process-demo` | `reflectInvoke=hello Ada`; `processRan=true` |
+| `java-lang-util-demo` | `strip=Ada Lovelace`; `copyOf=[Bob, Ada, Lin]`; `first=Bob`; `join=Bob-Ada-Lin`; `hashConsistent=true` |
+| `stdlib-overview-demo` | `pathFileName=notes.txt`; `byteBufferPos=4`; `uriHost=example.com`; `instantEpoch=true` |
+| `reflection-annotations-process-demo` | `annotation=sample-bean`; `reflectInvoke=hello Ada`; `processRan=true`; `processArgs=[java, -version]` |
 
-**Module 20 status:** Completed  
+**Module 20 status:** Completed (master-template align; demos re-Verified Temurin 21.0.12.1)  
 **Next recommended chapter:** Module 21 (Completed below)
 
 ---
@@ -543,20 +543,20 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-files-and-streams.md](21-file-io-and-serialization/01-files-and-streams.md) | Completed | Quality pass 2026-11-10 | WatchService in advanced I/O |
-| [02-nio2.md](21-file-io-and-serialization/02-nio2.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-serialization-and-data-formats.md](21-file-io-and-serialization/03-serialization-and-data-formats.md) | Completed | Quality pass 2026-11-10 | Jackson module cross-link later |
+| [01-files-and-streams.md](21-file-io-and-serialization/01-files-and-streams.md) | Completed | Master-template align 2026-11-11 (Technical L3) | WatchService in advanced I/O |
+| [02-nio2.md](21-file-io-and-serialization/02-nio2.md) | Completed | Master-template align 2026-11-11 (Technical L3) | — |
+| [03-serialization-and-data-formats.md](21-file-io-and-serialization/03-serialization-and-data-formats.md) | Completed | Master-template align 2026-11-11 (Deep-dive L3–4) | Jackson module cross-link later |
 | [Module assessment](assessments/module-assessments/21-file-io-serialization-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|
-| `files-streams-demo` | `tempLines=3`; `bufferedTransform=ONE`/`TWO` |
-| `nio2-demo` | `read=nio2-line`; `listCount=2` |
-| `serialization-formats-demo` | `deserialized=Ada:97`; `propertiesStored=true` |
+| `files-streams-demo` | `tempLines=3`; `bufferedTransform=ONE`/`TWO`; `readBytes=17` |
+| `nio2-demo` | `exists=true`; `size=9`; `read=nio2-line`; `listCount=2` |
+| `serialization-formats-demo` | `serializedBytes=99`; `deserialized=Ada:97`; `propertiesStored=true`; `jsonBytes=25` |
 
-**Module 21 status:** Completed  
+**Module 21 status:** Completed (master-template align; demos re-Verified Temurin 21.0.12.1)  
 **Next recommended chapter:** Module 22 (Completed below)
 
 ---
@@ -565,9 +565,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-java-time.md](22-date-time-and-internationalization/01-java-time.md) | Completed | Quality pass 2026-11-10 | `Clock` testing patterns in unit-test module |
-| [02-time-zones-and-formatting.md](22-date-time-and-internationalization/02-time-zones-and-formatting.md) | Completed | Quality pass 2026-11-10 | DST edge cases expanded later |
-| [03-locale-and-internationalization.md](22-date-time-and-internationalization/03-locale-and-internationalization.md) | Completed | Quality pass 2026-11-10 | `MessageFormat` plural rules |
+| [01-java-time.md](22-date-time-and-internationalization/01-java-time.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | `Clock` testing patterns in unit-test module |
+| [02-time-zones-and-formatting.md](22-date-time-and-internationalization/02-time-zones-and-formatting.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | DST edge cases expanded later |
+| [03-locale-and-internationalization.md](22-date-time-and-internationalization/03-locale-and-internationalization.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | `MessageFormat` plural rules |
 | [Module assessment](assessments/module-assessments/22-date-time-i18n-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -587,8 +587,8 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-regex-fundamentals.md](23-regular-expressions/01-regex-fundamentals.md) | Completed | Quality pass 2026-11-10 | Unicode category flags |
-| [02-java-regex-api.md](23-regular-expressions/02-java-regex-api.md) | Completed | Quality pass 2026-11-10 | `Matcher.quoteReplacement` in log pipelines |
+| [01-regex-fundamentals.md](23-regular-expressions/01-regex-fundamentals.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | Unicode category flags |
+| [02-java-regex-api.md](23-regular-expressions/02-java-regex-api.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | `Matcher.quoteReplacement` in log pipelines |
 | [Module assessment](assessments/module-assessments/23-regular-expressions-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -607,11 +607,11 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-threads-and-runnables.md](24-concurrency-and-multithreading/01-threads-and-runnables.md) | Completed | Quality pass 2026-11-10 | Structured concurrency preview detail in Module 19 |
-| [02-synchronization-and-atomics.md](24-concurrency-and-multithreading/02-synchronization-and-atomics.md) | Completed | Quality pass 2026-11-10 | `java.util.concurrent.locks` depth later |
-| [03-executors-and-futures.md](24-concurrency-and-multithreading/03-executors-and-futures.md) | Completed | Quality pass 2026-11-10 | `CompletableFuture` patterns in backend modules |
-| [04-concurrent-collections.md](24-concurrency-and-multithreading/04-concurrent-collections.md) | Completed | Quality pass 2026-11-10 | BlockingQueue hands-on in projects |
-| [05-virtual-threads-and-structured-concurrency.md](24-concurrency-and-multithreading/05-virtual-threads-and-structured-concurrency.md) | Completed | Quality pass 2026-11-10 | Carrier pinning ops tuning in production notes |
+| [01-threads-and-runnables.md](24-concurrency-and-multithreading/01-threads-and-runnables.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~67 lines → ~189) | Structured concurrency preview detail in Module 19 |
+| [02-synchronization-and-atomics.md](24-concurrency-and-multithreading/02-synchronization-and-atomics.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive L4 JMM; was ~51 → ~300) | `java.util.concurrent.locks` depth later |
+| [03-executors-and-futures.md](24-concurrency-and-multithreading/03-executors-and-futures.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical; was ~50 → ~123) | `CompletableFuture` patterns in backend modules |
+| [04-concurrent-collections.md](24-concurrency-and-multithreading/04-concurrent-collections.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical; was ~49 → ~106) | BlockingQueue hands-on in projects |
+| [05-virtual-threads-and-structured-concurrency.md](24-concurrency-and-multithreading/05-virtual-threads-and-structured-concurrency.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~53 → ~109) | Carrier pinning ops tuning in production notes |
 | [Module assessment](assessments/module-assessments/24-concurrency-multithreading-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -619,7 +619,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | Example | Result |
 |---------|--------|
 | `threads-runnable-demo` | `mainThread=main`; `afterJoinAlive=false` |
-| `synchronization-atomics-demo` | `unsafeCounter=12188`; `atomicCounter=40000`; `syncCounter=40000` |
+| `synchronization-atomics-demo` | `unsafeCounter=10856`; `atomicCounter=40000`; `syncCounter=40000` (unsafe count varies by scheduling) |
 | `executors-futures-demo` | `futureResult=42`; `poolShutdown=ok` |
 | `concurrent-collections-demo` | `Ada=2`; `Lin=2` |
 | `virtual-threads-demo` | `isVirtual=true`; `platformIsVirtual=false` |
@@ -633,9 +633,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-stack-heap-and-references.md](25-java-memory-model/01-stack-heap-and-references.md) | Completed | Quality pass 2026-11-10 | Off-heap / FFM in advanced modules |
-| [02-happens-before-and-visibility.md](25-java-memory-model/02-happens-before-and-visibility.md) | Completed | Quality pass 2026-11-10 | `VarHandle` in advanced concurrency |
-| [03-safe-publication.md](25-java-memory-model/03-safe-publication.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-stack-heap-and-references.md](25-java-memory-model/01-stack-heap-and-references.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~44 → ~72) | Off-heap / FFM in advanced modules |
+| [02-happens-before-and-visibility.md](25-java-memory-model/02-happens-before-and-visibility.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive L4 JLS HB; was ~50 → ~77) | `VarHandle` in advanced concurrency |
+| [03-safe-publication.md](25-java-memory-model/03-safe-publication.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~46 → ~48) | — |
 | [Module assessment](assessments/module-assessments/25-java-memory-model-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**

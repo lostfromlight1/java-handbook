@@ -1,6 +1,6 @@
 # Module 18 — Optional and Null Handling
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

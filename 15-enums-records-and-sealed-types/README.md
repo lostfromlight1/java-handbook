@@ -1,6 +1,6 @@
 # Module 15 — Enums, Records, and Sealed Types
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

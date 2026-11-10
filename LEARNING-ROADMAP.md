@@ -78,6 +78,25 @@ flowchart TD
   M24 --> M53
 ```
 
+## Progressive explanation (curriculum-wide)
+
+Important ideas appear more than once. Future chapters must follow **explain it now, expand it later**:
+
+| Concept | First introduction (minimum viable) | Dedicated deepening |
+|---------|-------------------------------------|---------------------|
+| JVM / bytecode / GC | M00–M01 (purpose, responsibilities, GC why) | M26–M28 |
+| Class / `main` / `static` | M00–M01 (enough to run programs) | M04–M06 |
+| Types / references | M00–M02 | M10–M11 |
+| Methods / stack frames | M00–M02 preview; M04 full | M25 |
+| Objects / `equals` | M02–M05 previews | M06 |
+| Interfaces / contracts | When first needed for polymorphism | M08; Spring DI later |
+| Generics | When collections demand type parameters | M13 (erasure, PECS) |
+| Threads / concurrency | Plain-language thread idea before shared mutable state | M24–M25 |
+| Dependency injection | Idea of supplying dependencies before Spring annotations | M36–M37 |
+| JDBC / ORM | SQL + JDBC before Hibernate mapping magic | M33–M35 |
+
+Authors: give a usable explanation at first appearance; later modules must **add depth**, not only repeat slogans. See `DOCUMENTATION-STANDARDS.md`.
+
 ## Prerequisite highlights
 
 | Topic | Requires | Why | Later dependents | Beginners | Experienced |

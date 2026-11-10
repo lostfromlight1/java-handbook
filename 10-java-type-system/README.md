@@ -1,6 +1,6 @@
 # Module 10 — Java Type System
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

@@ -1,6 +1,6 @@
 # Module 46 — Caching and Performance Engineering
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

@@ -1,7 +1,24 @@
 # Java Version History (Seed)
 
 > **Status:** Drafted (seed)  
-> **Purpose:** Support the handbook version policy—not a full historical essay yet.
+> **Purpose:** Support the handbook version policy—not a full historical essay yet.  
+> **Last updated:** 2026-11-10
+
+## Why this appendix exists
+
+Java evolves on a predictable cadence. Without a clear version policy, chapters disagree about which APIs are “current,” and learners confuse **language features**, **JDK tools**, and **vendor builds**. This seed defines the handbook’s primary target and how later versions appear in notes.
+
+A fuller narrative history (motivations per release, major JEPs) can expand this file later without changing the policy below.
+
+## Key terms
+
+| Term | Meaning |
+|------|---------|
+| **GA** | General Availability—the public release date of a Java SE version |
+| **LTS** | Long-Term Support—releases intended for longer production support windows (for example 17, 21, 25) |
+| **Feature release (non-LTS)** | Six-month cadence releases with a shorter support window; useful for early access to features, not the main curriculum path |
+| **Preview / incubator** | Features shipping for feedback; not final. Label them; do not treat them as production defaults in main-path chapters |
+| **Distribution** | A concrete JDK build (Oracle JDK, Eclipse Temurin, Amazon Corretto, …) implementing Java SE |
 
 ## Version policy for this handbook
 
@@ -39,11 +56,13 @@ Non-LTS feature releases arrive roughly every six months. Once superseded, they 
 
 ## Local validation
 
-Phase 1 examples were validated with:
+Phase 1 module examples (Modules 00–03) were validated primarily with:
 
 ```text
 java version "21.0.9" 2025-10-21 LTS
 javac 21.0.9
 ```
+
+Language-level rechecks during the 2026-11-10 documentation quality pass also ran on Temurin JDK **21.0.12.1** (same Java SE 21 language level). Prefer recording the exact `java -version` when documenting new example output.
 
 Update this section when the validation JDK changes.

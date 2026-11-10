@@ -13,6 +13,7 @@ After completing this chapter, you should be able to:
 - Explain the roles of CPU, RAM, storage, and the operating system in running a program.
 - Distinguish machine code, assembly, high-level source, and Java bytecode.
 - Describe sequential execution, method calls, and the idea of a call stack at a beginner level.
+- Explain stack versus heap and a single thread of execution at a beginner level.
 - Trace a small Java program’s statement order and relate it to bytecode inspected with `javap`.
 - Separate language/platform ideas from HotSpot implementation details.
 - Connect this foundation to later JVM, memory, and concurrency modules.
@@ -97,6 +98,29 @@ You are never “talking to the CPU” directly from Java source; layers of soft
 
 Saying “Java is interpreted” is an oversimplification. Prefer: **compiled to bytecode, executed by a virtual machine that may JIT-compile**.
 
+### 4.6 Stack, heap, and threads (minimum viable model)
+
+When a Java process runs, the JVM divides memory usage into ideas you will see in stack traces and memory chapters:
+
+| Region | What lives there (intuition) | Example in this chapter |
+|--------|------------------------------|-------------------------|
+| **JVM stack** (per thread) | Nested **method calls**: local variables, parameters, and “where to return” for each active call | While `greet` runs, its parameter `name` and bookkeeping sit in a **stack frame** |
+| **Heap** | **Objects and arrays** created at run time; shared across threads subject to Java’s concurrency rules | Any `String` you pass to `greet`; array objects in later chapters |
+| **Thread** | One **sequential** stream of execution inside a process | Default Java apps start with one thread running `main` |
+
+```text
+Process: java HelloWorld
+  Thread "main"
+    Call stack (top = currently running):
+      | greet frame     |  ← executing now
+      | main frame      |
+    Heap: String objects, arrays, ...
+```
+
+**Stack frames** push when a method is called and pop when it returns—that is why `main` “waits” during `greet`. **Primitives** such as `int` in local variables typically live in the frame; **reference types** often store a pointer in the frame while the actual object data sits on the heap.
+
+**Threads:** A process may have many threads (parallel execution paths). Until you use concurrency APIs, assume **one thread** runs your statements in order. Module **24** covers Java threads; Module **25** maps stack/heap to Java variables and object lifetimes in detail.
+
 ## 5. Terminology
 
 | Term | Meaning |
@@ -107,6 +131,7 @@ Saying “Java is interpreted” is an oversimplification. Prefer: **compiled to
 | Bytecode | JVM instructions in `.class` files |
 | Call stack | Nested method-call tracking structure |
 | Stack frame | One method call’s locals + bookkeeping |
+| Heap | Storage for objects and arrays at run time |
 | Instruction pointer / PC | “Which instruction is next?” (JVM has a PC per thread—JVMS concept) |
 
 ## 6. Syntax and Language Rules
@@ -117,7 +142,24 @@ This chapter is mostly conceptual. The Java rules you need:
 - A method must be **called** to run; defining it is not enough.
 - `return` ends a method and (for non-`void`) provides a value to the caller.
 
-Full method syntax arrives in Module 04; here we use simple `static` helpers for clarity.
+### 6.1 Helper methods and `static`
+
+The example below defines `greet` and `add` beside `main` in the same class:
+
+```java
+static void greet(String name) { ... }
+static int add(int a, int b) { ... }
+```
+
+| Keyword / idea | Meaning in this chapter |
+|----------------|-------------------------|
+| **Method** | A named block of code with parameters and optionally a return type. |
+| **`static`** | Belongs to the class, not an instance. `main` calls `greet(...)` without creating an `ExecutionOrder` object. |
+| **`void`** | No return value (`greet` only prints). |
+| **`int`** | Returns a 32-bit integer (`add` returns `a + b`). |
+| **Call syntax** | `greet("Ada")` and `add(2, 3)` run the method and then execution continues in `main`. |
+
+Module **04** (methods) covers overloads, instance methods, and `return` semantics in full. Here, `static` helpers keep the focus on **call order and the stack**, not object construction.
 
 ## 7. Step-by-Step Examples
 

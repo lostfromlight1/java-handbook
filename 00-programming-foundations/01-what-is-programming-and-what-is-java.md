@@ -87,7 +87,7 @@ flowchart LR
 - **Storage (disk/SSD):** long-term files, including your source code and installed tools.
 - **Operating system (OS):** Windows, macOS, or Linux software that manages hardware and runs programs.
 
-When a program “runs,” the OS loads it, the CPU executes instructions, and RAM holds the program’s current **state** (the data it is working with). Later modules refine this model (stack, heap, threads). For now, remember: **programs manipulate data over time according to rules you wrote.**
+When a program “runs,” the OS loads it, the CPU executes instructions, and RAM holds the program’s current **state** (the data it is working with). The next chapter in this module introduces a minimal **stack, heap, and thread** picture; later handbook modules add JVM detail. For now, remember: **programs manipulate data over time according to rules you wrote.**
 
 ### 4.3 Algorithms and problem solving
 

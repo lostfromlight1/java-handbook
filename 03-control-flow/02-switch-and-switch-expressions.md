@@ -70,6 +70,54 @@ case "MON" -> {
 }
 ```
 
+**`yield` vs `break`:** In a **classic** colon-style `switch` **statement**, `break` stops fall-through and exits the switch (it does not produce a value). In a **switch expression** with a block body (`case L -> { ... }`), **`yield`** supplies the value that the whole switch expression evaluates to—`break` is not used that way here. Arrow cases with a single expression (`case L -> expr;`) do not need `yield`.
+
+### 4.5 Intentional fall-through, then arrows
+
+Classic form can group labels by **fall-through** (no `break` between cases):
+
+```java
+String size;
+switch (n) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        size = "small";
+        break;
+    default:
+        size = "large";
+        break;
+}
+```
+
+Execution enters at the matching `case` and **falls through** shared labels until it hits `break`. Easy to forget a `break` by accident—that is why modern code often rewrites grouped cases with **comma labels** and arrows (no fall-through):
+
+```java
+String size = switch (n) {
+    case 1, 2, 3, 4, 5 -> "small";
+    default -> "large";
+};
+```
+
+### 4.6 Enum exhaustiveness (conceptual)
+
+For an `enum` with a fixed set of constants, a switch expression can list every constant and omit `default`—the compiler knows the selector cannot be any other value at compile time.
+
+```java
+enum Season { SPRING, SUMMER, FALL, WINTER }
+
+String vibe = switch (season) {
+    case SPRING -> "bloom";
+    case SUMMER -> "heat";
+    case FALL -> "harvest";
+    case WINTER -> "cold";
+};
+```
+
+If you remove one `case` (for example `WINTER`), the compiler reports that the switch is **not exhaustive**. Adding `default -> "?"` makes the switch syntactically complete but hides future enum constants if someone adds a fifth value later—trade clarity of exhaustiveness against defensive defaults.
+
 ## 5. Terminology
 
 | Term | Meaning |
@@ -89,7 +137,23 @@ case "MON" -> {
 
 [examples/core-java/switch-demo/](../examples/core-java/switch-demo/)
 
+`SwitchDemo` uses a `String` day and a separate **`int`** switch for `label(int code)`—the line `label=two` in the output comes from `code == 2`:
+
+```java
+static String label(int code) {
+    return switch (code) {
+        case 1 -> "one";
+        case 2 -> "two";
+        case 3 -> "three";
+        default -> "other";
+    };
+}
+```
+
+`main` calls `label(2)`, so the expression’s value is `"two"`.
+
 ```bash
+javac SwitchDemo.java
 java SwitchDemo MON
 ```
 
@@ -223,3 +287,4 @@ Fall-through · switch expression · arrow label · default · yield
 
 - [x] SwitchDemo verified
 - [x] Version notes for switch expressions
+- [x] Depth gate passed

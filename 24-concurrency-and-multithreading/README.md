@@ -1,6 +1,6 @@
 # Module 24 — Concurrency and Multithreading
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

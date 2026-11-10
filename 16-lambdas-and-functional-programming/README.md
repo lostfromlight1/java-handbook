@@ -1,6 +1,6 @@
 # Module 16 — Lambdas and Functional Programming
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

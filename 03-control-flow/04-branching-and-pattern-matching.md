@@ -54,16 +54,47 @@ if (value instanceof Double d && d > 0) { ... }
 
 ### 4.2 Pattern matching for `switch` (Java 21)
 
+A **sealed** type declares which classes may implement it; only those subtypes can appear at runtime. **Records** (Module 15) supply compact data carriers—here they implement a small `Shape` hierarchy used in the demo and below (read top to bottom before the `switch`):
+
 ```java
-return switch (shape) {
-    case Circle c -> Math.PI * c.radius() * c.radius();
-    case Rectangle r -> r.width() * r.height();
-};
+sealed interface Shape permits Circle, Rectangle {}
+
+record Circle(double radius) implements Shape {}
+
+record Rectangle(double width, double height) implements Shape {}
 ```
 
-With a **sealed** hierarchy, the compiler can require exhaustiveness—no silent missed subtype.
+**Sealed** means “only `Circle` and `Rectangle` exist”; **permits** lists them. The compiler uses that closed set for exhaustiveness checking.
 
-### 4.3 `case null`
+```java
+static double area(Shape shape) {
+    return switch (shape) {
+        case Circle c -> Math.PI * c.radius() * c.radius();
+        case Rectangle r -> r.width() * r.height();
+    };
+}
+```
+
+Each `case` is a **type pattern**: if `shape` is a `Circle`, bind `c` and run the first arrow; if a `Rectangle`, bind `r`. No `default` is required because every permitted subtype has a `case`.
+
+### 4.3 `when` guards in `switch`
+
+Besides `instanceof` guards (`&& d > 0` above), **switch** cases can add a **`when`** clause—extra boolean condition after the pattern:
+
+```java
+static String sizeHint(Shape shape) {
+    return switch (shape) {
+        case Circle c when c.radius() > 10 -> "large circle";
+        case Circle c -> "small circle";
+        case Rectangle r when r.width() == r.height() -> "square";
+        case Rectangle r -> "rectangle";
+    };
+}
+```
+
+More specific cases (large circle) must appear **before** broader ones (`Circle` without `when`) so the compiler’s **dominance** rules are satisfied—the first matching case wins.
+
+### 4.4 `case null`
 
 Modern switches can handle null explicitly instead of always NPE-ing on the selector:
 
@@ -71,7 +102,7 @@ Modern switches can handle null explicitly instead of always NPE-ing on the sele
 case null -> "missing";
 ```
 
-### 4.4 Labeled break/continue (brief)
+### 4.5 Labeled break/continue (brief)
 
 ```java
 outer:
@@ -84,7 +115,7 @@ for (...) {
 
 Valid but easy to abuse. Prefer methods returning results from inner searches.
 
-### 4.5 What this chapter is not
+### 4.6 What this chapter is not
 
 Full treatment of records, sealed types, and record patterns lives in Module 15 / 10. Here you learn the **control-flow** payoff with a small sealed demo.
 
@@ -104,6 +135,28 @@ Full treatment of records, sealed types, and record patterns lives in Module 15 
 - `when` clauses appear in switch patterns for guards (Java 21).
 
 ## 7. Step-by-Step Examples
+
+Progression for branching on a `String` held as `Object`:
+
+**1. Classic cast style (still valid, verbose):**
+
+```java
+Object value = "Java";
+if (value instanceof String) {
+    String s = (String) value;
+    System.out.println(s.length());
+}
+```
+
+**2. Pattern matching for `instanceof` (Java 16+):**
+
+```java
+if (value instanceof String s) {
+    System.out.println(s.length());  // s in scope only here
+}
+```
+
+**3. `switch` with patterns and null** (demo `describe` / `trafficLight` / `area`):
 
 [examples/core-java/pattern-control-demo/](../examples/core-java/pattern-control-demo/)
 
@@ -149,6 +202,17 @@ if (value instanceof String) {
 
 Prefer `instanceof String s` on Java 16+ / 21 path.
 
+### Incorrect — dominance (case order)
+
+```java
+// switch (obj) {
+//     case Object o -> "anything";
+//     case String s -> "text";  // compile error: String is covered by Object above
+// }
+```
+
+A **general** pattern (`Object`) before a **specific** one (`String`) makes the `String` case unreachable—the compiler rejects it. Put **more specific** cases first.
+
 ### Incorrect
 
 Non-exhaustive switch on sealed types without handling all permits.
@@ -169,7 +233,9 @@ Add cases or a legal default if allowed—compiler will guide you.
 |----------|---------|------|
 | Pattern switch | Local, expressive | Can centralize too much logic |
 | Virtual methods | Open/OO | More types/classes |
-| Visitor | Double dispatch | Ceremony |
+| Separate handler per type | Clear extension points | More classes/files |
+
+*Track B:* The **Visitor** pattern is another way to dispatch on multiple types; pattern switches often replace small visitor hierarchies with less boilerplate.
 
 ## 14. Performance Considerations
 
@@ -196,7 +262,7 @@ Similar spirit to Kotlin `when` / C# pattern matching—Java’s arrived via ste
 
 ## 18. Revision and Mastery
 
-Record patterns, nested patterns, `when` guards, dominance rules, replacing visitor with sealed switches carefully.
+Record patterns, nested patterns, `when` guards, dominance rules, sealed switches vs spreading behavior across virtual methods.
 
 ## 19. Exercises
 
@@ -232,7 +298,7 @@ Pattern matching modernizes branching: bind typed names in `instanceof` and `swi
 
 ## 23. Key Terminology
 
-Type pattern · guard · exhaustiveness · sealed · labeled break
+Type pattern · guard · `when` · exhaustiveness · sealed · labeled break
 
 ## 24. References and Further Reading
 

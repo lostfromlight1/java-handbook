@@ -69,6 +69,88 @@ do {
 
 Labeled `break`/`continue` exist for nested loops—use sparingly; prefer clearer structure.
 
+**In-chapter walkthrough** (same logic as LoopsDemo’s `continue/break` line, output `1 3`):
+
+```java
+System.out.print("continue/break: ");
+for (int i = 1; i <= 6; i++) {
+    if (i % 2 == 0) {
+        continue;           // i=2,4,6: skip println, go to next i
+    }
+    if (i > 4) {
+        break;              // i=5: odd but >4 → exit loop (no print)
+    }
+    System.out.print(i + " ");
+}
+System.out.println();
+```
+
+| `i` | Odd? | `i > 4`? | Action | Printed |
+|-----|------|----------|--------|---------|
+| 1 | yes | no | print | `1` |
+| 2 | no | — | `continue` | — |
+| 3 | yes | no | print | `3` |
+| 4 | no | — | `continue` | — |
+| 5 | yes | yes | `break` (before print) | — |
+| 6 | — | — | loop ended | — |
+
+Result: `continue/break: 1 3 `
+
+### 4.6 Labeled `break` (nested search)
+
+When an inner loop finds a target, you may need to exit **both** loops. A **label** names an outer loop:
+
+```java
+int[][] grid = {{1, 9}, {3, 4}};
+int target = 9;
+boolean found = false;
+outer:
+for (int row = 0; row < grid.length; row++) {
+    for (int col = 0; col < grid[row].length; col++) {
+        if (grid[row][col] == target) {
+            found = true;
+            break outer;
+        }
+    }
+}
+System.out.println("found=" + found);
+```
+
+`break outer` jumps out of the named loop, not only the inner `for`. Prefer extracting a method that returns `boolean` when this pattern grows.
+
+### 4.7 Same sum: indexed `for` vs enhanced `for`
+
+Sum `{10, 20, 30}` both ways (enhanced `for` when you do not need the index):
+
+```java
+int[] nums = {10, 20, 30};
+int sum = 0;
+for (int i = 0; i < nums.length; i++) {
+    sum += nums[i];
+}
+
+int sum2 = 0;
+for (int n : nums) {
+    sum2 += n;
+}
+// sum and sum2 are both 60
+```
+
+### 4.8 `do-while` when the body must run once
+
+Menus and “show prompt, then validate” often need **at least one** iteration—classic pattern:
+
+```java
+java.util.Scanner in = new java.util.Scanner(System.in);
+String choice;
+do {
+    System.out.print("Continue? (y/n): ");
+    choice = in.nextLine().trim();
+} while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("n"));
+```
+
+The body runs before the condition is checked, so the user always sees the prompt once even if the first line is invalid.
+
 ### 4.6 Infinite loops
 
 `while (true)` with an internal `break` is a valid pattern (event loops). Accidental infinity usually means forgotten updates or wrong conditions.
@@ -118,16 +200,39 @@ Loops compile to conditional jumps backward/forward. JIT may unroll tiny loops�
 
 ## 11. Common Mistakes
 
-### Incorrect
+These are **two different** bugs beginners often mix up.
+
+### Mistake A: semicolon makes an empty loop body
 
 ```java
 for (int i = 0; i < nums.length; i++);
-    System.out.println(nums[i]); // i out of scope / empty for
+    System.out.println(nums[i]);  // NOT inside the for — runs once after loop ends
 ```
 
-### Corrected
+The `;` immediately after `for (...)` ends the loop body. The `println` is a separate statement that runs **after** the loop, when `i == nums.length` → often `ArrayIndexOutOfBoundsException`.
 
-Brace the body; drop stray semicolons.
+**Fix:** remove the stray semicolon and brace the body:
+
+```java
+for (int i = 0; i < nums.length; i++) {
+    System.out.println(nums[i]);
+}
+```
+
+### Mistake B: loop variable scope
+
+```java
+for (int i = 0; i < nums.length; i++) { }
+System.out.println(i);  // error: i cannot be resolved
+```
+
+`i` exists only inside the `for` header and body. Use a variable declared **before** the loop if you need the final index outside:
+
+```java
+int i;
+for (i = 0; i < nums.length; i++) { }
+System.out.println("last index=" + (i - 1));
+```
 
 ### Incorrect
 

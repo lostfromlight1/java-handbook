@@ -68,7 +68,24 @@ int x = 5;           // x holds 5
 int[] nums = {1,2};  // nums refers to an array object
 ```
 
-Module 02 and 25 explain memory layouts. Beginners should remember: **assigning arrays/objects does not always copy all contents**—often you share the same array.
+**Assignment semantics (critical for arrays).**
+
+```java
+int a = 5;
+int b = a;   // b gets a copy of the value; changing b does not change a
+
+int[] one = {1, 2, 3};
+int[] two = one;  // two gets a copy of the REFERENCE, not a new array
+two[0] = 99;
+// one[0] is now 99 as well — both variables point at the same array object on the heap
+```
+
+| Kind | What the variable holds | Assignment copies |
+|------|-------------------------|-------------------|
+| **Primitive** (`int`, `boolean`, …) | The value itself | The value |
+| **Reference** (`int[]`, `String`, objects) | A reference (handle) to heap data | The reference only—**not** a deep copy of the array/object |
+
+Module **25** maps this to stack versus heap drawings. Beginners should remember: **`int[] b = a;` does not duplicate elements** unless you explicitly copy (for example `Arrays.copyOf` in later modules).
 
 ### 4.4 Arrays: ordered sequence
 
@@ -96,7 +113,18 @@ Arrays do not resize. Growing requires creating a new larger array and copying�
 | Map | Key → value | later `Map` |
 | Record of related fields | Name + score together | later class/record |
 
-**Parallel arrays** (names[i] with scores[i]) work for tiny demos but break easily—easy to update one array and forget the other. Objects fix that by keeping related data together.
+**Parallel arrays** (names[i] with scores[i]) work for tiny demos but break easily—easy to update one array and forget the other.
+
+**Why classes exist (preview).** A **class** lets you declare a new type that **groups fields that belong together**:
+
+```text
+class Player {
+  String name;
+  int score;
+}
+```
+
+Then one `Player[]` or list holds both name and score per row—no fragile “index 2 means the same person in two arrays” convention. Classes also attach **methods** to that data (`player.addPoints(5)`). Module **05** defines classes, constructors, and objects; Module **12** shows resizable `List<Player>`. Parallel arrays are a teaching scaffold, not how production domain models stay consistent.
 
 ## 5. Terminology
 
@@ -172,7 +200,9 @@ Alan -> 92
 Average: 91.66666666666667
 ```
 
-Note `(double) total` — integer division would truncate; casting promotes to floating division (Module 02).
+**Why `(double) total` appears.** In Java, `int / int` performs **integer division**: fractional parts are discarded (`7 / 2` is `3`, not `3.5`). Here, `total` and `scores.length` are both `int`, so `total / scores.length` would truncate the average.
+
+`(double) total` is a **cast**: it tells the compiler to treat `total` as a `double` for this expression. The division then uses floating-point rules, so you get a decimal average. Casts can lose precision in other contexts; here the goal is simply to avoid silent truncation. Module **02** covers numeric types, promotion, and casting rules systematically.
 
 ### 7.3 Toward better structure (preview)
 

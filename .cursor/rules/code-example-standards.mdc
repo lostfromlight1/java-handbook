@@ -11,6 +11,8 @@ alwaysApply: false
 - Place runnable examples under `examples/` with a short README (purpose, prerequisites, compile, run, expected output, concepts).
 - Examples must compile on the documented JDK 21 unless explicitly labeled otherwise.
 - Include necessary imports; use meaningful names; demonstrate expected output when useful.
+- Chapter prose must explain unfamiliar syntax before or beside the example; a demo link alone is not enough for major concepts.
+- Prefer progressive examples (minimal → realistic → advanced) when teaching a new idea.
 - Compile and execute whenever possible; record actual JDK version and output.
 - Never invent successful execution.
 - Do not commit `.class` files or binaries.

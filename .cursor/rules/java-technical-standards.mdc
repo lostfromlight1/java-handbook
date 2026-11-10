@@ -14,3 +14,5 @@ alwaysApply: false
 - Never invent API behavior, compiler messages, or JVM guarantees.
 - For post-21 features, state version introduced and status (final / preview / incubator / deprecated / removed).
 - Distinguish JLS, Java SE API, JVMS, HotSpot, and framework behavior.
+- When documenting results, record the real JDK version used; do not silently mix unverified outputs across distributions.
+- Correct inaccurate explanations when evidence supports the correction; prefer official docs over folklore.

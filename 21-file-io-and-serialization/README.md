@@ -1,6 +1,6 @@
 # Module 21 — File I/O and Serialization
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

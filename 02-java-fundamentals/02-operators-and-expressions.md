@@ -28,7 +28,24 @@ Control flow and algorithms are built from expressions that compute values and t
 
 ### 4.1 Expressions and statements
 
-An **expression** produces a value (`a + b`). A **statement** performs an action (`System.out.println(a + b);`). Many statements contain expressions.
+An **expression** evaluates to a **single value** (or to `void` for a few special cases). You can nest expressions inside larger expressions:
+
+```java
+int a = 10, b = 3;
+a + b              // expression; value 13
+a > b              // expression; value true
+(a > 5) && (b < 5) // expression; value true
+```
+
+A **statement** performs an action and ends with `;` (or is a control-flow statement with a body). It may contain expressions but is not “just a value” by itself:
+
+```java
+int x = a + b;           // declaration statement; initializer contains expression
+System.out.println(a);   // expression statement; println(...) is void
+if (a > b) { x = 1; }    // if is a statement; condition is expression
+```
+
+`x = 5` is both an expression (it evaluates to `5`) and commonly used as a statement. Prefer using assignment as its own statement while learning—dense `a = b = c` chains hide bugs.
 
 ### 4.2 Arithmetic operators
 
@@ -49,7 +66,20 @@ a / b; // 3, not 3.333...
 | `== !=` | Equal / not equal |
 | `< > <= >=` | Ordering |
 
-For primitives, `==` compares values. For objects/references, `==` compares identity—use `equals` later (Module 06).
+For **primitives**, `==` compares values. For **references**, `==` asks whether two references point at the **same object** (identity), not whether two strings contain the same characters.
+
+```java
+String x = "hi";
+String y = "hi";
+String z = new String("hi");
+
+x == y;          // often true (literal pooling); not a general rule for all strings
+x.equals(y);     // true — same character sequence
+x == z;          // false — different objects
+x.equals(z);     // true — value comparison
+```
+
+**Rule of thumb:** never use `==` to compare `String` content; use `equals` (and `equalsIgnoreCase` when appropriate). Module 06 covers `equals`, hashing, and contracts in depth.
 
 ### 4.4 Logical operators
 
@@ -60,6 +90,16 @@ For primitives, `==` compares values. For objects/references, `==` compares iden
 | `!` | Not |
 
 **Short-circuit:** `false && anything` does not evaluate `anything`. Important when the right side would crash or is expensive.
+
+Walk-through with a side effect on the right-hand side:
+
+```java
+int calls = 0;
+boolean skipped = false && ((calls++) > 0); // short-circuit: calls stays 0
+boolean ran     = true  && ((calls++) > 0); // evaluates RHS; calls becomes 1
+```
+
+For `||`, if the left operand is `true`, the right operand is skipped.
 
 ### 4.5 Assignment and compounds
 
@@ -77,16 +117,43 @@ x++; // postfix: yield old value, then add 1
 
 ### 4.7 Precedence
 
+Operators bind in a fixed order (full table in JLS). High-level picture:
+
+| Precedence (high → low) | Operators | Notes |
+|-------------------------|-----------|--------|
+| Postfix | `expr++` `expr--` | Value before increment |
+| Unary | `++expr` `--expr` `!` unary `+` `-` | |
+| Multiplicative | `*` `/` `%` | Before add/subtract |
+| Additive | `+` `-` | String `+` is still `+` |
+| Relational | `<` `>` `<=` `>=` | |
+| Equality | `==` `!=` | After ordering |
+| Logical AND | `&&` | Short-circuit |
+| Logical OR | `\|\|` | Short-circuit |
+| Assignment | `=` `+=` … | Lowest common pitfall |
+
 `*` binds tighter than `+`:
 
 ```java
-2 + 3 * 4   // 14
+2 + 3 * 4   // 14, not 20
 (2 + 3) * 4 // 20
+boolean mid = a > 5 && b < 5; // && looser than > ; clearer with parens when mixing
 ```
 
-When unsure, parenthesize. Clarity beats memorizing the full table.
+When unsure, parenthesize. Clarity beats memorizing every row of the JLS table.
 
-### 4.8 String `+`
+### 4.8 `&` vs `&&` on booleans
+
+Both combine boolean values, but `&` is **not** short-circuit: it always evaluates both sides. `&&` stops when the result is fixed.
+
+```java
+int sideEffect = 0;
+boolean b = false && ((sideEffect++) > 0); // RHS skipped
+boolean c = false &  ((sideEffect++) > 0); // RHS runs; sideEffect becomes 1
+```
+
+Use `&&` and `||` for conditions. Reserve `&` for integer **bitwise** AND unless you truly need both sides evaluated.
+
+### 4.9 String `+`
 
 If either side of `+` is a `String`, Java performs concatenation (with conversion of the other operand to text). That is why `"sum=" + (a + b)` needs parentheses for numeric add-first.
 
@@ -106,11 +173,20 @@ Assignment is an expression (`a = b = 0`) but prefer simple statements while lea
 
 ## 7. Step-by-Step Examples
 
-### 7.1–7.2 Operators demo
+### 7.1 Arithmetic and precedence
 
-[examples/core-java/operators-demo/](../examples/core-java/operators-demo/)
+```java
+int a = 10, b = 3;
+a + b;   // 13
+a / b;   // 3 — integer division truncates toward zero
+a % b;   // 1 — remainder of division
+2 + 3 * 4;    // 14
+(2 + 3) * 4;  // 20
+```
 
-**Verified output:**
+Full tour: [examples/core-java/operators-demo/](../examples/core-java/operators-demo/)
+
+**Verified output (arithmetic + precedence + increment section):**
 
 ```text
 a + b = 13
@@ -124,11 +200,33 @@ x++ yields 5, then x=6
 ++x yields 6, then x=6
 ```
 
-### 7.3 Classic bug
+### 7.2 Logic, comparison, and short-circuit
+
+Relational results are `boolean`; combine them with `&&` / `||`:
 
 ```java
-System.out.println("sum=" + a + b); // concatenates as strings after "sum="
-System.out.println("sum=" + (a + b)); // adds first
+a > b;                 // true
+(a > 5) && (b < 5);    // true
+b != 0 && (a / b > 1); // safe: divide only if divisor non-zero
+```
+
+If `b` were `0`, `b != 0 && …` avoids evaluating `a / b` (short-circuit).
+
+### 7.3 Strings, concatenation, and increment pitfalls
+
+String `+` converts non-`String` operands to text:
+
+```java
+System.out.println("sum=" + a + b);      // "sum=103" — left-to-right concatenation
+System.out.println("sum=" + (a + b));    // "sum=13" — add ints first
+```
+
+Postfix vs prefix increment (see verified lines in output above):
+
+```java
+int x = 5;
+int old = x++; // old is 5, then x becomes 6
+int newer = ++x; // x becomes 7, newer is 7
 ```
 
 ## 8. Real-World Use Cases
@@ -142,7 +240,8 @@ Integer ops wrap on overflow. Floating ops follow IEEE rules including `NaN`. Bi
 ## 10. Edge Cases and Limitations
 
 - Division by zero: ints throw `ArithmeticException`; doubles yield Infinity/NaN.
-- `&&` vs `&` for booleans: `&` always evaluates both sides.
+- `&&` vs `&` for booleans: `&` always evaluates both sides (§4.8).
+- `==` on `String` compares references, not text—use `equals` (§4.3).
 - Comparing doubles with `==` is often fragile—use tolerances for measured values.
 
 ## 11. Common Mistakes

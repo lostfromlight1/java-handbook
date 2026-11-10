@@ -39,6 +39,10 @@ You do not need heavy mathematics yet. You need instincts and a process.
 
 We care about **growth rate**, not exact nanoseconds on your laptop. Exact timing depends on CPU, JVM warmup, and load (Module 28). Growth rate is about the idea: “if input is 10× larger, does work become ~10× larger, ~100× larger, or barely change?”
 
+**Input size `n`.** In this module, `n` usually means “how many elements you process” (array length, number of records, and so on). Complexity statements describe how **steps or extra memory** scale when `n` grows, not the constant overhead of starting the JVM.
+
+**Space complexity** counts memory beyond the input itself—for example, extra variables (`best` in `findMax` uses O(1) extra space) or a second array copy (often O(n)). Time and space trade off: storing a hash map can turn a slow search into a fast one at the cost of more memory (Modules **12** and **28** revisit this in production).
+
 ### 4.2 Big-O intuition (beginner-friendly)
 
 **Big-O** notation classifies growth. For this handbook’s start:
@@ -66,7 +70,15 @@ Say `n` is the number of elements:
 - Checking all pairs for duplicates with nested loops ≈ **quadratic**
 - Returning a stored length field ≈ **constant**
 
-Formal definitions and amortized analysis come later with collections (Module 12) and interviews (Module 52).
+**How to read the notation (enough for now).** “O(n)” is read “order n” or “big-O of n.” It is an **upper-bound style** classification: we ignore fixed setup costs and focus on the dominant term as `n` becomes large. We are not proving theorems here— we are building intuition so you can spot a nested loop over an entire array and ask “is this quadratic?”
+
+| Symbol | Plain language |
+|--------|----------------|
+| O(1) | Doubling input barely changes work (read one cell, return cached size) |
+| O(n) | Doubling input about doubles work (single pass) |
+| O(n²) | Doubling input about quadruples work (all pairs) |
+
+Formal definitions, logarithmic classes (O(log n)), and **amortized** analysis (some operations are “cheap on average”) come with collections (Module **12**) and interview prep (Module **52**).
 
 ### 4.3 Time vs space trade-offs
 
@@ -94,6 +106,16 @@ Logic bugs are often the hardest: no red compiler error, only wrong behavior.
 8. **Prevent** — add a test or clearer names/comments so it does not return.
 
 Debugging is scientific method applied to code.
+
+### 4.6 Reading symptoms: compiler, exception, logic
+
+| Symptom | What to read first | Typical fix mindset |
+|---------|-------------------|---------------------|
+| **Compiler error** | First `javac` message and line number | Syntax, types, missing symbol—code does not compile yet |
+| **Exception + stack trace** | Exception **type** (e.g. `ArrayIndexOutOfBoundsException`) and **top stack frame** | Illegal state at run time—often bounds, `null`, or bad input |
+| **Wrong output, no crash** | Compare expected vs actual on the **smallest** input | Logic bug—loop bounds, wrong operator, wrong variable |
+
+A **regression** is when a change fixes one thing but breaks behavior that used to work—hence rerunning old tests after each fix. **Reproduce** means you can trigger the bug reliably; without reproduction, you are guessing.
 
 ## 5. Terminology
 

@@ -1,6 +1,6 @@
 # Module 42 — Clean Code and SOLID
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

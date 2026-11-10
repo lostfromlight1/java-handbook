@@ -1,6 +1,6 @@
 # Module 51 — Enterprise and Large-Scale Engineering
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

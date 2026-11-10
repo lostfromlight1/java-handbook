@@ -21,7 +21,7 @@ After completing this chapter, you should be able to:
 
 - [01-what-is-programming-and-what-is-java.md](01-what-is-programming-and-what-is-java.md)
 - [02-how-computers-execute-programs.md](02-how-computers-execute-programs.md)
-- Willingness to use basic `for` / `if` (explained gently here; Module 03 deepens control flow)
+- Willingness to use basic `for` / `if` (explained in §6 below; the **Control Flow** module `03-control-flow` deepens every branching and looping form)
 
 ## 3. Why This Concept Exists
 
@@ -118,15 +118,53 @@ You will mostly write imperative Java at first. Algorithms exist independently o
 
 ## 6. Syntax and Language Rules
 
-Minimal Java used here (full rules later):
+This chapter uses a small subset of Java. Each construct is enough to read `findMax` without opening another chapter first.
 
-- `int[] scores = { ... };` — array of integers
-- `scores.length` — number of elements
-- `scores[i]` — element at index `i` (indexes start at **0**)
-- `for (int i = 1; i < scores.length; i++)` — loop
-- `if (condition) { ... }` — decision
+### 6.1 Arrays and indexing
 
-**Pitfall:** The first index is `0`, not `1`. Off-by-one errors are classic (Chapter 05).
+- `int[] scores = { 72, 91, 85 };` — creates an **array** of `int` with three elements.
+- `scores.length` — element **count** (here `3`). Not a method: no parentheses.
+- `scores[i]` — element at index `i`. Valid indexes: `0` through `length - 1`.
+
+**Pitfall:** The first index is `0`, not `1`. Off-by-one errors are classic ([Chapter 05](05-complexity-and-debugging-mindset.md)).
+
+### 6.2 The `for` loop (counted repetition)
+
+```java
+for (int i = 1; i < scores.length; i++) {
+    // body runs once per iteration while condition is true
+}
+```
+
+| Part | Role |
+|------|------|
+| `int i = 1` | **Initialization:** create loop variable `i` once before the loop starts. Here we start at `1` because we already used `scores[0]` as the initial `best`. |
+| `i < scores.length` | **Condition:** checked **before** each iteration. When false, the loop stops. |
+| `i++` | **Update:** runs after each iteration (`i` becomes `i + 1`). |
+| `{ ... }` | **Body:** statements to repeat. |
+
+Equivalent English: “For each index from `1` up to but not including `length`, run the body.”
+
+### 6.3 The `if` statement (conditional action)
+
+```java
+if (values[i] > best) {
+    best = values[i];
+}
+```
+
+When the **condition** (`values[i] > best`) is **true**, the block runs. There is no `else` here—when the condition is false, Java simply skips the block and continues. Parentheses around the condition are required.
+
+### 6.4 Method call and `return`
+
+```java
+static int findMax(int[] values) {
+    ...
+    return best;
+}
+```
+
+`findMax(scores)` passes the array reference into the method; `return best` sends the final `int` back to the caller. Module **04** covers methods, parameters, and return types in depth.
 
 ## 7. Step-by-Step Examples
 
@@ -321,7 +359,7 @@ Algorithm · pseudocode · flowchart · trace · edge case · decomposition · p
 ## 24. References and Further Reading
 
 - Any standard intro CS text on algorithms (conceptual)
-- Next: [04-data-and-basic-structures.md](04-data-and-basic-structures.md), Module 03 control flow
+- Next: [04-data-and-basic-structures.md](04-data-and-basic-structures.md); deeper branching/loops: [03-control-flow](../03-control-flow/README.md)
 - Later: Module 12 collections; Module 52 interview algorithms
 
 ## 25. Next Steps

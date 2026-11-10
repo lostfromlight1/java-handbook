@@ -1,6 +1,6 @@
 # Module 35 — Hibernate and JPA
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

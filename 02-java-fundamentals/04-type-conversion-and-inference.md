@@ -35,7 +35,32 @@ int whole = 42;
 double widened = whole; // OK
 ```
 
-Typical widenings: `byte/short/char → int → long → float → double` (see JLS for full rules).
+**Widening ladder** (each step is safe without a cast; see JLS for the full matrix):
+
+```text
+byte ──┐
+short ─┼──► int ──► long ──► float ──► double
+char ──┘
+```
+
+```mermaid
+flowchart LR
+  B[byte short char]
+  I[int]
+  L[long]
+  F[float]
+  D[double]
+  B --> I --> L --> F --> D
+```
+
+`char` widens to `int` with the numeric code-unit value (`'A'` → `65`). `boolean` does not widen to numeric types.
+
+**`byte + byte` → `int`:** Even if both operands are `byte`, Java applies *binary numeric promotion*: each operand is promoted to `int` before `+`. The result type is `int`, not `byte`:
+
+```java
+byte a = 1, b = 2;
+int sum = a + b; // required; byte sum = a + b may not compile without cast
+```
 
 ### 4.2 Narrowing (explicit cast)
 
@@ -44,7 +69,14 @@ Going to a smaller type needs a cast and may lose data:
 ```java
 double pi = 3.99;
 int narrowed = (int) pi; // 3 — fractional part discarded toward zero
+
+double negative = -3.9;
+int towardZero = (int) negative; // -3 — toward zero, not "floor"
 ```
+
+Verified on JDK 21: `(int) -3.9` is `-3`.
+
+**Floating specials:** Narrowing `double` to `int` maps `NaN` to `0` and infinities to `Integer.MIN_VALUE` / `Integer.MAX_VALUE` per JLS. Verified: `(int) Double.NaN` is `0`. Do not use such casts as validation—check with `Double.isNaN` when needed.
 
 ### 4.3 Binary numeric promotion
 
@@ -77,6 +109,27 @@ Rules of thumb:
 
 `var` is still **statically typed**—inferred at compile time, not dynamic typing.
 
+**Illegal `var` (compiler error themes):**
+
+```java
+var x;              // cannot infer type without initializer
+var n = null;       // cannot infer type from null alone
+// var field = 1;   // fields cannot use var
+// void m(var p) {} // parameters cannot use var (classic methods)
+```
+
+Messages vary by compiler but always mean: the compiler needs a **definite type** from context.
+
+### 4.6 `char` and `int`
+
+`char` is numeric for arithmetic: it widens to `int` with the UTF-16 code unit value.
+
+```java
+char letter = 'A';
+int code = letter;     // widening; code is 65
+char next = (char) (letter + 1); // narrowing cast required to store back in char
+```
+
 ## 5. Terminology
 
 | Term | Meaning |
@@ -95,6 +148,20 @@ Rules of thumb:
 Parenthesize casts in mixed expressions.
 
 ## 7. Step-by-Step Examples
+
+### 7.1 Widening and narrowing primitives
+
+Assign `int` to `double` without a cast; cast when you must drop fraction or width.
+
+### 7.2 Integer vs floating division
+
+`5 / 2` stays integral; introduce `double` on an operand to get `2.5`.
+
+### 7.3 Local type inference with `var`
+
+Use `var` when the RHS type is obvious from constructors or literals.
+
+### 7.4 Runnable — ConversionDemo
 
 [examples/core-java/conversion-demo/](../examples/core-java/conversion-demo/)
 
@@ -119,8 +186,9 @@ Narrowing floating→int drops the fraction toward zero (JLS). Overflow when nar
 
 ## 10. Edge Cases and Limitations
 
-- Casting `NaN`/Infinity to int has defined but surprising results—read JLS if needed.
-- `var` with diamond/`new` is fine; `var` with `null` alone is illegal without a target type.
+- Casting `NaN`/Infinity to `int` has defined but surprising results (§4.2); do not treat `(int) d` as “sanitizing” user doubles.
+- `var` with diamond/`new` is fine; `var` with `null` alone is illegal (§4.5).
+- `byte + byte` still yields `int` after promotion (§4.1).
 - `var` is not a keyword in all positions historically—but treat it as reserved for locals in practice.
 
 ## 11. Common Mistakes

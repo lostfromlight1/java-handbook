@@ -29,7 +29,7 @@ Programs manipulate **typed** data. If you do not understand variables and types
 
 ### 4.1 Variables
 
-A **variable** is a named storage location for a value of a given type.
+A **variable** is a named storage location for a value of a given type. The **type** is not decoration: it tells the compiler which operations are legal, how much space the value needs, and (for references) what kind of object the name may point at. That is why Java is **statically typed**—many category errors are caught at compile time instead of failing in production.
 
 ```java
 int count = 42;
@@ -41,7 +41,11 @@ int count = 42;
 | `count` | Name |
 | `42` | Initial value |
 
-You can declare without initializing in some contexts, but local variables must be assigned before use (compiler-enforced).
+**Local variables** are declared inside a method or block. They exist only while that block runs and must be **definitely assigned** before you read them (the compiler enforces this).
+
+**Fields** (also called instance variables or class variables) are declared on a type and belong to an object or class. They can live for the whole lifetime of that object. Module 05 covers fields in depth; at this stage, know that locals and fields follow different initialization rules (see §4.7 and §6).
+
+You can declare without assigning in some contexts (for example `int x;` as a field), but a **local** must receive a value on every path before its first use.
 
 ### 4.2 Constants with `final`
 
@@ -68,13 +72,26 @@ final int MAX_SCORE = 100;
 
 ### 4.4 Reference types (first contact)
 
-`String` and arrays are **references**: the variable holds a handle to an object, not the object bits themselves (Module 00 preview; Module 05+ deepens).
+`String` and arrays are **reference types**: the variable does not hold the string’s characters inline. It holds a **reference** (a handle) to an object that lives elsewhere. The JVM compares references when you use `==` on objects; **value** comparison for `String` uses `equals` (Module 06 deepens this).
+
+**Value vs reference in one contrast:**
+
+```java
+int n = 5;
+n = 6;           // n’s slot now holds 6; the old 5 is gone from this variable
+
+String a = "hi";
+String b = a;    // b references the same object as a
+b = b + "!";     // b may now reference a new "hi!"; a may still be "hi"
+```
+
+Primitives store the bits of the value in the variable’s slot. Reference variables store a reference to a heap object (or `null`). Both kinds are typed; only references can be `null`.
 
 ```java
 String label = "Java";
 ```
 
-`String` is not a primitive—even though it looks basic.
+`String` is not a primitive—even though it looks basic. Literals like `"Java"` are still real objects with methods such as `length()`.
 
 ### 4.5 Literals
 
@@ -90,6 +107,23 @@ boolean ok = true;
 ### 4.6 Static typing
 
 Java checks types at compile time. `"hi" + 1` becomes string concatenation; `"hi" * 2` is a compile error (unlike some dynamic languages). That discipline scales to large codebases.
+
+### 4.7 Field default values (preview)
+
+If you declare a **field** and omit an initializer, Java assigns a **default** before your code runs. **Locals** have no default—you must assign explicitly.
+
+| Type kind | Default when uninitialized as a field |
+|-----------|----------------------------------------|
+| Numeric primitives (`byte`, `short`, `int`, `long`, `float`, `double`) | `0` (or `0.0` for floating) |
+| `boolean` | `false` |
+| `char` | `'\u0000'` (null character) |
+| Reference types (`String`, arrays, any class) | `null` |
+
+Module 05 explains fields, constructors, and when relying on defaults is unsafe. While learning, **initialize fields and locals on purpose** so intent stays visible.
+
+### 4.8 Autoboxing (preview)
+
+Primitives have matching **wrapper** classes (`int` → `Integer`, `boolean` → `Boolean`, …). When an `int` is needed where an `Integer` is expected (for example a generic collection), the compiler inserts **autoboxing**: `Integer.valueOf(n)`. The reverse is **unboxing**. Autoboxing is convenient but can hide `NullPointerException` if you unbox a null `Integer`. Wrappers, identity, and collections are covered in Module 05 and Module 09; for now, prefer primitives in simple locals and know that `Integer` is an object, not a primitive.
 
 ## 5. Terminology
 
@@ -109,18 +143,34 @@ type name;
 name = expression;
 ```
 
-Local variables: effectively must be initialized before read. Fields get default values (Module 05)—don’t rely on that confusion yet; initialize explicitly while learning.
+Local variables: must be initialized before read on every code path. Fields receive the defaults in §4.7 if you omit an initializer—initialize explicitly while learning.
 
 ## 7. Step-by-Step Examples
 
-### 7.1 Minimal
+### 7.1 Minimal — counter in a local
+
+Locals are the usual place for short-lived state inside a method:
 
 ```java
 int lives = 3;
-lives = lives - 1;
+lives = lives - 1; // still int; assignment replaces the value in lives
 ```
 
-### 7.2 Realistic — primitives tour
+### 7.2 Realistic — fields on a tiny profile
+
+Fields hold data that outlives one statement (full rules in Module 05):
+
+```java
+class UserProfile {
+    String displayName = "Guest"; // reference field; default would be null
+    int loginCount;                 // field default 0 without writing "= 0"
+    final int maxSessions = 5;    // final field: assign once
+}
+```
+
+Explicit initializers like `displayName = "Guest"` avoid accidentally shipping `null` names.
+
+### 7.3 Primitives tour (runnable)
 
 [examples/core-java/primitives-demo/](../examples/core-java/primitives-demo/)
 
@@ -138,21 +188,32 @@ boolean=true
 String=Java
 ```
 
-### 7.3 Edge — `long` without `L`
+### 7.4 Edge — `long` literal without `L`
 
-`long big = 3000000000;` fails to compile: the literal is treated as `int` and is out of range. Use `3000000000L`.
+`long big = 3000000000;` fails to compile: the literal is treated as `int` and is out of range. Use `3000000000L` (as in PrimitivesDemo).
 
 ## 8. Real-World Use Cases
 
-Counters, money as integer cents (avoid binary float for currency—Module 20/`BigDecimal` later), feature flags (`boolean`), IDs as `long`.
+- **Counters** — `int` or `long` locals (`requestCount`, `retriesRemaining`).
+- **Money as integer cents** — store `$12.34` as `int cents = 1234` (or `long` for large ledgers). Floating `double` cannot represent every decimal exactly; ledgers and taxes need exact arithmetic (`BigDecimal` in Module 20). At fundamentals level: prefer whole minor units over `double` for currency.
+- **Feature flags** — `boolean enabled`.
+- **IDs** — `long` when values can exceed ~2 billion (`int` range).
 
 ## 9. Internal Behavior
 
-Primitives are not objects; they have no methods. Autoboxing to wrapper types (`Integer`, …) appears later. Floating-point follows IEEE-754-style binary fractions—`0.1 + 0.2` surprises are normal (Module 02 ops / later numerics).
+Primitives are not objects; they have no methods (until autoboxed). Floating-point follows IEEE-754-style binary fractions—`0.1 + 0.2` surprises are normal (operators chapter and later numerics).
+
+**Integer overflow (two’s complement).** For `int` and `long`, arithmetic is wrapped modulo 2³² or 2⁶⁴ per the JLS—there is no exception on overflow. Adding one past the maximum value flips to the minimum:
+
+```java
+int wrapped = Integer.MAX_VALUE + 1; // -2147483648 (same as Integer.MIN_VALUE)
+```
+
+Verified on JDK 21: `Integer.MAX_VALUE + 1` prints `-2147483648`. Financial and security code must check ranges or use wider types / `BigInteger` when overflow is unacceptable.
 
 ## 10. Edge Cases and Limitations
 
-- Integer overflow wraps silently for `int`/`long` arithmetic (two’s complement)—validate ranges when needed.
+- Integer overflow wraps silently for `int`/`long` arithmetic (two’s complement)—validate ranges when needed (see §9).
 - `char` is a code unit, not a full Unicode code point for all characters (Module 11).
 - `null` applies to references, not primitives.
 
@@ -190,11 +251,11 @@ Initialize meaningfully; null handling Module 18.
 
 ## 14. Performance Considerations
 
-Primitives avoid object headers; micro-optimizing `byte` vs `int` rarely matters—clarity first.
+Primitives live directly in stack slots or inside objects without per-value object headers. That keeps access cheap and GC pressure low compared with boxing every number in `Integer`. Micro-optimizing `byte` vs `int` for CPU rarely matters on modern HotSpot—prefer `int` unless you have a measured memory layout reason. Hot paths that mix primitives and collections will autobox; be aware when profiling (Module 09).
 
 ## 15. Security Considerations
 
-Don’t trust external strings as numbers without parsing/validation (Modules 14, 43).
+Types are not validation. A variable typed `int` can still hold attacker-controlled data after parsing. Reject or bound-check external input before arithmetic (overflow can turn a large positive into a negative). Never parse secrets from strings in logs. Parsing user text into numbers and validating ranges is covered with I/O and web modules; here, remember that **static typing prevents syntax errors, not malicious values**.
 
 ## 16. Java Version and Compatibility Notes
 

@@ -29,8 +29,12 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **IDE** | Integrated Development Environment (editor + project + run/debug). | [Module 01 Ch.03](01-java-getting-started/03-ide-and-command-line-workflow.md) |
 | **Exit code** | Integer status a process returns to the OS (0 often means success). | [Module 01 Ch.04](01-java-getting-started/04-first-java-program-deep-dive.md) |
 | **Package** | Namespace for Java types; usually mirrors directories. | [Module 01 Ch.05](01-java-getting-started/05-project-structure-and-jshell.md) |
-| **Classpath** | Locations where the JVM searches for user classes. | Module 01 Ch.05 |
+| **Classpath** | Locations where the JVM and `javac` search for user classes (directories and JARs). | [Module 01 Ch.01](01-java-getting-started/01-jdk-jre-jvm-and-tooling.md) / Ch.05 |
+| **Garbage collection (GC)** | JVM automatic reclaiming of unreachable objects from the heap. | Module 00 Ch.01 / Module 01 Ch.01 |
+| **Heap** | JVM-managed memory region for objects. | Module 00 Ch.02 |
 | **JShell** | Official Java REPL included with the JDK. | Module 01 Ch.05 |
+| **Reference type** | Type whose values are references to objects (or `null`), not inline primitive bits. | Module 02 Ch.01 |
+| **Autoboxing** | Automatic conversion between a primitive and its wrapper type (e.g. `int` ↔ `Integer`). | Module 02 Ch.01 |
 | **Primitive type** | One of Java’s eight built-in non-reference value types. | [Module 02 Ch.01](02-java-fundamentals/01-variables-and-types.md) |
 | **Literal** | Source-code representation of a fixed value (e.g. `42`, `"hi"`). | Module 02 Ch.01 |
 | **Expression** | Code that produces a value. | [Module 02 Ch.02](02-java-fundamentals/02-operators-and-expressions.md) |

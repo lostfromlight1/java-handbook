@@ -1,6 +1,6 @@
 # Module 30 — Testing and Code Quality
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

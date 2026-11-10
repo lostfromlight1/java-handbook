@@ -41,6 +41,18 @@ int outer = 1;
 // inner not visible here
 ```
 
+**Method parameters** are locals too. Their scope is the entire method body from the opening `{` of the method through its closing `}`—the same region where you can use the parameter name.
+
+```java
+static int scale(int value, int factor) {
+    // value and factor are in scope for the whole method
+    return value * factor;
+}
+// value and factor are not visible here
+```
+
+You cannot reference a parameter outside its method. Inside the method, the parameter name is fixed for that invocation until the method returns.
+
 ### 4.2 Loop variables
 
 ```java
@@ -50,9 +62,33 @@ for (int i = 0; i < 2; i++) {
 // i not visible here
 ```
 
-### 4.3 Shadowing (preview)
+### 4.3 Shadowing
 
-A name in an inner scope can hide a same-named variable in an outer scope (fields vs locals especially). Avoid accidental shadowing—Module 05 (`this`) clarifies field access.
+A name in an **inner** scope can **hide** a same-named variable in an **outer** scope. The inner declaration wins **inside** that block only. This is legal but easy to misread:
+
+```java
+int limit = 10;
+{
+    int limit = 5; // shadows outer limit inside this block
+    System.out.println(limit); // prints 5
+}
+System.out.println(limit); // prints 10 again
+```
+
+Fields vs locals use the same idea (Module 05 uses `this.field` when a parameter shadows a field). Prefer distinct names (`maxRetries` vs `retries`) over clever shadowing.
+
+### 4.3.1 Illegal duplicate locals
+
+Two locals with the **same name** cannot occupy **overlapping** scopes where both are visible at once:
+
+```java
+void bad() {
+    int count = 1;
+    int count = 2; // compile error: variable count is already defined
+}
+```
+
+Nested blocks may reuse a name only if the outer binding is **not** in scope (the inner block completely hides the outer name only when the inner declares its own `count`). Redeclaring in the **same** block is always illegal.
 
 ### 4.4 Naming conventions
 
@@ -79,7 +115,22 @@ Names should reveal intent: `secondsRemaining` beats `sr`.
  */
 ```
 
-Comment **why** and non-obvious constraints, not “increment i by 1.”
+A complete minimal Javadoc on a public method names the contract, not the implementation:
+
+```java
+/**
+ * Returns a display label for the given user id, or {@code null} if unknown.
+ *
+ * @param userId non-negative account id
+ * @return human-readable label, or {@code null}
+ */
+public String labelFor(long userId) {
+    // ...
+    return null;
+}
+```
+
+`@param` documents each parameter; `@return` documents the result (omit `@return` only for `void` methods). Comment **why** and non-obvious constraints, not “increment i by 1.”
 
 ## 5. Terminology
 
@@ -92,7 +143,7 @@ Comment **why** and non-obvious constraints, not “increment i by 1.”
 
 ## 6. Syntax and Language Rules
 
-Two local variables with the same name cannot both be in scope at once in overlapping blocks in ways the language forbids—compiler errors guide you. Class members have different rules (Module 05).
+Two local variables with the same name cannot both be in scope at once in the same block (§4.3.1). Parameters are locals for the whole method body. Class members have different rules (Module 05).
 
 ## 7. Step-by-Step Examples
 
@@ -111,14 +162,25 @@ loop i=0
 loop i=1
 ```
 
-### 7.2 Naming contrast
+### 7.2 Shadowing in a nested block
+
+```java
+int limit = 10;
+{
+    int limit = 2; // legal shadow; outer limit hidden here
+    // use inner limit
+}
+// outer limit visible again
+```
+
+### 7.3 Naming contrast
 
 ```java
 int a = 86400;                 // weak
 int secondsPerDay = 86_400;    // clear
 ```
 
-### 7.3 Comment contrast
+### 7.4 Comment contrast
 
 ```java
 // Bad: add one to count
@@ -138,7 +200,7 @@ Scope is a language/compile-time concept. Bytecode locals use slots—interestin
 
 ## 10. Edge Cases and Limitations
 
-- `switch`/`case` scoping improved in modern Java—Module 03.
+- **`switch` scope:** In Java 14+, a `switch` label can introduce a block `{ ... }` so that a variable declared for one `case` does not leak into the next `case`. Without a block, `case` labels share one scope in older patterns—Module 03 shows the block form and fall-through rules.
 - Resource variables in try-with-resources have special scope (Module 14).
 
 ## 11. Common Mistakes

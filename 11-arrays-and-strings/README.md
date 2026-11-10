@@ -1,6 +1,6 @@
 # Module 11 — Arrays and Strings
 
-**Status:** In progress (index only) — chapters appear when written.
+**Status:** Not started (index only) — chapters appear when written.
 
 | # | Chapter | Status |
 |---|---------|--------|

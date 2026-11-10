@@ -40,27 +40,101 @@ The condition must be `boolean`. Braces `{}` are strongly recommended even for o
 
 ### 4.2 `else if` chains
 
-Test mutually exclusive ranges from most specific/highest first:
+Test mutually exclusive ranges from **highest threshold first**. Each branch is “first match wins”: as soon as one condition is true, later `else if` tests are skipped.
+
+**Grade thresholds** used by [ConditionalsDemo](../examples/core-java/conditionals-demo/) (and this chapter):
+
+| Letter | Condition (inclusive) |
+|--------|------------------------|
+| A | `score >= 90` |
+| B | `score >= 80` |
+| C | `score >= 70` |
+| D | `score >= 60` |
+| F | otherwise (`score < 60`) |
 
 ```java
-if (score >= 90) { ... }
-else if (score >= 80) { ... }
-else { ... }
+static String grade(int score) {
+    if (score >= 90) {
+        return "A";
+    } else if (score >= 80) {
+        return "B";
+    } else if (score >= 70) {
+        return "C";
+    } else if (score >= 60) {
+        return "D";
+    } else {
+        return "F";
+    }
+}
 ```
 
-Order matters: if you check `>= 60` before `>= 90`, the A branch never runs.
+For `score = 85`, the chain tests `>= 90` (false), then `>= 80` (true) and returns **B**—that matches the demo output below.
 
-### 4.3 Nested `if`
+Order matters: if you check `>= 60` before `>= 90`, a score of 95 would match the D branch and never reach A.
 
-Allowed, but deep nesting hurts readability. Prefer early `return` / guard clauses (Module 04 methods) when logic grows.
+### 4.3 Nested `if` vs flat structure
 
-### 4.4 Ternary operator (related)
+Nesting is legal, but each extra level forces the reader to track “which `if` am I inside?” Compare the same check for discount eligibility:
+
+**Nested (harder to scan):**
+
+```java
+if (customer != null) {
+    if (customer.isActive()) {
+        if (orderTotal >= 100) {
+            applyDiscount();
+        }
+    }
+}
+```
+
+**Flat with guards (same logic, clearer exit paths):**
+
+```java
+if (customer == null) {
+    return;
+}
+if (!customer.isActive()) {
+    return;
+}
+if (orderTotal >= 100) {
+    applyDiscount();
+}
+```
+
+Flat structure is not always possible in `main`, but the idea is the same: handle invalid or uninteresting cases first, then keep the “happy path” at the left margin.
+
+### 4.4 Guard clauses and `return`
+
+A **guard clause** is an early exit when a precondition fails, so the rest of the method does not run.
+
+A **method** is a named block of code; **`return`** immediately finishes that method and optionally sends a value back to the caller. In a `void` method, `return;` alone means “stop here.” In `String grade(int score)`, `return "B";` means “stop and the result of calling `grade` is the string `B`.”
+
+```java
+static String greet(String name) {
+    if (name == null || name.isBlank()) {
+        return "Hello, guest";
+    }
+    return "Hello, " + name;
+}
+```
+
+Module 04 goes deeper into methods; here you only need guards as a readability tool when `if` chains get deep.
+
+### 4.5 Ternary operator (`? :`)
 
 ```java
 String status = score >= 60 ? "passing" : "failing";
 ```
 
-Use for simple value selection—not for multi-statement logic.
+The ternary is an expression: it picks one of two values. Both branches must be **type-compatible** (for example, both `String`, or both `int`). This does not compile if one branch is `String` and the other is `int`:
+
+```java
+// Object ok = condition ? "yes" : 1;  // error: incompatible types
+Object ok = condition ? "yes" : Integer.valueOf(1);  // both branches are Object-compatible
+```
+
+**When not to use it:** multi-step logic, I/O, loops, or nested ternaries (`a ? b : c ? d : e`). Use a normal `if`/`else` or a small method instead. Reserve the ternary for assigning one of two simple values on one line.
 
 ## 5. Terminology
 
@@ -103,7 +177,9 @@ Auth checks, input validation, feature flags, pricing tiers, HTTP status mapping
 
 ## 9. Internal Behavior
 
-Bytecode uses conditional jumps (`ifeq`, `if_icmpge`, …). Mentally: evaluate boolean, jump to the matching block.
+**Plain language:** the JVM runs your `if`/`else` by evaluating the condition once. If it is true, it runs the first block; if false, it skips that block and runs the `else` branch (if any). Only one path executes per decision.
+
+**Under the hood (Track B):** the compiler often emits **conditional jump** bytecodes—instructions that skip forward when a comparison fails (names like `ifeq`, `if_icmpge` appear in disassembly). You do not need to memorize opcode names to write correct conditionals; they simply show that branching is implemented as “test, then jump to the right instruction,” not as magic.
 
 ## 10. Edge Cases and Limitations
 
@@ -163,9 +239,14 @@ Unlike JavaScript, conditions must be boolean—no implicit truthiness of number
 
 ## 18. Revision and Mastery
 
-- De Morgan’s laws for boolean simplification  
-- Exhaustive handling vs `else` catch-alls  
-- Prefer polymorphism over type-code if/else chains  
+**De Morgan’s laws** rewrite negated conditions (handy when refactoring):
+
+- `!(a && b)` is equivalent to `!a || !b`
+- `!(a || b)` is equivalent to `!a && !b`
+
+Example: `if (!(isAdmin && isActive))` ↔ `if (!isAdmin || !isActive)`.
+
+Also review: exhaustive handling vs `else` catch-alls; prefer polymorphism over type-code `if`/`else` chains when behavior varies by type across many methods.
 
 ## 19. Exercises
 

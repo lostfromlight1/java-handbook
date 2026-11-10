@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 48 — DevOps and Deployment  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3  
 > **Examples verified with:** Temurin JDK 21.0.12.1 — [diagnostics-awareness-demo](../../examples/debugging/diagnostics-awareness-demo/)
 
 ## 1. Learning Objectives

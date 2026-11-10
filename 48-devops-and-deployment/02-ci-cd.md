@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 48 — DevOps and Deployment  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -78,6 +80,26 @@ jobs:
 ```
 
 `verify` runs tests and fails the job on failures—do not swallow test errors.
+
+### Mechanism and execution flow (PR → production)
+
+```mermaid
+sequenceDiagram
+  participant Dev as Developer
+  participant VCS as Git / PR
+  participant CI as CI (Temurin 21)
+  participant Reg as Registry
+  participant CD as CD / K8s
+  Dev->>VCS: push / open PR
+  VCS->>CI: checkout + ./mvnw verify
+  CI->>CI: unit + integration + scan
+  alt main / release tag
+    CI->>Reg: push image digest
+    CD->>Reg: pull same digest to staging/prod
+  end
+```
+
+**Immutability rule:** production deploys the **same artifact SHA** promoted from staging; config changes via env/Secrets, not ad hoc rebuilds on the server.
 
 ### Quality gates
 

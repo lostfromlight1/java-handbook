@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 48 — DevOps and Deployment  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -40,6 +42,24 @@ flowchart LR
     O2[Pod v1] --> N2[Pod v2]
   end
 ```
+
+## 5. Mechanism and Execution Flow
+
+Rolling replacement (typical Kubernetes `Deployment`) interleaves old and new pods while Service endpoints shift only to **ready** instances:
+
+```mermaid
+sequenceDiagram
+  participant LB as Service / Ingress
+  participant O as Old pod v1
+  participant N as New pod v2
+  LB->>O: traffic while v2 starting
+  Note over N: readiness false until pool warm
+  N-->>LB: readiness true
+  LB->>N: new traffic share
+  O-->>O: terminate after drain
+```
+
+**Database ordering:** expand/contract migrations run **before** or in lockstep with code that depends on new schema (see Database migrations below).
 
 ### JVM warmup and readiness
 

@@ -8,8 +8,8 @@
 2. Why is constructor injection preferred over field `@Autowired`?
 3. What is a composition root?
 4. Name three stages of a Spring bean lifecycle.
-5. JDK proxy vs CGLIB—when does Spring choose each?
-6. Why does `@Transactional` on a private method fail?
+5. JDK proxy vs CGLIB—what does Spring Boot’s `spring.aop.proxy-target-class` default change?
+6. Why does `@Transactional` on a private method fail? When can protected/package-visible methods work?
 7. What problem does AOP solve?
 8. Purpose of `@RestController` vs raw servlet?
 9. Why avoid returning JPA entities from REST?

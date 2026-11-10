@@ -29,7 +29,7 @@ To edit the JPMS demo with full IDE support, open `examples/build-tools/jpms-hel
 | `networking/` | JDK HTTP and sockets |
 | `testing/` | JUnit-oriented samples |
 | `build-tools/` | Maven awareness, classpath JARs, JPMS hello |
-| `backend/` | JDBC/JPA (Maven), DI/proxy/REST teaching demos |
+| `backend/` | JDBC/JPA (Maven), DI/proxy/REST teaching demos, `spring-boot-minimal` (Maven Wrapper) |
 | `patterns/` | Creational and structural/behavioral sketches |
 | `clean-code/` | Readability and naming demos |
 | `security/` | Input-guard / defensive coding demos |

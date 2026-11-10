@@ -1,0 +1,127 @@
+# OpenTelemetry and Prometheus
+
+> **Status:** Completed  
+> **Module:** 47 — Observability and Monitoring  
+> **Target Java version:** 21  
+> **Last reviewed:** 2026-11-10
+
+## 1. Learning Objectives
+
+- Describe **OpenTelemetry** (OTel) traces, metrics, logs signals and Java agent/SDK—**conceptually without requiring local install**.
+- Scrape **Prometheus** metrics from Spring Boot Actuator.
+- Build **Grafana** dashboards and **alerting** rules at high level.
+- Avoid vendor lock-in via **OTLP** export.
+
+## 2. Prerequisites
+
+- Ch.01 observability pillars.
+- Module 37 Spring Boot Actuator awareness.
+
+## 3. Why This Concept Exists
+
+Every vendor had proprietary agents. **OpenTelemetry** standardizes instrumentation and export; **Prometheus** excels at pull-based metrics and alerting in Kubernetes.
+
+## 4. OpenTelemetry overview
+
+| Component | Role |
+|-----------|------|
+| **API** | App code creates spans/metrics |
+| **SDK** | Implements export pipelines |
+| **Instrumentation** | Auto for JDBC, HTTP, etc. |
+| **Collector** | Receives OTLP; fans out to backends |
+| **OTLP** | gRPC/HTTP protocol to collector |
+
+Java options:
+
+- **Java agent** (`-javaagent:opentelemetry-javaagent.jar`) — low-code HTTP/JDBC spans.
+- **Manual** `Span` in critical business paths.
+
+**Conceptual:** without installing OTel, plan header propagation (`traceparent`) and naming conventions (`http.server.duration`).
+
+## 5. Spring Boot integration (awareness)
+
+Spring Boot 3.x aligns with Micrometer tracing + OTel bridge:
+
+```properties
+# conceptual application.properties
+management.tracing.sampling.probability=1.0
+management.otlp.tracing.endpoint=http://collector:4317
+```
+
+Export to Jaeger, Tempo, or vendor via collector—not directly from app to many backends.
+
+## 6. Prometheus model
+
+- **Pull:** Prometheus scrapes `GET /actuator/prometheus` periodically.
+- **Time series:** `metric_name{label="value"} value timestamp`.
+- **PromQL:** `rate(http_server_requests_seconds_count[5m])`.
+
+Common JVM metrics:
+
+- `jvm_memory_used_bytes`
+- `http_server_requests_seconds` histogram
+- `hikaricp_connections_active`
+
+## 7. Alerting
+
+Alertmanager rules (examples):
+
+- `error_rate > 1%` for 5m on checkout.
+- `hikaricp_connections_pending > 10` for 2m.
+
+Tie alerts to **runbooks** (Ch.03).
+
+## 8. Dashboards
+
+Grafana panels:
+
+- RPS and p95 latency by endpoint.
+- Saturation: CPU, heap, pool wait.
+- Business KPI: orders/min (counter).
+
+## 9. Real-World Use Cases
+
+- K8s: ServiceMonitor scrapes each pod; same labels for HPA.
+- Canary deploy: compare error metric canary vs stable.
+- JDBC trace shows N+1 query span pattern.
+
+## 10. Edge Cases
+
+- **Sampling:** 100% traces expensive—sample in prod, full in staging.
+- **Cardinality:** avoid high-cardinality labels on Prometheus metrics.
+
+## 11. Common Mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Multiple conflicting agents | One OTel pipeline |
+| Scraping without auth | Network policy + mTLS |
+| Dashboards without SLO | Start from user journeys (Ch.03) |
+
+## 12. Conceptual note
+
+Install OTel collector + Prometheus in lab when ready; this chapter documents **architecture and contracts**, not fabricated scrape output.
+
+## 13. Revision and Mastery
+
+- Pull vs push metrics?
+- OTLP destination?
+- Actuator path for Prometheus?
+
+## 14. Exercises
+
+1. Sketch diagram: JVM → Actuator → Prometheus → Grafana.
+2. Write PromQL for 5xx rate.
+3. List three auto-instrumented libraries via OTel agent.
+
+## 15. Chapter Summary
+
+OpenTelemetry standardizes Java instrumentation and OTLP export; Prometheus scrapes Micrometer metrics for dashboards and alerts—deploy collectors in ops environments to realize the stack.
+
+## 16. Next Steps
+
+[03-slos-and-incidents.md](03-slos-and-incidents.md)
+
+## Review Checklist
+
+- [x] OTel/Prometheus conceptual; no fabricated scrape data

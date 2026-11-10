@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 06 completed)
+**Last updated:** 2026-11-10 (Module 07 completed)
 
 ## Status values
 
@@ -214,10 +214,34 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `equals-hashcode-demo` | equals/hash true/false; `setSize=2` |
 
 **Module 06 status:** Completed  
-**Next recommended chapter:** `07-inheritance-and-polymorphism/` (advanced inheritance, contracts)
+**Next recommended chapter:** Module 07 (Completed below)
 
 ---
 
-## Modules 07–53
+## Module 07 — Inheritance and Polymorphism
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-inheritance-deep-dive.md](07-inheritance-and-polymorphism/01-inheritance-deep-dive.md) | Completed | Quality pass 2026-11-10 | Interfaces in M08 |
+| [02-abstract-classes.md](07-inheritance-and-polymorphism/02-abstract-classes.md) | Completed | Quality pass 2026-11-10 | default methods compare M08 |
+| [03-dynamic-dispatch-and-lsp.md](07-inheritance-and-polymorphism/03-dynamic-dispatch-and-lsp.md) | Completed | Quality pass 2026-11-10 | CHA / bytecode in later JVM module |
+| [04-sealed-classes.md](07-inheritance-and-polymorphism/04-sealed-classes.md) | Completed | Quality pass 2026-11-10 | Module patterns in M15 |
+| [Module assessment](assessments/module-assessments/07-inheritance-and-polymorphism-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `inheritance-deep-demo` | Savings line; balance 1200; withdraw 900 true / 1100 false |
+| `abstract-classes-demo` | REPORT Q1 pdf/csv blocks with END |
+| `dispatch-lsp-demo` | Rectangle 12; Square 25; poly area 4 |
+| `sealed-classes-demo` | ok/err lines; area=12.566370614359172 |
+
+**Module 07 status:** Completed  
+**Next recommended chapter:** [08-interfaces-and-abstraction/](08-interfaces-and-abstraction/) (interfaces, `default` methods)
+
+---
+
+## Modules 08–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

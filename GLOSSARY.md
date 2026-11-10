@@ -63,6 +63,12 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Abstraction** | Exposing essential operations while hiding implementation details. | Module 05 Ch.02 |
 | **Inheritance** | `extends` relationship where a subclass is-a specialized superclass. | [Module 05 Ch.03](05-object-oriented-programming/03-inheritance-and-polymorphism-intro.md) |
 | **Polymorphism** | Same call site; runtime type decides which overridden instance method runs. | Module 05 Ch.03 |
+| **Dynamic dispatch** | JVM selects the overridden instance method using the receiver object’s runtime class. | [Module 07 Ch.03](07-inheritance-and-polymorphism/03-dynamic-dispatch-and-lsp.md) |
+| **Liskov Substitution Principle (LSP)** | Subtypes must be replaceable for their supertypes without breaking caller expectations. | Module 07 Ch.03 |
+| **Abstract class** | Class declared `abstract`; may declare abstract methods; cannot be instantiated with `new`. | [Module 07 Ch.02](07-inheritance-and-polymorphism/02-abstract-classes.md) |
+| **Template method** | Superclass `final` algorithm invoking overridable hook methods in subclasses. | Module 07 Ch.02 |
+| **Sealed type** | Class or interface restricting which types may directly extend or implement it (`permits`). | [Module 07 Ch.04](07-inheritance-and-polymorphism/04-sealed-classes.md) |
+| **`protected`** | Member visible to subclasses and same-package code; part of an inheritance extension API. | [Module 07 Ch.01](07-inheritance-and-polymorphism/01-inheritance-deep-dive.md) |
 | **Composition** | Has-a design where an object uses/owns another object as a part or collaborator. | [Module 05 Ch.04](05-object-oriented-programming/04-composition-and-object-relationships.md) |
 | **Constructor chaining** | One constructor invoking another in the same class via `this(...)` as the first statement. | [Module 06 Ch.01](06-classes-and-objects/01-initialization-and-constructors.md) |
 | **Static initializer** | `static { }` block or static field initializers run once when the class is initialized. | Module 06 Ch.01 |

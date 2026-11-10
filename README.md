@@ -17,7 +17,7 @@ A comprehensive, technically accurate Java textbook and professional reference�
 ## How to navigate
 
 1. Read [LEARNING-ROADMAP.md](LEARNING-ROADMAP.md) for prerequisites and both learning tracks.
-2. Check [PROGRESS.md](PROGRESS.md) for what is actually written (planned ≠ complete).
+2. Check [PROGRESS.md](PROGRESS.md) for what is actually written (planned ≠ complete). **Through Module 07** (inheritance, abstract types, LSP, sealed classes); **next up:** Module 08.
 3. Follow [DOCUMENTATION-STANDARDS.md](DOCUMENTATION-STANDARDS.md) if you contribute content.
 4. Use [GLOSSARY.md](GLOSSARY.md) for shared terminology.
 5. Prefer official sources listed in [REFERENCES.md](REFERENCES.md).

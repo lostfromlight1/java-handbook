@@ -16,4 +16,5 @@
 
 **Assessment:** [12-collections-framework-assessment.md](../assessments/module-assessments/12-collections-framework-assessment.md) · [solutions](../assessments/module-assessments/12-collections-framework-assessment-solutions.md)
 
-**Next module:** [13 — Generics](../13-generics/README.md)
+**Next module:** [14 — Exceptions and Error Handling](../14-exceptions-and-error-handling/README.md)  
+**Generics (M13):** [13 — Generics](../13-generics/README.md)

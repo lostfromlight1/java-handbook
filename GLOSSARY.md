@@ -103,9 +103,16 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Type pattern** | Pattern such as `case String s` or `instanceof String s` that tests a type and binds a variable when it matches. | Module 10 Ch.02 |
 | **Narrowing reference conversion** | Treating a supertype reference as a subtype after a safe proof (cast or pattern). | Module 10 Ch.02 |
 | **Invariance (generics)** | `G<A>` is not a subtype of `G<B>` even when `A` extends `B`; prevents unsafe writes through the wrong static type. | [Module 10 Ch.03](10-java-type-system/03-variance-wildcards-and-erasure-preview.md) |
-| **Wildcard** | Unknown or flexible type argument in generics: `?`, `? extends T`, or `? super T`. | Module 10 Ch.03 |
-| **PECS** | Producer Extends, Consumer Super—use `? extends T` when reading, `? super T` when writing. | Module 10 Ch.03 |
-| **Type erasure** | Compile-time generic type information is removed in bytecode; type parameters become their bounds or `Object` at runtime. | Module 10 Ch.03 |
+| **Wildcard** | Unknown or flexible type argument in generics: `?`, `? extends T`, or `? super T`. | [Module 13 Ch.02](13-generics/02-bounds-and-wildcards.md) (preview M10 Ch.03) |
+| **PECS** | Producer Extends, Consumer Super—use `? extends T` when reading, `? super T` when writing. | Module 13 Ch.02 |
+| **Type erasure** | Compile-time generic type information is removed in bytecode; type parameters become their bounds or `Object` at runtime. | [Module 13 Ch.03](13-generics/03-type-erasure-and-restrictions.md) (preview M10 Ch.03) |
+| **Type parameter** | Formal placeholder on a generic class or method declaration (`T` in `Box<T>`). | [Module 13 Ch.01](13-generics/01-generic-types-and-methods.md) |
+| **Type argument** | Concrete type substituted for a type parameter at a use site (`String` in `Box<String>`). | Module 13 Ch.01 |
+| **Raw type** | Generic type or interface used without type arguments—weakens static checking for legacy interop. | Module 13 Ch.01 |
+| **Bounded type parameter** | Type parameter constrained with `extends` (`T extends Number`) or intersection (`T extends A & B`). | [Module 13 Ch.02](13-generics/02-bounds-and-wildcards.md) |
+| **Bridge method** | Synthetic method emitted so overriding remains correct after type erasure changes erased signatures. | Module 13 Ch.03 |
+| **Heap pollution** | Illegal element types present at runtime in a generically typed collection due to arrays, raw types, or unsafe casts. | Module 13 Ch.03 |
+| **Wildcard capture** | Compiler technique introducing a fresh type variable so code operating on wildcard parameters type-checks. | Module 13 Ch.02 |
 | **Array** | Fixed-length, indexed sequence of elements of one type; length set at creation and exposed via `length` field. | [Module 11 Ch.01](11-arrays-and-strings/01-arrays.md) |
 | **String immutability** | After construction, a `String`'s character sequence cannot change; mutating APIs return new strings. | [Module 11 Ch.02](11-arrays-and-strings/02-strings-and-immutability.md) |
 | **String pool** | JVM-managed set of canonical string literals and interned strings that may share identity for equal content. | Module 11 Ch.02 |

@@ -356,10 +356,33 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `collections-choice-demo` | `index2=3`; `kb=5`; `odds=[1, 3]` |
 
 **Module 12 status:** Completed
-**Next recommended chapter:** [13-generics/](13-generics/) (generic types, bounds, erasure)
 
 ---
 
-## Modules 13–53
+## Module 13 — Generics
 
-Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-generic-types-and-methods.md](13-generics/01-generic-types-and-methods.md) | Completed | Quality pass 2026-11-10 | Primitive generics (Valhalla) out of scope |
+| [02-bounds-and-wildcards.md](13-generics/02-bounds-and-wildcards.md) | Completed | Quality pass 2026-11-10 | Declaration-site variance (Kotlin) comparison only |
+| [03-type-erasure-and-restrictions.md](13-generics/03-type-erasure-and-restrictions.md) | Completed | Quality pass 2026-11-10 | Reified generics not in Java 21 |
+| [04-generic-api-design.md](13-generics/04-generic-api-design.md) | Completed | Quality pass 2026-11-10 | Framework-specific DAO patterns later |
+| [Module assessment](assessments/module-assessments/13-generics-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `generics-basics-demo` | `value=hello`; `first=1`; `pair=a:1` |
+| `generics-bounds-demo` | `sum=6.0`; `nums=[1, 2, 3]`; `producer0=1` |
+| `generics-erasure-demo` | `sameRawClass=true`; `s=hi`; `i=7`; `built=[a, b]` |
+| `generics-api-demo` | `found=Ada`; `missing=false`; `count=1` |
+
+**Module 13 status:** Completed
+**Next recommended chapter:** [14-exceptions-and-error-handling/](14-exceptions-and-error-handling/) (throw, catch, design)
+
+---
+
+## Modules 14–53
+
+Remaining modules: **Not started** (indexes only), except Module 13 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

@@ -1,13 +1,13 @@
 # Module 30 — Testing and Code Quality
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Testing Fundamentals | Not started |
-| 02 | JUnit and Mockito | Not started |
-| 03 | Static Analysis and CI | Not started |
+| 01 | [Testing Fundamentals](01-testing-fundamentals.md) | Completed |
+| 02 | [JUnit and Mockito](02-junit-and-mockito.md) | Completed |
+| 03 | [Static Analysis and CI](03-static-analysis-and-ci.md) | Completed |
 
 **Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [30-testing-quality-assessment.md](../assessments/module-assessments/30-testing-quality-assessment.md)

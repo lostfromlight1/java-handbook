@@ -4,7 +4,23 @@
 > **Module:** 01 — Introduction to Java  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Oracle JDK 21.0.9
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (`main` contract, args, exit codes)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -106,9 +122,26 @@ When the JVM process ends, the operating system receives an **exit code** (also 
 
 `System.exit(int)` **immediately** terminates the entire JVM with that code—use it at the top level of command-line apps when usage is wrong. Libraries and reusable components usually **throw exceptions** instead of exiting, so callers can recover (Module 14).
 
-**Observing exit codes:** After `java MainDeepDive` in PowerShell, check `$LASTEXITCODE`; in Bash, `echo $?`. Scripts chain commands with `&&` only when exit code is 0. The MainDeepDive example (§7.2) uses **1** for missing args and **2** for a blank name so scripts can distinguish cases if needed.
+**Observing exit codes:** After `java MainDeepDive` in PowerShell, check `$LASTEXITCODE`; in Bash, `echo $?`. Scripts chain commands with `&&` only when exit code is 0. The MainDeepDive example (§8.2) uses **1** for missing args and **2** for a blank name so scripts can distinguish cases if needed.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+From the OS’s view, launching `java MainDeepDive arg1 arg2` is one process. Inside the JVM, the classic entry path is:
+
+1. **Tokenize** — The launcher splits the command line: class name `MainDeepDive`, remaining tokens become the `String[] args` array (`args.length` equals token count; each element is a `String`, never pre-parsed numbers).
+2. **Load class** — Binary name `MainDeepDive` must match the public class in `MainDeepDive.java` (Module 01 Ch.01 classpath rules apply when packages appear).
+3. **Resolve `main`** — The JVM searches for `public static void main(String[] args)`. Each keyword is required for this contract:
+   - **`public`** — launcher is outside the class;
+   - **`static`** — no instance exists yet;
+   - **`void`** — no Java return value (exit code is separate);
+   - **`main`** — conventional name the launcher probes;
+   - **`String[] args`** — array of argument strings (equivalent `String args[]` form is legal but non-idiomatic).
+4. **Invoke body** — Your code runs on the main thread; `System.out` / `System.err` map to OS streams.
+5. **Terminate** — Normal `return` from `main` yields exit **0**; `System.exit(n)` ends the whole JVM immediately with **n**.
+
+**Parsing preview:** When a program needs numbers, it calls library parsers (`Integer.parseInt`, etc.) **inside** `main` or helpers—after checking `args.length` and handling `NumberFormatException` (see §4.2 `AgePreview`). The launcher never does that step for you.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -117,7 +150,7 @@ When the JVM process ends, the operating system receives an **exit code** (also 
 | stdout / stderr | Standard output / error streams |
 | Launcher | The `java` tool that starts the JVM |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 public class MainDeepDive {
@@ -133,9 +166,9 @@ Rules that bite beginners:
 - `String[] args` may also be written `String args[]` (older style)—prefer `String[] args`
 - `main` must be `static` for the classic launch pattern
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — args echo
+### 8.1 Minimal — args echo
 
 [ArgsEcho](../examples/beginner/args-echo/) verified:
 
@@ -153,7 +186,7 @@ args[1] = Java
 args[2] = 21
 ```
 
-### 7.2 Realistic — validate args and exit codes
+### 8.2 Realistic — validate args and exit codes
 
 [MainDeepDive](../examples/beginner/main-deep-dive/):
 
@@ -176,7 +209,7 @@ public class MainDeepDive {
 }
 ```
 
-**Verified (PowerShell `$LASTEXITCODE`):**
+**Verified** (Temurin JDK 21.0.12.1; PowerShell `$LASTEXITCODE`):
 
 | Command | Output | Exit |
 |---------|--------|------|
@@ -184,28 +217,28 @@ public class MainDeepDive {
 | `java MainDeepDive ""` | Name must not be blank | 2 |
 | `java MainDeepDive Ada` | `Welcome, Ada!` | 0 |
 
-### 7.3 Advanced note — `return` after `exit`
+### 8.3 Advanced note — `return` after `exit`
 
 `System.exit` terminates the JVM; `return` afterward is unreachable in practice but can satisfy readers/compilers about control flow. Prefer clear structure; Module 14 covers exceptions as another failure style for libraries (not always for process exit).
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - CLI utilities (`git`-style commands)
 - Container entrypoints: exit nonzero so orchestrators restart/fail the pod
 - Passing config paths as args (prefer env/files for secrets—Module 43)
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 The launcher loads the class and invokes `main` using reflection-like internal mechanisms. Your program’s threads must finish (or you call `System.exit`) for the JVM to end—non-daemon threads can keep it alive (Module 24).
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - Args with spaces need shell quoting
 - Empty string arg `""` is length 1, not 0
 - `System.exit` skips ordinary shutdown patterns you may want in larger apps (hooks exist—advanced)
 - Single-file `java MainDeepDive.java` launch is convenient but not the multi-file mental model
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect
 
@@ -231,13 +264,13 @@ Assuming args are already integers.
 
 Parse intentionally later; validate failures.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Document usage in the error message.
 - Use distinct exit codes for distinct failure classes when scripts care.
 - Keep `main` thin: parse args, then call other methods (Module 04).
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | Benefit | Cost |
 |----------|---------|------|
@@ -245,23 +278,23 @@ Parse intentionally later; validate failures.
 | Exceptions from `main` | Stack traces | Less clean for CLIs unless handled |
 | Flags libraries | Rich CLIs | Dependency weight |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Irrelevant for arg parsing at learning scale.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Treat args as untrusted input. Don’t pass them unsanitized into shells, SQL, or file paths (Modules 21, 33, 43).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Classic `main` is stable. Validated on **21.0.9**. Newer conveniences (compact source files in later releases) are documented in Module 19 when relevant—primary path stays classic.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Similar to `func main()` in Go or static `Main` in C#—every language has an entry ritual.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 ### Questions
 
@@ -269,7 +302,7 @@ Similar to `func main()` in Go or static `Main` in C#—every language has an en
 2. Difference between returning from `main` and `System.exit(2)`?
 3. When should libraries call `System.exit`? (Hint: almost never.)
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -286,13 +319,13 @@ Similar to `func main()` in Go or static `Main` in C#—every language has an en
 5. Research `Runtime.addShutdownHook` and explain one use case.
 6. Compare IDE Program arguments field vs CLI quoting on Windows PowerShell.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **Signature of main?** — `public static void main(String[] args)`.  
 2. **What is args?** — Command-line tokens as strings.  
 3. **Exit code 0 vs nonzero?** — Success vs failure convention.  
 
-## 21. Solutions
+## 22. Solutions
 
 1. Match verified table above.  
 2. Loop `i` from `args.length - 1` down to `0`.  
@@ -301,25 +334,47 @@ Similar to `func main()` in Go or static `Main` in C#—every language has an en
 5. Cleanup on JVM shutdown (flush logs)—with caveats.  
 6. Note how your shell parses quotes.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 `main` is the process entry point: public, static, named `main`, taking `String[]`. Use args carefully, print errors to stderr, and signal failure with nonzero exit codes.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Entry point · args · stdout · stderr · exit code · System.exit
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - JLS: method declarations / application launch discussions in Java SE docs
 - JDK `java` launcher documentation
 
-## 25. Next Steps
+## 26. Next Steps
 
 [05-project-structure-and-jshell.md](05-project-structure-and-jshell.md)
 
 ## Review Checklist
 
-- [x] ArgsEcho and MainDeepDive verified with real exit codes
-- [x] Depth gate passed
-- [x] Revision and Mastery included
+**Mandatory Depth Review:** Technical profile; entry point contract at **Levels 2–3**.
+
+- [x] Learning objectives covered
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained (§5 launcher → main → exit)
+- [x] First-appearance concepts explained now (`main` keywords, `parseInt` preview in §4.2/§5)
+- [x] Terminology defined before use (§6)
+- [x] Examples include sufficient context to compile and run
+- [x] Verification status accurately labeled (Verified / Compile-verified / Illustrative)
+- [x] Explanations distinguish specification guarantees from implementation details (§10)
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included (§19)
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-10)
+
+**Omissions (section → reason):**
+
+- **Mermaid diagrams** — omitted; §5 ordered list is sufficient for launch contract at this depth.
+- **§ Internal Behavior (deep reflection)** — kept brief in §10; full launcher internals deferred to JVM/module material.

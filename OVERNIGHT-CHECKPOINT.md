@@ -5,27 +5,23 @@
 **JDK:** Temurin 21.0.12.1  
 **Reference quality:** Module 17 Streams pilot + master chapter template
 
-## Prior WIP (this session start)
-
-Uncommitted work from earlier sessions covering:
-- Master template + DOCUMENTATION-STANDARDS upgrade
-- Cursor skill/rules/agents alignment
-- Module 17 Streams pilot retrofit
-- Modules 36–37 depth expansion + `spring-boot-minimal`
-
 ## Assessment snapshot
 
-- Early modules (00–05) have substantial line counts (~280–585) and were quality-passed before the new profile/Mechanism/verification-label standards.
-- Module 17 is the reference for Technical/Deep-dive structure under the new template.
-- Most chapters lack `Chapter profile` / verification labels in headers even when content is strong.
-- Handbook-wide retrofit must be incremental: review → preserve or expand → commit → push.
-
-## Resume point
-
-After committing prior WIP: begin Module 00 standards alignment (profiles, mechanism notes, verification labels; deepen only where PROGRESS “Outstanding” notes require).
+- Early modules (00–05) have substantial content but lacked new profile/Mechanism/verification-label metadata.
+- Module 17 is the reference Technical/Deep-dive structure.
+- Strategy: expand-preserve standards alignment per module; deepen only where PROGRESS outstanding notes require; commit+push after each module.
 
 ## Completed this overnight run
 
-- Committed+pushed prior WIP: standards (`ddf6b3e`), M17 pilot (`80aa3eb`), M36–37 (`e6e7efa`), checkpoint (`c759652`)
-- Module 00 standards alignment (profiles, Mechanism, Temurin Verified labels); expand-preserve
-- Resume next: Module 01 alignment same pattern
+| Commit | Summary |
+|--------|---------|
+| `ddf6b3e` | Master template + standards + Cursor config |
+| `80aa3eb` | Module 17 Streams pilot |
+| `e6e7efa` | Modules 36–37 depth + spring-boot-minimal |
+| `c759652` | Overnight checkpoint file |
+| `30ac170` | Module 00 standards alignment |
+| `30ac170`+ | Module 01 standards alignment (pending this update) |
+
+## Resume point
+
+After Module 01 push: continue Module 02, then 03, same expand-preserve pattern. Do not rush handbook-wide regenerations.

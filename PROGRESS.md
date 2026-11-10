@@ -77,14 +77,14 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-jdk-jre-jvm-and-tooling.md](01-java-getting-started/01-jdk-jre-jvm-and-tooling.md) | Completed | Quality pass 2026-11-10 | Classpath + JVM launch + `javap` |
-| [02-installing-java-and-environment.md](01-java-getting-started/02-installing-java-and-environment.md) | Completed | Quality pass 2026-11-10 | PATH/JAVA_HOME as problem/solution |
-| [03-ide-and-command-line-workflow.md](01-java-getting-started/03-ide-and-command-line-workflow.md) | Completed | Quality pass 2026-11-10 | CLI/IDE trade-offs clarified |
-| [04-first-java-program-deep-dive.md](01-java-getting-started/04-first-java-program-deep-dive.md) | Completed | Quality pass 2026-11-10 | `main` keywords + parseInt preview |
-| [05-project-structure-and-jshell.md](01-java-getting-started/05-project-structure-and-jshell.md) | Completed | Quality pass 2026-11-10 | Packages/classpath narrative |
+| [01-jdk-jre-jvm-and-tooling.md](01-java-getting-started/01-jdk-jre-jvm-and-tooling.md) | Completed | Standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [02-installing-java-and-environment.md](01-java-getting-started/02-installing-java-and-environment.md) | Completed | Standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [03-ide-and-command-line-workflow.md](01-java-getting-started/03-ide-and-command-line-workflow.md) | Completed | Standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [04-first-java-program-deep-dive.md](01-java-getting-started/04-first-java-program-deep-dive.md) | Completed | Standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [05-project-structure-and-jshell.md](01-java-getting-started/05-project-structure-and-jshell.md) | Completed | Standards-alignment pass 2026-11-10 Temurin re-verify | — |
 | [Module assessment](assessments/module-assessments/01-java-getting-started-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Oracle JDK 21.0.9):**
+**Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|

@@ -314,18 +314,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-arrays.md](11-arrays-and-strings/01-arrays.md) | Completed | Quality pass 2026-11-10 | `List` depth in M12 |
-| [02-strings-and-immutability.md](11-arrays-and-strings/02-strings-and-immutability.md) | Completed | Quality pass 2026-11-10 | Grapheme/ICU in advanced appendix |
-| [03-stringbuilder-and-text-blocks.md](11-arrays-and-strings/03-stringbuilder-and-text-blocks.md) | Completed | Quality pass 2026-11-10 | String templates stay preview-only |
-| [04-encoding-and-string-performance.md](11-arrays-and-strings/04-encoding-and-string-performance.md) | Completed | Quality pass 2026-11-10 | NIO charset depth in M17 |
+| [01-arrays.md](11-arrays-and-strings/01-arrays.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | `List` depth in M12 |
+| [02-strings-and-immutability.md](11-arrays-and-strings/02-strings-and-immutability.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Grapheme/ICU in advanced appendix |
+| [03-stringbuilder-and-text-blocks.md](11-arrays-and-strings/03-stringbuilder-and-text-blocks.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | String templates stay preview-only |
+| [04-encoding-and-string-performance.md](11-arrays-and-strings/04-encoding-and-string-performance.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | NIO charset depth in M17 |
 | [Module assessment](assessments/module-assessments/11-arrays-and-strings-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
 | `arrays-demo` | `len=3`; `max=95`; `sorted=[85, 90, 95]`; `grid01=b` |
-| `strings-demo` | pool/`equals` lines; `upper=JAVA`; `sub=hand` |
+| `strings-demo` | `a==b=true`; `a.equals(c)=true`; `upper=JAVA`; `sub=hand` |
 | `stringbuilder-textblock-demo` | `Hello Java!`; `jsonLines=4`; JSON block as documented |
 | `encoding-perf-demo` | `chars=4`; `utf8Bytes=5`; `roundtripOk=true`; `built=012` |
 
@@ -338,14 +338,14 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-collection-hierarchy.md](12-collections-framework/01-collection-hierarchy.md) | Completed | Quality pass 2026-11-10 | Generics depth in M13 |
-| [02-lists.md](12-collections-framework/02-lists.md) | Completed | Quality pass 2026-11-10 | Concurrent lists in JUC modules |
-| [03-sets-and-queues.md](12-collections-framework/03-sets-and-queues.md) | Completed | Quality pass 2026-11-10 | `BlockingQueue` in concurrency track |
-| [04-maps-and-hashing.md](12-collections-framework/04-maps-and-hashing.md) | Completed | Quality pass 2026-11-10 | `ConcurrentHashMap` later |
-| [05-internals-and-choosing-structures.md](12-collections-framework/05-internals-and-choosing-structures.md) | Completed | Quality pass 2026-11-10 | External cache libs out of scope |
+| [01-collection-hierarchy.md](12-collections-framework/01-collection-hierarchy.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Generics depth in M13 |
+| [02-lists.md](12-collections-framework/02-lists.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Concurrent lists in JUC modules |
+| [03-sets-and-queues.md](12-collections-framework/03-sets-and-queues.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | `BlockingQueue` in concurrency track |
+| [04-maps-and-hashing.md](12-collections-framework/04-maps-and-hashing.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | `ConcurrentHashMap` later |
+| [05-internals-and-choosing-structures.md](12-collections-framework/05-internals-and-choosing-structures.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | External cache libs out of scope |
 | [Module assessment](assessments/module-assessments/12-collections-framework-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
@@ -363,13 +363,13 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-generic-types-and-methods.md](13-generics/01-generic-types-and-methods.md) | Completed | Quality pass 2026-11-10 | Primitive generics (Valhalla) out of scope |
-| [02-bounds-and-wildcards.md](13-generics/02-bounds-and-wildcards.md) | Completed | Quality pass 2026-11-10 | Declaration-site variance (Kotlin) comparison only |
-| [03-type-erasure-and-restrictions.md](13-generics/03-type-erasure-and-restrictions.md) | Completed | Quality pass 2026-11-10 | Reified generics not in Java 21 |
-| [04-generic-api-design.md](13-generics/04-generic-api-design.md) | Completed | Quality pass 2026-11-10 | Framework-specific DAO patterns later |
+| [01-generic-types-and-methods.md](13-generics/01-generic-types-and-methods.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Primitive generics (Valhalla) out of scope |
+| [02-bounds-and-wildcards.md](13-generics/02-bounds-and-wildcards.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Declaration-site variance (Kotlin) comparison only |
+| [03-type-erasure-and-restrictions.md](13-generics/03-type-erasure-and-restrictions.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Reified generics not in Java 21 |
+| [04-generic-api-design.md](13-generics/04-generic-api-design.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Framework-specific DAO patterns later |
 | [Module assessment](assessments/module-assessments/13-generics-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
@@ -387,9 +387,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-throwable-hierarchy.md](14-exceptions-and-error-handling/01-throwable-hierarchy.md) | Completed | Quality pass 2026-11-10 | Virtual threads and structured concurrency cite later modules |
-| [02-try-catch-finally-and-try-with-resources.md](14-exceptions-and-error-handling/02-try-catch-finally-and-try-with-resources.md) | Completed | Quality pass 2026-11-10 | try-with-resources on custom types only |
-| [03-custom-exceptions-and-design.md](14-exceptions-and-error-handling/03-custom-exceptions-and-design.md) | Completed | Quality pass 2026-11-10 | Bean Validation / framework handlers in later modules |
+| [01-throwable-hierarchy.md](14-exceptions-and-error-handling/01-throwable-hierarchy.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | Virtual threads and structured concurrency cite later modules |
+| [02-try-catch-finally-and-try-with-resources.md](14-exceptions-and-error-handling/02-try-catch-finally-and-try-with-resources.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | try-with-resources on custom types only |
+| [03-custom-exceptions-and-design.md](14-exceptions-and-error-handling/03-custom-exceptions-and-design.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | Bean Validation / framework handlers in later modules |
 | [Module assessment](assessments/module-assessments/14-exceptions-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -400,7 +400,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `try-with-resources-demo` | `ok-path`; `finally-ran`; `catch2=boom`; `finally2-ran`; `open=R1`; `data-R1`; `close=R1` |
 | `custom-exceptions-demo` | `balance=60`; `error=need 40 more`; `shortfall=40` |
 
-**Module 14 status:** Completed  
+**Module 14 status:** Completed (standards alignment: profile, Mechanism, master checklist; demos re-verified Temurin 21.0.12.1)  
 **Next recommended chapter:** [16-lambdas-and-functional-programming/](16-lambdas-and-functional-programming/) (lambdas, functional interfaces)
 
 ---
@@ -409,9 +409,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-enums.md](15-enums-records-and-sealed-types/01-enums.md) | Completed | Quality pass 2026-11-10 | `EnumSet`/`EnumMap` advanced tuning in later collections notes |
-| [02-records.md](15-enums-records-and-sealed-types/02-records.md) | Completed | Quality pass 2026-11-10 | JPA/serialization deep dives in later modules |
-| [03-sealed-types-and-patterns.md](15-enums-records-and-sealed-types/03-sealed-types-and-patterns.md) | Completed | Quality pass 2026-11-10 | JPMS cross-module `permits` in advanced modules |
+| [01-enums.md](15-enums-records-and-sealed-types/01-enums.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | `EnumSet`/`EnumMap` advanced tuning in later collections notes |
+| [02-records.md](15-enums-records-and-sealed-types/02-records.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | JPA/serialization deep dives in later modules |
+| [03-sealed-types-and-patterns.md](15-enums-records-and-sealed-types/03-sealed-types-and-patterns.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | JPMS cross-module `permits` in advanced modules |
 | [Module assessment](assessments/module-assessments/15-enums-records-sealed-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -422,7 +422,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `records-demo` | `Point[x=3, y=4]`; `x=3`; `equals=true`; `hashEqual=true`; `contains3=true`; `contains9=false` |
 | `sealed-patterns-demo` | `eval=5`; `desc=const:7`; `descAdd=add` |
 
-**Module 15 status:** Completed  
+**Module 15 status:** Completed (standards alignment: profile, Mechanism, master checklist; demos re-verified Temurin 21.0.12.1)  
 **Next recommended chapter:** [16-lambdas-and-functional-programming/](16-lambdas-and-functional-programming/) (lambdas, SAM types)
 
 ---
@@ -431,9 +431,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-functional-fundamentals.md](16-lambdas-and-functional-programming/01-functional-fundamentals.md) | Completed | Quality pass 2026-11-10 | Virtual-thread executors in later concurrency modules |
-| [02-lambdas-and-functional-interfaces.md](16-lambdas-and-functional-programming/02-lambdas-and-functional-interfaces.md) | Completed | Quality pass 2026-11-10 | Custom SAM in framework modules as needed |
-| [03-method-references-and-composition.md](16-lambdas-and-functional-programming/03-method-references-and-composition.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-functional-fundamentals.md](16-lambdas-and-functional-programming/01-functional-fundamentals.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | Virtual-thread executors in later concurrency modules |
+| [02-lambdas-and-functional-interfaces.md](16-lambdas-and-functional-programming/02-lambdas-and-functional-interfaces.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | Custom SAM in framework modules as needed |
+| [03-method-references-and-composition.md](16-lambdas-and-functional-programming/03-method-references-and-composition.md) | Completed | Standards alignment Technical L2–3 2026-11-11 | — |
 | [Module assessment](assessments/module-assessments/16-lambdas-functional-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -444,7 +444,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `lambdas-interfaces-demo` | `greeting=Hello`; `lenAda=3`; `nonBlankCount=2`; `mapped=[ADA, BOB]` |
 | `method-references-demo` | `normalized=[ADA, LIN]`; `pipeline=14`; `compose=14` |
 
-**Module 16 status:** Completed  
+**Module 16 status:** Completed (standards alignment: profile, Mechanism, expanded teaching depth Ch.01–03, master checklist; demos re-verified Temurin 21.0.12.1)  
 **Next recommended chapter:** Module 17 (Completed below)
 
 ---

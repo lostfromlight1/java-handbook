@@ -222,13 +222,13 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-inheritance-deep-dive.md](07-inheritance-and-polymorphism/01-inheritance-deep-dive.md) | Completed | Quality pass 2026-11-10 | Interfaces in M08 |
-| [02-abstract-classes.md](07-inheritance-and-polymorphism/02-abstract-classes.md) | Completed | Quality pass 2026-11-10 | default methods compare M08 |
-| [03-dynamic-dispatch-and-lsp.md](07-inheritance-and-polymorphism/03-dynamic-dispatch-and-lsp.md) | Completed | Quality pass 2026-11-10 | CHA / bytecode in later JVM module |
-| [04-sealed-classes.md](07-inheritance-and-polymorphism/04-sealed-classes.md) | Completed | Quality pass 2026-11-10 | Module patterns in M15 |
+| [01-inheritance-deep-dive.md](07-inheritance-and-polymorphism/01-inheritance-deep-dive.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | Interfaces in M08 |
+| [02-abstract-classes.md](07-inheritance-and-polymorphism/02-abstract-classes.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | default methods compare M08 |
+| [03-dynamic-dispatch-and-lsp.md](07-inheritance-and-polymorphism/03-dynamic-dispatch-and-lsp.md) | Completed | Standards-alignment 2026-11-11; dispatch/LSP Level 3; §5 mechanism | CHA / bytecode in later JVM module |
+| [04-sealed-classes.md](07-inheritance-and-polymorphism/04-sealed-classes.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | Module patterns in M15 |
 | [Module assessment](assessments/module-assessments/07-inheritance-and-polymorphism-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples (Verified Temurin JDK 21.0.12.1, re-run 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
@@ -237,7 +237,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `dispatch-lsp-demo` | Rectangle 12; Square 25; poly area 4 |
 | `sealed-classes-demo` | ok/err lines; area=12.566370614359172 |
 
-**Module 07 status:** Completed  
+**Module 07 status:** Completed (Technical profile; Ch.03 dispatch/LSP at Level 3)  
 **Next recommended chapter:** Module 08 (Completed below)
 
 ---
@@ -246,13 +246,13 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-interface-fundamentals.md](08-interfaces-and-abstraction/01-interface-fundamentals.md) | Completed | Quality pass 2026-11-10 | Streams / `java.util.function` in M16 |
-| [02-default-static-and-private-methods.md](08-interfaces-and-abstraction/02-default-static-and-private-methods.md) | Completed | Quality pass 2026-11-10 | JVM default resolution in later JVM module |
-| [03-functional-and-marker-interfaces.md](08-interfaces-and-abstraction/03-functional-and-marker-interfaces.md) | Completed | Quality pass 2026-11-10 | Deep stream usage M16 |
-| [04-api-design-with-interfaces.md](08-interfaces-and-abstraction/04-api-design-with-interfaces.md) | Completed | Quality pass 2026-11-10 | DI frameworks in later modules |
+| [01-interface-fundamentals.md](08-interfaces-and-abstraction/01-interface-fundamentals.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | Streams / `java.util.function` in M16 |
+| [02-default-static-and-private-methods.md](08-interfaces-and-abstraction/02-default-static-and-private-methods.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | JVM default resolution in later JVM module |
+| [03-functional-and-marker-interfaces.md](08-interfaces-and-abstraction/03-functional-and-marker-interfaces.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | Deep stream usage M16 |
+| [04-api-design-with-interfaces.md](08-interfaces-and-abstraction/04-api-design-with-interfaces.md) | Completed | Standards-alignment 2026-11-11; Technical L2–3; §5 mechanism | DI frameworks in later modules |
 | [Module assessment](assessments/module-assessments/08-interfaces-and-abstraction-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples (Verified Temurin JDK 21.0.12.1, re-run 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
@@ -261,7 +261,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `functional-marker-demo` | add=5; mul=6; sum=10; entity=true |
 | `api-interfaces-demo` | created:ada; exists:ada; find=ada |
 
-**Module 08 status:** Completed  
+**Module 08 status:** Completed (Technical profile; Levels 2–3)  
 **Next recommended chapter:** Module 09 (Completed below)
 
 ---
@@ -270,12 +270,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-access-control-and-api-boundaries.md](09-encapsulation-and-design/01-access-control-and-api-boundaries.md) | Completed | Quality pass 2026-11-10 | JPMS deep dive in later modules |
-| [02-coupling-and-cohesion.md](09-encapsulation-and-design/02-coupling-and-cohesion.md) | Completed | Quality pass 2026-11-10 | Architectural metrics optional later |
-| [03-composition-versus-inheritance.md](09-encapsulation-and-design/03-composition-versus-inheritance.md) | Completed | Quality pass 2026-11-10 | Decorator pattern examples in M15+ |
+| [01-access-control-and-api-boundaries.md](09-encapsulation-and-design/01-access-control-and-api-boundaries.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | JPMS deep dive in later modules |
+| [02-coupling-and-cohesion.md](09-encapsulation-and-design/02-coupling-and-cohesion.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Architectural metrics optional later |
+| [03-composition-versus-inheritance.md](09-encapsulation-and-design/03-composition-versus-inheritance.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Decorator pattern examples in M15+ |
 | [Module assessment](assessments/module-assessments/09-encapsulation-and-design-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
@@ -292,12 +292,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-static-and-strong-typing.md](10-java-type-system/01-static-and-strong-typing.md) | Completed | Quality pass 2026-11-10 | Generics depth in M13 |
-| [02-instanceof-and-pattern-matching.md](10-java-type-system/02-instanceof-and-pattern-matching.md) | Completed | Quality pass 2026-11-10 | Overlaps M03 Ch.04 by design |
-| [03-variance-wildcards-and-erasure-preview.md](10-java-type-system/03-variance-wildcards-and-erasure-preview.md) | Completed | Quality pass 2026-11-10 | Bridges/bounds in M13 |
+| [01-static-and-strong-typing.md](10-java-type-system/01-static-and-strong-typing.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Generics depth in M13 |
+| [02-instanceof-and-pattern-matching.md](10-java-type-system/02-instanceof-and-pattern-matching.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Overlaps M03 Ch.04 by design |
+| [03-variance-wildcards-and-erasure-preview.md](10-java-type-system/03-variance-wildcards-and-erasure-preview.md) | Completed | Standards alignment 2026-11-11; Temurin re-verify | Bridges/bounds in M13 |
 | [Module assessment](assessments/module-assessments/10-java-type-system-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|

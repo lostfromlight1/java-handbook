@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 07 — Inheritance and Polymorphism  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (dynamic dispatch, LSP, behavioral contracts at Level 3)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -56,18 +72,9 @@ The compiler checks **reference type**; the JVM dispatches **instance methods** 
 | Field | No (compile-time slot) |
 | `private` / `final` instance methods | No further override; `private` not virtual in the override sense |
 
-### 4.3 Dispatch mechanics (conceptual)
+### 4.3 Dispatch mechanics (preview)
 
-**JLS:** Virtual method invocation uses the **dynamic method** matching signature and runtime class.
-
-**HotSpot (implementation):** typically **vtable**-based; JIT may **inline** monomorphic calls. Behavior is specified by JLS, not a particular vtable layout.
-
-```mermaid
-flowchart LR
-  Call["s.area()"] --> Resolve["Lookup runtime class"]
-  Resolve --> Rect["Rectangle.area"]
-  Resolve --> Sq["Square.area"]
-```
+**JLS §15.12.4.4** selects the **most specific** instance method on the **runtime class** of the receiver. That guarantee is separate from any **HotSpot** vtable or inline-cache strategy. Full compile-time and run-time phases, bytecode forms, and an execution trace appear in **§5 Mechanism and Execution Flow**.
 
 ### 4.4 Liskov Substitution Principle (LSP)
 
@@ -97,7 +104,75 @@ void grow(Rectangle r) {
 
 An override may return a **more specific type** (Java 5+). Dispatch still selects the override; callers see the narrowed return when reference is the subclass.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+Virtual instance method invocation is specified in **JLS §15.12.4.4** (method invocation expressions). The steps below are the language guarantee; **HotSpot** realizes them with vtables and JIT inline caches (**implementation**, not portable JVM law).
+
+### 5.1 Compile time: what the compiler checks
+
+For `Shape s = new Rectangle(3, 4); s.area();`:
+
+1. **Overload resolution** — pick the method named `area` with an empty argument list visible on the **compile-time type** `Shape` (including inherited members).
+2. **Access control** — confirm `area` is accessible from the call site.
+3. **Bytecode emission** — emit a **virtual** invocation instruction (`invokevirtual` for classes, `invokeinterface` when the compile-time type is an interface—Module 08).
+
+The compiler does **not** embed the runtime class into the instruction; it only proves the call is legal for the reference type.
+
+### 5.2 Run time: dynamic method selection (JLS)
+
+When the call runs:
+
+1. **Evaluate receiver** — compute the object reference (`s`). If `null`, `NullPointerException` before dispatch.
+2. **Compute runtime class** — the class of the actual object (`Rectangle`, `Square`, …).
+3. **Select target method** — the **most specific** instance method for that signature on the runtime class, following override chains upward until a match is found (respecting `final` stops).
+4. **Invoke** — run the selected method body with the receiver bound to `this`.
+
+```mermaid
+flowchart TD
+  compile["Compile: legal on Shape"] --> bc["emit invokevirtual area"]
+  bc --> run["Run: receiver non-null"]
+  run --> rtc["runtime class Rectangle"]
+  rtc --> pick["most specific area()"]
+  pick --> exec["execute Rectangle.area"]
+```
+
+### 5.3 Non-virtual and special calls (contrast)
+
+| Bytecode / form | When | Dispatch |
+|-----------------|------|----------|
+| `invokevirtual` / `invokeinterface` | Virtual instance call on reference type | Runtime class |
+| `invokespecial` | `super.m()`, `private`, constructors | Fixed declared target |
+| `invokestatic` | Static method | No receiver |
+
+`super.area()` in a subclass calls the **superclass version** even when the object’s runtime class is the subclass—otherwise `super` would contradict inheritance semantics.
+
+### 5.4 HotSpot (labeled implementation)
+
+Typical **HotSpot** steps after class loading: build a **vtable** (or equivalent) per class for virtual methods; each call site may use **monomorphic inline caching** when only one runtime type appears, then **megamorphic** fallback when many types hit the same call. Deoptimization occurs if assumptions fail—relevant only when profiling shows hot megamorphic sites.
+
+### 5.5 LSP as behavioral subtyping (Level 3)
+
+Liskov & Wing frame subtyping as **behavioral** substitutability: clients that depend only on type `T`’s **observable contract** must keep working when given any subtype instance.
+
+| Contract element | Subclass rule | Java symptom when broken |
+|------------------|---------------|---------------------------|
+| **Preconditions** | Cannot strengthen (require more) | Wider inputs rejected unexpectedly |
+| **Postconditions** | Cannot weaken (deliver less) | Weaker guarantees, wrong totals |
+| **Invariants** | Must preserve superclass invariants on public API | “Rectangle” whose sides decouple under `Square` child |
+| **Exceptions** | Cannot throw unexpected checked types or broaden failure modes | Callers miss `catch` paths |
+| **Historical properties** | New overrides must not break algorithms coded to supertype | `grow(Rectangle)` with `Square` child |
+
+The **Square extends Rectangle** anti-pattern (§4.5) violates **invariants** and **postconditions** of “independent width/height” rather than syntax. The **sibling `Shape` + immutable dimensions** model in **DispatchLspDemo** keeps each subtype honest under `Shape` references—tests that only use `Shape` still pass.
+
+### 5.6 Trace: demo loop
+
+| Step | `s` compile-time | Runtime class | `area()` resolved to |
+|------|------------------|---------------|----------------------|
+| 1 | `Shape` | `Rectangle` | `Rectangle.area` → 12 |
+| 2 | `Shape` | `Square` | `Square.area` → 25 |
+| 3 | `Shape` | `Square(2)` | `Square.area` → 4 |
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -107,7 +182,7 @@ An override may return a **more specific type** (Java 5+). Dispatch still select
 | **Contract** | Preconditions, postconditions, invariants of a type |
 | **Subtype** | Subclass or subinterface |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 Polymorphic loop:
 
@@ -122,7 +197,7 @@ Each iteration: `s` compile-time `Shape`, runtime `Rectangle` or `Square`; `area
 
 Casting (`((Rectangle) s)`) is only valid when runtime type matches—`ClassCastException` otherwise (Module 05 intro).
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 ### 7.1 Minimal dispatch
 
@@ -159,26 +234,26 @@ class BadSquare extends MutableRectangle {
 
 Callers treating `BadSquare` as `MutableRectangle` may double-increment height in `grow()`—LSP violation.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Collections of handlers:** `List<PaymentMethod>` with `charge()` dispatch per implementation.
 - **Stream pipelines:** `Stream<Animal>` with `speak()` per runtime type.
 - **Test doubles:** mock implements interface; production code polymorphic on interface (Module 41).
 - **UI frameworks:** paint loop over `Component` hierarchy (legacy pattern).
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 - **invokevirtual** / **invokeinterface** bytecodes for virtual calls; **invokespecial** for `super.m()`, private, constructors.
 - Deoptimization may occur if runtime types multiply (polymorphic inline limits)—rare concern without profiling.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **`final`** methods: dispatch stops at declaring class—no further override.
 - **`private` methods:** not inherited; no override—subclass method with same signature is separate.
 - **Overload vs override:** dispatch is per **exact signature**; overload resolution is compile-time.
 - **`Object` methods:** `equals` / `hashCode` / `toString` participate in dispatch—must honor contracts (Module 06 Ch.04).
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect: assuming fields polymorph
 
@@ -201,14 +276,14 @@ Already discussed—use sibling types under abstraction.
 
 Weakens contract if superclass documented failure modes—LSP / contract issue for callers.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Design **sibling** abstractions for unrelated dimensions (`Shape`), not forced is-a (`Square` is-a `Rectangle`).
 - Prefer **immutability** for value shapes—mutations and LSP interact badly.
 - Document **expected** behavior superclass callers rely on before subclasses override.
 - Run **behavioral tests** using supertype references only—catch LSP breaks early.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | LSP | Flexibility |
 |----------|-----|-------------|
@@ -216,30 +291,30 @@ Weakens contract if superclass documented failure modes—LSP / contract issue f
 | Immutable siblings under Shape | Strong | Less “set dimension” API |
 | Interface + records (Java 16+) | Strong | Less shared code in superclass |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Megamorphic virtual calls can inhibit inlining; fix only when profiled. Algorithmic cost dominates typical business logic.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 If a security check lives in superclass `public` method, subclass override must not **bypass** checks—prefer `final` public wrapper with `protected` hooks (Ch.02).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 - Dispatch rules stable for decades.
 - **Pattern matching `instanceof`** (16+) and **sealed types** (17+) make type-safe dispatch alternatives in `switch`—Ch.04.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 C++ `virtual` functions; Python always dispatches dynamically on methods—fields still class-dependent. Smalltalk full dispatch.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** static `@Override` “polymorphism”; confusion with overloading.
 - **Advanced:** CHA (class hierarchy analysis) for devirtualization in JIT.
 - **You should answer:** Why does `Shape s = new Square(2); s.area()` print 4? State LSP in one sentence.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -255,7 +330,7 @@ C++ `virtual` functions; Python always dispatches dynamically on methods—field
 
 5. Explain why `Collection.sort` accepting `Comparator` relies on behavioral substitutability of comparator implementations.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. How does Java choose which `area()` runs?
 2. What is LSP?
@@ -263,7 +338,7 @@ C++ `virtual` functions; Python always dispatches dynamically on methods—field
 4. Are static methods polymorphic?
 5. Difference between overload and override for dispatch?
 
-## 21. Solutions
+## 22. Solutions
 
 1. Add override returning name `Triangle` and area formula; third loop line appears.
 2. `B`.
@@ -271,28 +346,52 @@ C++ `virtual` functions; Python always dispatches dynamically on methods—field
 4. Unexpected totals; `ClassCastException` in downstream code; tests passing concrete types only while production uses supertype references.
 5. Comparator `compare` must be reflexive/antisymmetric/transitive per contract—violations break sort even if code compiles.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Dynamic dispatch** makes polymorphism work: overridden **instance methods** follow the **runtime object**. **LSP** keeps substitutable hierarchies honest—prefer **sibling** types and **immutable** models over forced **is-a** when dimensions differ. The shape demo shows safe **`Shape`** references for both **Rectangle** and **Square**.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Dynamic dispatch · virtual method · runtime type · compile-time type · LSP · substitutability · contract
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS §15.12.4.4 — Runtime Evaluation of Method Invocation](https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html#jls-15.12.4.4)
 - Liskov & Wing, *A Behavioral Notion of Subtyping*
 - Effective Java — Item on favor composition; `@Override`
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [04-sealed-classes.md](04-sealed-classes.md) — restricted hierarchies and exhaustive switches
 - Module 08 — interface polymorphism and default methods
 
 ## Review Checklist
 
-- [x] Dispatch + LSP depth gate
-- [x] DispatchLspDemo verified Temurin 21.0.12.1
-- [x] Square/Rectangle anti-pattern explained
-- [x] Revision, exercises, references
+**Mandatory Depth Review:** Technical profile; dynamic dispatch and LSP at **Level 3**; remaining topics Levels 2–3.
+
+- [x] Learning objectives covered
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated with diagrams where useful
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **§15 Performance Considerations** — megamorphic calls noted briefly; tuning is HotSpot-specific.
+- **§17 Related Language Comparisons** — kept short pointer only.
+
+**Verification note:** DispatchLspDemo: Rectangle 12; Square 25; poly area 4 on Temurin JDK 21.0.12.1 (2026-11-11).

@@ -1,15 +1,15 @@
 # Module 43 — Security
 
-**Status:** Completed
+**Status:** Completed — EXPAND-PRESERVE 2026-11-11 (Technical L3, Temurin 21.0.12.1)
 
-| # | Chapter | Status |
-|---|---------|--------|
-| 01 | [Secure Coding and OWASP](01-secure-coding-and-owasp.md) | Completed |
-| 02 | [Crypto, TLS, and Secrets](02-crypto-tls-and-secrets.md) | Completed |
-| 03 | [Security Testing](03-security-testing.md) | Completed |
+| # | Chapter | Lines | Status |
+|---|---------|-------|--------|
+| 01 | [Secure Coding and OWASP](01-secure-coding-and-owasp.md) | 285 | Completed |
+| 02 | [Crypto, TLS, and Secrets](02-crypto-tls-and-secrets.md) | 293 | Completed |
+| 03 | [Security Testing](03-security-testing.md) | 286 | Completed |
 
-**Prerequisites:** Modules 32–33, 38–39.
+**Module average:** ~288 lines/chapter
 
-**Assessment:** [43-security-assessment.md](../assessments/module-assessments/43-security-assessment.md)
+**Verified demo (2026-11-11):** `input-guard-demo` (`input-guard=ok`)
 
-**Examples:** [input-guard-demo](../examples/security/input-guard-demo/)
+**Assessment:** [43-security-assessment](../assessments/module-assessments/43-security-assessment.md)

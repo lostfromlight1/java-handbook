@@ -67,7 +67,11 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Liskov Substitution Principle (LSP)** | Subtypes must be replaceable for their supertypes without breaking caller expectations. | Module 07 Ch.03 |
 | **Abstract class** | Class declared `abstract`; may declare abstract methods; cannot be instantiated with `new`. | [Module 07 Ch.02](07-inheritance-and-polymorphism/02-abstract-classes.md) |
 | **Template method** | Superclass `final` algorithm invoking overridable hook methods in subclasses. | Module 07 Ch.02 |
-| **Sealed type** | Class or interface restricting which types may directly extend or implement it (`permits`). | [Module 07 Ch.04](07-inheritance-and-polymorphism/04-sealed-classes.md) |
+| **Sealed type** | Class or interface restricting which types may directly extend or implement it (`permits`). | [Module 07 Ch.04](07-inheritance-and-polymorphism/04-sealed-classes.md); [Module 15 Ch.03](15-enums-records-and-sealed-types/03-sealed-types-and-patterns.md) |
+| **Enum type** | Reference type whose instances are a fixed set of named constants, implicitly extending `Enum`. | [Module 15 Ch.01](15-enums-records-and-sealed-types/01-enums.md) |
+| **Record** | Immutable data class: compiler-generated accessors, `equals`, `hashCode`, and `toString` from the header components. | [Module 15 Ch.02](15-enums-records-and-sealed-types/02-records.md) |
+| **Record pattern** | Pattern that deconstructs record components in `switch` or `instanceof` (e.g. `case Point(var x, var y)`). | Module 15 Ch.03 |
+| **Exhaustive switch** | `switch` covering all possibilities; compiler-checked for sealed types and enum constants when complete. | Module 15 Ch.03 |
 | **`protected`** | Member visible to subclasses and same-package code; part of an inheritance extension API. | [Module 07 Ch.01](07-inheritance-and-polymorphism/01-inheritance-deep-dive.md) |
 | **Composition** | Has-a design where an object uses/owns another object as a part or collaborator. | [Module 05 Ch.04](05-object-oriented-programming/04-composition-and-object-relationships.md) |
 | **Constructor chaining** | One constructor invoking another in the same class via `this(...)` as the first statement. | [Module 06 Ch.01](06-classes-and-objects/01-initialization-and-constructors.md) |

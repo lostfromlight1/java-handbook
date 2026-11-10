@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 11 completed)
+**Last updated:** 2026-11-10 (Module 15 completed)
 
 ## Status values
 
@@ -379,7 +379,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `generics-api-demo` | `found=Ada`; `missing=false`; `count=1` |
 
 **Module 13 status:** Completed
-**Next recommended chapter:** [15-enums-records-and-sealed-types/](15-enums-records-and-sealed-types/) (enums, records, sealed)
+**Next recommended chapter:** [16-lambdas-and-functional-programming/](16-lambdas-and-functional-programming/) (lambdas, functional interfaces)
 
 ---
 
@@ -401,10 +401,32 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `custom-exceptions-demo` | `balance=60`; `error=need 40 more`; `shortfall=40` |
 
 **Module 14 status:** Completed  
-**Next recommended chapter:** [15-enums-records-and-sealed-types/](15-enums-records-and-sealed-types/) (enums, records, sealed)
+**Next recommended chapter:** [16-lambdas-and-functional-programming/](16-lambdas-and-functional-programming/) (lambdas, functional interfaces)
 
 ---
 
-## Modules 15–53
+## Module 15 — Enums, Records, and Sealed Types
 
-Remaining modules: **Not started** (indexes only), except Modules 13–14 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-enums.md](15-enums-records-and-sealed-types/01-enums.md) | Completed | Quality pass 2026-11-10 | `EnumSet`/`EnumMap` advanced tuning in later collections notes |
+| [02-records.md](15-enums-records-and-sealed-types/02-records.md) | Completed | Quality pass 2026-11-10 | JPA/serialization deep dives in later modules |
+| [03-sealed-types-and-patterns.md](15-enums-records-and-sealed-types/03-sealed-types-and-patterns.md) | Completed | Quality pass 2026-11-10 | JPMS cross-module `permits` in advanced modules |
+| [Module assessment](assessments/module-assessments/15-enums-records-sealed-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `enums-demo` | `name=HIGH`; `ordinal=2`; `label=High`; `parse=LOW`; `isHigh=true` |
+| `records-demo` | `Point[x=3, y=4]`; `x=3`; `equals=true`; `hashEqual=true`; `contains3=true`; `contains9=false` |
+| `sealed-patterns-demo` | `eval=5`; `desc=const:7`; `descAdd=add` |
+
+**Module 15 status:** Completed  
+**Next recommended chapter:** [16-lambdas-and-functional-programming/](16-lambdas-and-functional-programming/) (lambdas, SAM types)
+
+---
+
+## Modules 16–53
+
+Remaining modules: **Not started** (indexes only), except Modules 13–15 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

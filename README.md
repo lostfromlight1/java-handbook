@@ -4,6 +4,7 @@ A comprehensive, technically accurate Java textbook and professional referenceâ€
 
 **Primary curriculum version:** Java 21 LTS  
 **Local validation JDK (Phase 1):** Oracle JDK 21.0.9  
+**Modules 46â€“53 examples / depth pass:** Eclipse Temurin **21.0.12.1** (see `PROGRESS.md` Verified tables)  
 **Latest LTS (documented, not primary):** Java 25  
 **Latest feature release (awareness):** Java 27 (non-LTS)
 

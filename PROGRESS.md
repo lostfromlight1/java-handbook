@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-11 (Modules 29–32 EXPAND-PRESERVE; curriculum through M53)
+**Last updated:** 2026-11-11 (Modules 38–45 EXPAND-PRESERVE; Modules 29–32; curriculum through M53)
 
 ## Status values
 
@@ -908,18 +908,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-rest-design.md](38-rest-api-development/01-rest-design.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-dtos-errors-and-versioning.md](38-rest-api-development/02-dtos-errors-and-versioning.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-openapi-and-api-testing.md](38-rest-api-development/03-openapi-and-api-testing.md) | Completed | Quality pass 2026-11-10 | springdoc runnable optional |
+| [01-rest-design.md](38-rest-api-development/01-rest-design.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-dtos-errors-and-versioning.md](38-rest-api-development/02-dtos-errors-and-versioning.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-openapi-and-api-testing.md](38-rest-api-development/03-openapi-and-api-testing.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | springdoc optional Illustrative |
 | [Module assessment](assessments/module-assessments/38-rest-api-development-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
-| `rest-httpserver-demo` | `GET /users/1 status=200`; `POST /users status=201`; `restDemo=ok` |
+| `rest-httpserver-demo` | `GET /users/1 status=200 body={"id":1,"name":"Lin"}`; `POST /users status=201`; `restDemo=ok` |
 
-**Module 38 status:** Completed  
+**Module 38 status:** Completed (EXPAND-PRESERVE ~310 lines/chapter avg)  
 **Next recommended chapter:** Module 39 (Completed below)
 
 ---
@@ -928,12 +928,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-authentication-and-authorization-basics.md](39-authentication-and-authorization/01-authentication-and-authorization-basics.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-sessions-jwt-and-oauth.md](39-authentication-and-authorization/02-sessions-jwt-and-oauth.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-spring-security-patterns.md](39-authentication-and-authorization/03-spring-security-patterns.md) | Completed | Quality pass 2026-11-10 | Security integration tests optional |
+| [01-authentication-and-authorization-basics.md](39-authentication-and-authorization/01-authentication-and-authorization-basics.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-sessions-jwt-and-oauth.md](39-authentication-and-authorization/02-sessions-jwt-and-oauth.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-spring-security-patterns.md](39-authentication-and-authorization/03-spring-security-patterns.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | Spring tests Illustrative |
 | [Module assessment](assessments/module-assessments/39-authentication-and-authorization-assessment.md) | Completed | Solutions separate | — |
 
-**Module 39 status:** Completed  
+**Module 39 status:** Completed (EXPAND-PRESERVE ~297 lines/chapter avg)  
 **Next recommended chapter:** Module 40 (Completed below)
 
 ---
@@ -942,12 +942,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-layered-and-hexagonal-architecture.md](40-backend-architecture/01-layered-and-hexagonal-architecture.md) | Completed | Quality pass 2026-11-10 | ArchUnit sample in project track |
-| [02-ddd-basics.md](40-backend-architecture/02-ddd-basics.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-modular-monolith-versus-microservices.md](40-backend-architecture/03-modular-monolith-versus-microservices.md) | Completed | Quality pass 2026-11-10 | Spring Modulith lab optional |
+| [01-layered-and-hexagonal-architecture.md](40-backend-architecture/01-layered-and-hexagonal-architecture.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | ArchUnit sample optional |
+| [02-ddd-basics.md](40-backend-architecture/02-ddd-basics.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-modular-monolith-versus-microservices.md](40-backend-architecture/03-modular-monolith-versus-microservices.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | Spring Modulith Illustrative |
 | [Module assessment](assessments/module-assessments/40-backend-architecture-assessment.md) | Completed | Solutions separate | — |
 
-**Module 40 status:** Completed  
+**Module 40 status:** Completed (EXPAND-PRESERVE ~297 lines/chapter avg)  
 **Next recommended chapter:** Module 41 (Completed below)
 
 ---
@@ -956,19 +956,19 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-solid-and-principles.md](41-design-patterns/01-solid-and-principles.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-creational-patterns.md](41-design-patterns/02-creational-patterns.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-structural-and-behavioral-patterns.md](41-design-patterns/03-structural-and-behavioral-patterns.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-solid-and-principles.md](41-design-patterns/01-solid-and-principles.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-creational-patterns.md](41-design-patterns/02-creational-patterns.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-structural-and-behavioral-patterns.md](41-design-patterns/03-structural-and-behavioral-patterns.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
 | [Module assessment](assessments/module-assessments/41-design-patterns-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
 | `creational-demo` | `factory=csv:rows`; `builder=Report{title=T,rows=2}`; `creational=ok` |
-| `structural-behavioral-demo` | `adapter=v2:data`; `strategy=discount10`; `observer=events:2`; `patterns=ok` |
+| `structural-behavioral-demo` (`PatternsDemo`) | `adapter=v2:data`; `strategy=discount10`; `observer=events:2`; `patterns=ok` |
 
-**Module 41 status:** Completed  
+**Module 41 status:** Completed (EXPAND-PRESERVE ~285 lines/chapter avg)  
 **Next recommended chapter:** Module 42 (Completed below)
 
 ---
@@ -977,18 +977,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-clean-code-practices.md](42-clean-code-and-solid/01-clean-code-practices.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-solid-deep-dive.md](42-clean-code-and-solid/02-solid-deep-dive.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-anti-patterns.md](42-clean-code-and-solid/03-anti-patterns.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-clean-code-practices.md](42-clean-code-and-solid/01-clean-code-practices.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-solid-deep-dive.md](42-clean-code-and-solid/02-solid-deep-dive.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-anti-patterns.md](42-clean-code-and-solid/03-anti-patterns.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
 | [Module assessment](assessments/module-assessments/42-clean-code-and-solid-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
-| `readability-demo` | `readability=ok` |
+| `readability-demo` | `total=19.99`; `lineTotal=19.99`; `readability=ok` |
 
-**Module 42 status:** Completed  
+**Module 42 status:** Completed (EXPAND-PRESERVE ~332 lines/chapter avg)  
 **Next recommended chapter:** Module 43 (Completed below)
 
 ---
@@ -997,18 +997,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-secure-coding-and-owasp.md](43-security/01-secure-coding-and-owasp.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-crypto-tls-and-secrets.md](43-security/02-crypto-tls-and-secrets.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-security-testing.md](43-security/03-security-testing.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-secure-coding-and-owasp.md](43-security/01-secure-coding-and-owasp.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-crypto-tls-and-secrets.md](43-security/02-crypto-tls-and-secrets.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-security-testing.md](43-security/03-security-testing.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
 | [Module assessment](assessments/module-assessments/43-security-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
-| `input-guard-demo` | `input-guard=ok` |
+| `input-guard-demo` | `valid=true`; `invalid=false`; `input-guard=ok` |
 
-**Module 43 status:** Completed  
+**Module 43 status:** Completed (EXPAND-PRESERVE ~288 lines/chapter avg)  
 **Next recommended chapter:** Module 44 (Completed below)
 
 ---
@@ -1017,18 +1017,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-distributed-fundamentals.md](44-microservices-and-distributed-systems/01-distributed-fundamentals.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-resilience-patterns.md](44-microservices-and-distributed-systems/02-resilience-patterns.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-consistency-and-sagas.md](44-microservices-and-distributed-systems/03-consistency-and-sagas.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-distributed-fundamentals.md](44-microservices-and-distributed-systems/01-distributed-fundamentals.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-resilience-patterns.md](44-microservices-and-distributed-systems/02-resilience-patterns.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [03-consistency-and-sagas.md](44-microservices-and-distributed-systems/03-consistency-and-sagas.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
 | [Module assessment](assessments/module-assessments/44-microservices-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
-| `circuit-breaker-demo` | `circuit-breaker=ok`; OPEN fail-fast lines |
+| `circuit-breaker-demo` | `fail state=CLOSED`; `OPEN fail-fast`; `circuit-breaker=ok` |
 
-**Module 44 status:** Completed  
+**Module 44 status:** Completed (EXPAND-PRESERVE ~291 lines/chapter avg)  
 **Next recommended chapter:** Module 45 (Completed below)
 
 ---
@@ -1037,12 +1037,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-messaging-fundamentals.md](45-messaging-and-event-driven-systems/01-messaging-fundamentals.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-kafka-and-rabbitmq.md](45-messaging-and-event-driven-systems/02-kafka-and-rabbitmq.md) | Completed | Quality pass 2026-11-10 | Broker labs optional |
-| [03-delivery-guarantees-and-outbox.md](45-messaging-and-event-driven-systems/03-delivery-guarantees-and-outbox.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-messaging-fundamentals.md](45-messaging-and-event-driven-systems/01-messaging-fundamentals.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
+| [02-kafka-and-rabbitmq.md](45-messaging-and-event-driven-systems/02-kafka-and-rabbitmq.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | Broker labs Illustrative |
+| [03-delivery-guarantees-and-outbox.md](45-messaging-and-event-driven-systems/03-delivery-guarantees-and-outbox.md) | Completed | EXPAND-PRESERVE L3 2026-11-11 | — |
 | [Module assessment](assessments/module-assessments/45-messaging-assessment.md) | Completed | Solutions separate | — |
 
-**Module 45 status:** Completed  
+**Module 45 status:** Completed (EXPAND-PRESERVE ~295 lines/chapter avg)  
 **Next recommended chapter:** Module 46 (Completed below)
 
 ---
@@ -1051,9 +1051,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-caching-strategies.md](46-caching-and-performance/01-caching-strategies.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-redis-and-invalidation.md](46-caching-and-performance/02-redis-and-invalidation.md) | Completed | Quality pass 2026-11-10 | Redis lab optional |
-| [03-load-testing-and-capacity.md](46-caching-and-performance/03-load-testing-and-capacity.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-caching-strategies.md](46-caching-and-performance/01-caching-strategies.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [02-redis-and-invalidation.md](46-caching-and-performance/02-redis-and-invalidation.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Redis lab optional |
+| [03-load-testing-and-capacity.md](46-caching-and-performance/03-load-testing-and-capacity.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/46-caching-performance-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -1071,9 +1071,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-logging-metrics-and-tracing.md](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-opentelemetry-and-prometheus.md](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) | Completed | Quality pass 2026-11-10 | OTel collector lab optional |
-| [03-slos-and-incidents.md](47-observability-and-monitoring/03-slos-and-incidents.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-logging-metrics-and-tracing.md](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [02-opentelemetry-and-prometheus.md](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | OTel collector lab optional |
+| [03-slos-and-incidents.md](47-observability-and-monitoring/03-slos-and-incidents.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/47-observability-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -1091,9 +1091,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-containers-and-the-jvm.md](48-devops-and-deployment/01-containers-and-the-jvm.md) | Completed | Quality pass 2026-11-10 | Live docker smoke optional |
-| [02-ci-cd.md](48-devops-and-deployment/02-ci-cd.md) | Completed | Quality pass 2026-11-10 | Sample Actions workflow file optional |
-| [03-deployment-strategies.md](48-devops-and-deployment/03-deployment-strategies.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-containers-and-the-jvm.md](48-devops-and-deployment/01-containers-and-the-jvm.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Live docker smoke optional |
+| [02-ci-cd.md](48-devops-and-deployment/02-ci-cd.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Sample Actions workflow file optional |
+| [03-deployment-strategies.md](48-devops-and-deployment/03-deployment-strategies.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/48-devops-deployment-assessment.md) | Completed | Solutions separate | — |
 
 **Module 48 status:** Completed  
@@ -1105,9 +1105,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-cloud-native-java.md](49-cloud-and-containerization/01-cloud-native-java.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-kubernetes-basics-for-java.md](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) | Completed | Quality pass 2026-11-10 | kind/minikube lab optional |
-| [03-graalvm-and-native-image-concepts.md](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) | Completed | Quality pass 2026-11-10 | Native build CI optional |
+| [01-cloud-native-java.md](49-cloud-and-containerization/01-cloud-native-java.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [02-kubernetes-basics-for-java.md](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | kind/minikube lab optional |
+| [03-graalvm-and-native-image-concepts.md](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | Native build CI optional |
 | [Module assessment](assessments/module-assessments/49-cloud-containerization-assessment.md) | Completed | Solutions separate | — |
 
 **Module 49 status:** Completed  
@@ -1119,9 +1119,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-reflection-proxies-and-annotations.md](50-advanced-java/01-reflection-proxies-and-annotations.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-method-handles-varhandles-and-ffm.md](50-advanced-java/02-method-handles-varhandles-and-ffm.md) | Completed | Quality pass 2026-11-10 | FFM preview flags on JDK 21 |
-| [03-bytecode-and-agents.md](50-advanced-java/03-bytecode-and-agents.md) | Completed | Quality pass 2026-11-10 | Transformer sample optional |
+| [01-reflection-proxies-and-annotations.md](50-advanced-java/01-reflection-proxies-and-annotations.md) | Completed | EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4 | — |
+| [02-method-handles-varhandles-and-ffm.md](50-advanced-java/02-method-handles-varhandles-and-ffm.md) | Completed | EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4 | FFM preview flags on JDK 21 |
+| [03-bytecode-and-agents.md](50-advanced-java/03-bytecode-and-agents.md) | Completed | EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4 | Transformer sample optional |
 | [Module assessment](assessments/module-assessments/50-advanced-java-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -1142,9 +1142,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-large-codebases.md](51-enterprise-java/01-large-codebases.md) | Completed | Quality pass 2026-11-10 | ArchUnit sample optional |
-| [02-compatibility-and-migrations.md](51-enterprise-java/02-compatibility-and-migrations.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-production-readiness.md](51-enterprise-java/03-production-readiness.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-large-codebases.md](51-enterprise-java/01-large-codebases.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | ArchUnit sample optional |
+| [02-compatibility-and-migrations.md](51-enterprise-java/02-compatibility-and-migrations.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [03-production-readiness.md](51-enterprise-java/03-production-readiness.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/51-enterprise-java-assessment.md) | Completed | Solutions separate | — |
 
 **Module 51 status:** Completed  
@@ -1156,9 +1156,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-core-java-interviews.md](52-interview-preparation/01-core-java-interviews.md) | Completed | Quality pass 2026-11-10 | — |
-| [02-jvm-and-concurrency-interviews.md](52-interview-preparation/02-jvm-and-concurrency-interviews.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-spring-and-system-design-interviews.md](52-interview-preparation/03-spring-and-system-design-interviews.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-core-java-interviews.md](52-interview-preparation/01-core-java-interviews.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [02-jvm-and-concurrency-interviews.md](52-interview-preparation/02-jvm-and-concurrency-interviews.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
+| [03-spring-and-system-design-interviews.md](52-interview-preparation/03-spring-and-system-design-interviews.md) | Completed | EXPAND-PRESERVE 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/52-interview-preparation-assessment.md) | Completed | Solutions separate | — |
 
 **Module 52 status:** Completed  
@@ -1170,8 +1170,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Item | Status | Review | Outstanding |
 |------|--------|--------|-------------|
-| [53-projects/README.md](53-projects/README.md) | Completed | Quality pass 2026-11-10 | — |
-| Beginner specs (×2) | Completed | 2026-11-10 | Reference implementations optional |
+| [53-projects/README.md](53-projects/README.md) | Completed | EXPAND-PRESERVE 2026-11-11; standards note | — |
+| [projects/README.md](projects/README.md) | Completed | Aligned with Module 53 standards 2026-11-11 | — |
+| Beginner specs (×2) | Completed | 2026-11-10 | Reference implementations optional (learner-owned) |
 | Intermediate specs (×2) | Completed | 2026-11-10 | — |
 | Advanced specs (×2) | Completed | 2026-11-10 | — |
 | Expert specs (×2) | Completed | 2026-11-10 | — |

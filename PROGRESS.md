@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 10 completed)
+**Last updated:** 2026-11-10 (Module 11 completed)
 
 ## Status values
 
@@ -305,11 +305,35 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `instanceof-patterns-demo` | `string:Ada`; `int:21`; `null`; `double:3.5`; `long=java` |
 | `variance-erasure-preview-demo` | `sum=3`; `first=1`; `objs=[7]`; `listClass=ArrayList` |
 
-**Module 10 status:** Completed  
-**Next recommended chapter:** [11-arrays-and-strings/](11-arrays-and-strings/) (arrays, strings, builders)
+**Module 10 status:** Completed
+**Next recommended chapter:** Module 11 (Completed below)
 
 ---
 
-## Modules 11–53
+## Module 11 — Arrays and Strings
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-arrays.md](11-arrays-and-strings/01-arrays.md) | Completed | Quality pass 2026-11-10 | `List` depth in M12 |
+| [02-strings-and-immutability.md](11-arrays-and-strings/02-strings-and-immutability.md) | Completed | Quality pass 2026-11-10 | Grapheme/ICU in advanced appendix |
+| [03-stringbuilder-and-text-blocks.md](11-arrays-and-strings/03-stringbuilder-and-text-blocks.md) | Completed | Quality pass 2026-11-10 | String templates stay preview-only |
+| [04-encoding-and-string-performance.md](11-arrays-and-strings/04-encoding-and-string-performance.md) | Completed | Quality pass 2026-11-10 | NIO charset depth in M17 |
+| [Module assessment](assessments/module-assessments/11-arrays-and-strings-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `arrays-demo` | `len=3`; `max=95`; `sorted=[85, 90, 95]`; `grid01=b` |
+| `strings-demo` | pool/`equals` lines; `upper=JAVA`; `sub=hand` |
+| `stringbuilder-textblock-demo` | `Hello Java!`; `jsonLines=4`; JSON block as documented |
+| `encoding-perf-demo` | `chars=4`; `utf8Bytes=5`; `roundtripOk=true`; `built=012` |
+
+**Module 11 status:** Completed
+**Next recommended chapter:** [12-collections-framework/](12-collections-framework/) (lists, sets, maps)
+
+---
+
+## Modules 12–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

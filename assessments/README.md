@@ -5,7 +5,7 @@ Practice material separate from textbook chapters.
 | Area | Path | Policy |
 |------|------|--------|
 | Diagnostic | [diagnostic/](diagnostic/) | Framework in Phase 1; question sets when ready |
-| Module assessments | [module-assessments/](module-assessments/) | [00](module-assessments/00-programming-foundations-assessment.md)–[10](module-assessments/10-java-type-system-assessment.md) done; others after their modules Complete |
+| Module assessments | [module-assessments/](module-assessments/) | [00](module-assessments/00-programming-foundations-assessment.md)–[11](module-assessments/11-arrays-and-strings-assessment.md) done; others after their modules Complete |
 | Coding challenges | [coding-challenges/](coding-challenges/) | No empty stubs |
 | Debugging challenges | [debugging-challenges/](debugging-challenges/) | No empty stubs |
 | Interview questions | [interview-questions/](interview-questions/) | No empty stubs |

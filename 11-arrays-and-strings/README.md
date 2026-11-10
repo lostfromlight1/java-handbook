@@ -1,14 +1,18 @@
 # Module 11 — Arrays and Strings
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed — 2026-11-10 (Temurin JDK 21.0.12.1)
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Arrays | Not started |
-| 02 | Strings and Immutability | Not started |
-| 03 | StringBuilder and Text Blocks | Not started |
-| 04 | Encoding and String Performance | Not started |
+| 01 | [Arrays](01-arrays.md) | Completed |
+| 02 | [Strings and Immutability](02-strings-and-immutability.md) | Completed |
+| 03 | [StringBuilder and Text Blocks](03-stringbuilder-and-text-blocks.md) | Completed |
+| 04 | [Encoding and String Performance](04-encoding-and-string-performance.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 02–03 (types, loops), Module 06 (`equals`), Module 10 (reference typing preview helpful).
 
-**Assessment:** Created after all module chapters are Completed.
+**Examples:** `examples/core-java/{arrays-demo,strings-demo,stringbuilder-textblock-demo,encoding-perf-demo}/`
+
+**Assessment:** [11-arrays-and-strings-assessment.md](../assessments/module-assessments/11-arrays-and-strings-assessment.md) · [solutions](../assessments/module-assessments/11-arrays-and-strings-assessment-solutions.md)
+
+**Next module:** [12 — Collections Framework](../12-collections-framework/README.md)

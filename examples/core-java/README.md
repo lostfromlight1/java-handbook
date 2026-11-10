@@ -20,3 +20,7 @@
 | [typing-demo/](typing-demo/) | 10 | Validated Temurin 21.0.12.1 |
 | [instanceof-patterns-demo/](instanceof-patterns-demo/) | 10 | Validated Temurin 21.0.12.1 |
 | [variance-erasure-preview-demo/](variance-erasure-preview-demo/) | 10 | Validated Temurin 21.0.12.1 |
+| [arrays-demo/](arrays-demo/) | 11 | Validated Temurin 21.0.12.1 |
+| [strings-demo/](strings-demo/) | 11 | Validated Temurin 21.0.12.1 |
+| [stringbuilder-textblock-demo/](stringbuilder-textblock-demo/) | 11 | Validated Temurin 21.0.12.1 |
+| [encoding-perf-demo/](encoding-perf-demo/) | 11 | Validated Temurin 21.0.12.1 |

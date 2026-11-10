@@ -106,5 +106,13 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Wildcard** | Unknown or flexible type argument in generics: `?`, `? extends T`, or `? super T`. | Module 10 Ch.03 |
 | **PECS** | Producer Extends, Consumer Super—use `? extends T` when reading, `? super T` when writing. | Module 10 Ch.03 |
 | **Type erasure** | Compile-time generic type information is removed in bytecode; type parameters become their bounds or `Object` at runtime. | Module 10 Ch.03 |
+| **Array** | Fixed-length, indexed sequence of elements of one type; length set at creation and exposed via `length` field. | [Module 11 Ch.01](11-arrays-and-strings/01-arrays.md) |
+| **String immutability** | After construction, a `String`'s character sequence cannot change; mutating APIs return new strings. | [Module 11 Ch.02](11-arrays-and-strings/02-strings-and-immutability.md) |
+| **String pool** | JVM-managed set of canonical string literals and interned strings that may share identity for equal content. | Module 11 Ch.02 |
+| **StringBuilder** | Mutable, growable character buffer for efficient string assembly; not thread-safe (unlike `StringBuffer`). | [Module 11 Ch.03](11-arrays-and-strings/03-stringbuilder-and-text-blocks.md) |
+| **Text block** | Multiline string literal delimited by `"""` with compiler rules for incidental indentation stripping (JEP 378). | Module 11 Ch.03 |
+| **Code unit (UTF-16)** | 16-bit `char` value stored in a `String`; one code point may use one or two code units. | [Module 11 Ch.04](11-arrays-and-strings/04-encoding-and-string-performance.md) |
+| **Code point** | Unicode scalar value (U+XXXX); may span one or two UTF-16 code units in a `String`. | Module 11 Ch.04 |
+| **Charset** | Named mapping between sequences of bytes and characters; e.g. `UTF-8` for interchange. | Module 11 Ch.04 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

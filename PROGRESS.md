@@ -150,10 +150,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-methods-basics.md](04-methods-and-functions/01-methods-basics.md) | Completed | Quality pass 2026-11-10 | Guards, return/`void`, static preview |
-| [02-overloading-varargs-and-recursion.md](04-methods-and-functions/02-overloading-varargs-and-recursion.md) | Completed | Quality pass 2026-11-10 | Ambiguity, varargs, recursion vs iteration |
-| [03-pass-by-value-and-stack-frames.md](04-methods-and-functions/03-pass-by-value-and-stack-frames.md) | Completed | Quality pass 2026-11-10 | Pass-by-value myth; stack frames; JLS/JVMS/HotSpot |
-| [04-static-instance-and-method-references.md](04-methods-and-functions/04-static-instance-and-method-references.md) | Completed | Quality pass 2026-11-10 | `this`, static fields, method references preview |
+| [01-methods-basics.md](04-methods-and-functions/01-methods-basics.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [02-overloading-varargs-and-recursion.md](04-methods-and-functions/02-overloading-varargs-and-recursion.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [03-pass-by-value-and-stack-frames.md](04-methods-and-functions/03-pass-by-value-and-stack-frames.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [04-static-instance-and-method-references.md](04-methods-and-functions/04-static-instance-and-method-references.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
 | [Module assessment](assessments/module-assessments/04-methods-and-functions-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -174,10 +174,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-oop-fundamentals.md](05-object-oriented-programming/01-oop-fundamentals.md) | Completed | Quality pass 2026-11-10 | Class/object, `new`, identity, encapsulation preview |
-| [02-encapsulation-and-abstraction.md](05-object-oriented-programming/02-encapsulation-and-abstraction.md) | Completed | Quality pass 2026-11-10 | Access modifiers, invariants, Temperature API |
-| [03-inheritance-and-polymorphism-intro.md](05-object-oriented-programming/03-inheritance-and-polymorphism-intro.md) | Completed | Quality pass 2026-11-10 | `extends`, `super`, polymorphism intro |
-| [04-composition-and-object-relationships.md](05-object-oriented-programming/04-composition-and-object-relationships.md) | Completed | Quality pass 2026-11-10 | has-a, object graphs |
+| [01-oop-fundamentals.md](05-object-oriented-programming/01-oop-fundamentals.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [02-encapsulation-and-abstraction.md](05-object-oriented-programming/02-encapsulation-and-abstraction.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [03-inheritance-and-polymorphism-intro.md](05-object-oriented-programming/03-inheritance-and-polymorphism-intro.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
+| [04-composition-and-object-relationships.md](05-object-oriented-programming/04-composition-and-object-relationships.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | — |
 | [Module assessment](assessments/module-assessments/05-object-oriented-programming-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -198,13 +198,13 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-initialization-and-constructors.md](06-classes-and-objects/01-initialization-and-constructors.md) | Completed | Quality pass 2026-11-10 | `super()` chaining in M07 |
-| [02-nested-and-inner-classes.md](06-classes-and-objects/02-nested-and-inner-classes.md) | Completed | Quality pass 2026-11-10 | Lambdas vs anonymous deep dive in M09 |
-| [03-immutability-and-builders.md](06-classes-and-objects/03-immutability-and-builders.md) | Completed | Quality pass 2026-11-10 | Records as alternative carriers |
-| [04-equals-hashcode-and-tostring.md](06-classes-and-objects/04-equals-hashcode-and-tostring.md) | Completed | Quality pass 2026-11-10 | Collection internals in M18 |
+| [01-initialization-and-constructors.md](06-classes-and-objects/01-initialization-and-constructors.md) | Completed | standards-alignment pass 2026-11-11 Temurin re-verify | `super()` subclass order (§5.2 → M07) |
+| [02-nested-and-inner-classes.md](06-classes-and-objects/02-nested-and-inner-classes.md) | Completed | standards-alignment pass 2026-11-11 Temurin re-verify | Lambda bytecode/compare (§5.4 → M09) |
+| [03-immutability-and-builders.md](06-classes-and-objects/03-immutability-and-builders.md) | Completed | standards-alignment pass 2026-11-11 Temurin re-verify | Record vs builder depth (§5.3; records module later) |
+| [04-equals-hashcode-and-tostring.md](06-classes-and-objects/04-equals-hashcode-and-tostring.md) | Completed | standards-alignment pass 2026-11-11 Temurin re-verify | Hash table resizing/load factor (§5.2 → M18) |
 | [Module assessment](assessments/module-assessments/06-classes-and-objects-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|

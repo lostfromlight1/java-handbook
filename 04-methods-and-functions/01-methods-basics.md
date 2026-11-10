@@ -4,7 +4,23 @@
 > **Module:** 04 — Methods and Functions  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (declarations, `return`/`void`, guards, `static` preview)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -184,7 +200,32 @@ An **instance method** belongs to each object of the class and typically reads o
 
 When you call `sum(3, 5)`, Java copies the **values** of `3` and `5` into the parameters `a` and `b`. The method cannot change the caller’s local variables through those parameters (for primitives, the copy is independent). That is **pass-by-value**. Reference types pass a copy of the reference; the detailed rules and diagrams are in [03-pass-by-value-and-stack-frames.md](03-pass-by-value-and-stack-frames.md)—one sentence to remember: **arguments are always value-copied into parameters; Java does not pass variables by reference.**
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+A method **invocation** is a controlled transfer of execution: the caller prepares arguments, the callee receives parameter bindings, the body runs, then control returns.
+
+### 5.1 Invocation sequence (language level)
+
+For a call such as `println("sum(3, 5) = " + sum(3, 5))` (JLS §15.12):
+
+1. **Evaluate arguments** in the innermost expression first where grouping requires it; for comma-separated parameter lists, argument expressions are evaluated **left-to-right** (JLS §15.7.4).
+2. **Bind parameters** by copying each argument **value** into the callee’s corresponding parameter slot (pass-by-value; see Ch.03).
+3. **Execute** the method body until a `return` completes the method, the body ends normally (`void`), or an exception propagates.
+4. **Resume** the caller: for a value-returning method, the `return` expression’s value becomes the result of the invocation expression; the caller’s next statement or operand continues.
+
+`return` in a non-`void` method **immediately** ends the invocation. Any statement after `return` in the same block is unreachable (compile error). Guard clauses (§4.5) are ordinary early `return` paths—no special bytecode.
+
+### 5.2 Nested calls and ordering
+
+When `main` calls `clamp`, which does not call further methods, the callee runs to completion before `main` resumes. When `maxOfThree` calls `max` twice, the **inner** `max(a, b)` completes before the outer `max(..., c)` runs—**nested callees finish before their caller resumes** on a single thread.
+
+Each active call corresponds to a **stack frame** (activation record) holding parameters and locals; the JVM pushes a frame on entry and pops on return (JVMS §2.6). [03-pass-by-value-and-stack-frames.md](03-pass-by-value-and-stack-frames.md) diagrams frames for `PassByValueDemo`; here the model is “one frame per active method.”
+
+### 5.3 Declaration vs invocation
+
+The **declaration** (§4.2) is checked at compile time: return type, parameter types, and name must match an applicable overload when overloading exists (Ch.02). At **runtime**, dispatch uses the signature already chosen by the compiler—this chapter’s examples use a single overload per name.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -198,7 +239,7 @@ When you call `sum(3, 5)`, Java copies the **values** of `3` and `5` into the pa
 | Local variable | Variable declared in a method or block |
 | Guard clause | Early `return` (or throw) that handles a failure case |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 modifiers? returnType identifier ( FormalParameterList ) MethodBody
@@ -219,7 +260,7 @@ public static void main(String[] args)
 
 Changing parameter type to `String` or omitting `static`/`public` breaks the default launch convention (advanced launchers can specify another method; beginners should keep the canonical form).
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 Full program: [examples/core-java/methods-basics-demo/](../examples/core-java/methods-basics-demo/)
 
@@ -228,7 +269,7 @@ javac MethodsBasicsDemo.java
 java MethodsBasicsDemo
 ```
 
-### 7.1 Minimal: `void` greeting and `int` sum
+### 8.1 Minimal: `void` greeting and `int` sum
 
 ```java
 static void greet(String name) {
@@ -243,7 +284,7 @@ static int sum(int a, int b) {
 - `greet` — side effect only (prints); no value to assign.
 - `sum` — pure computation; caller can use `int total = sum(1, 2);`.
 
-### 7.2 Realistic: guards and bounded value
+### 8.2 Realistic: guards and bounded value
 
 `describeScore` and `clamp` show production-style validation and normalization:
 
@@ -268,7 +309,7 @@ static int clamp(int value, int min, int max) {
 
 `clamp` assumes `min <= max`; if not, behavior still returns a bound but may surprise callers—document or assert in real APIs.
 
-### 7.3 Advanced: composing calls from `main`
+### 8.3 Advanced: composing calls from `main`
 
 ```java
 public static void main(String[] args) {
@@ -283,7 +324,7 @@ public static void main(String[] args) {
 
 `main` does not implement business rules; it **demonstrates** helpers. That separation is how services grow: orchestration at the top, reusable pieces below.
 
-**Verified output (Temurin JDK 21.0.12.1):**
+**Verified (Temurin JDK 21.0.12.1):**
 
 ```text
 Hello, Ada!
@@ -294,27 +335,27 @@ clamp(150, 0, 100) = 100
 clamp(-5, 0, 100) = 0
 ```
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Validation methods** — `isValidEmail`, `normalizePhone` called from controllers before persistence.
 - **Pricing / rules** — `calculateDiscount`, `clampQuantity` shared between web and batch jobs.
 - **Mapping layers** — `toDto(Order)` keeps conversion out of `main` and testable.
 - **Test doubles** — small pure functions (`sum`, `clamp`) are easy to unit-test without starting a server.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 **Language level (JLS):** invoking a method causes argument expressions to be evaluated left-to-right; then control enters the method body (JLS §15.12). `return` completes the method and supplies a value to the invocation expression.
 
-**JVM level (preview):** each active method call corresponds to a **stack frame** (local variables, operand stack, return address). Nested calls stack frames until they return. HotSpot implements this per JVMS §2.6; you do not manage frames manually. Chapter 03 in this module diagrams frames.
+**JVM level (preview):** each active method call corresponds to a **stack frame** (local variables, operand stack, return address). Nested calls stack frames until they return. HotSpot implements this per JVMS §2.6; you do not manage frames manually. Ch.03 §5 diagrams frames.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Missing return on a path** — `if` without `else` may leave a non-`void` method without `return` (compile error).
 - **`void` method “returning” a value** — illegal: `return 5;` inside `void greet`.
 - **Recursive calls without base case** — infinite recursion until `StackOverflowError` (Chapter 02).
 - **Method too large** — readability and JIT inlining trade-offs; split when a method does more than one job.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — missing return on some path
 
@@ -384,7 +425,7 @@ int total = sum(1, 2);
 // or document deliberate fire-and-forget only for void methods
 ```
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Keep methods **focused**; one level of abstraction per method.
 - Prefer **guard clauses** over deep nesting for validation.
@@ -392,7 +433,7 @@ int total = sum(1, 2);
 - Make **pure** helpers (`sum`, `clamp`) `static` when they do not need instance state—easier to test.
 - Document public methods with Javadoc (`/** ... */`) in real libraries; the demo uses short comments.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -401,25 +442,25 @@ int total = sum(1, 2);
 | `void` + side effects | Simple I/O demos | Harder to compose in pipelines |
 | Value-returning pure methods | Easy to combine and test | Caller must use the result |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Method calls have small fixed cost; HotSpot **inlines** tiny hot methods (JIT detail, not a language guarantee). Prefer clarity first; micro-optimize only with profiling (Module 48+).
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Methods that **validate** input (`clamp` bounds, score rules) should run on the **server** for security-sensitive rules—never trust client-only checks (see later security modules).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Method declarations are core Java. Validated on **21.0.12.1** (Temurin). No preview features used in this chapter.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 - **C:** functions are not inside types; Java requires methods live in a class (except hidden nest/local cases—advanced).
 - **Python:** `def` with optional return `None`; Java requires declared return types and stricter path rules.
 - **JavaScript:** functions are values; Java methods are not first-class until method references (Ch.04) and functional interfaces (later modules).
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 **You should already understand:**
 
@@ -441,7 +482,7 @@ Method declarations are core Java. Validated on **21.0.12.1** (Temurin). No prev
 
 **Practical check:** Refactor a 40-line `main` into at least three named methods without changing behavior.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -460,14 +501,14 @@ Method declarations are core Java. Validated on **21.0.12.1** (Temurin). No prev
 7. Without running, predict output if `greet(null)` is called—then try and handle `null` safely.
 8. Sketch how many stack frames exist when `main` calls `clamp` that calls nothing else (one sentence; full picture in Ch.03).
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **What is the difference between a method and a constructor?** — Constructors initialize objects; methods are ordinary operations (Module 05).
 2. **Can you overload only by return type?** — No (Chapter 02).
 3. **What does `void` mean?** — No return value to the expression that called the method.
 4. **Is Java pass-by-reference?** — No; pass-by-value (references copied by value).
 
-## 21. Solutions
+## 22. Solutions
 
 1. Order: `greet` → `sum` → two `describeScore` → two `clamp`; each `println` evaluates its method call first.
 2. Add method; `System.out.println(doubleValue(21));` prints `42`.
@@ -478,22 +519,22 @@ Method declarations are core Java. Validated on **21.0.12.1** (Temurin). No prev
 7. `greet(null)` prints `Hello, null!` without a null check; fix with guard returning early or using `"guest"`.
 8. Two frames: `main` and `clamp` (when `clamp` is active, `main` waits)—simplified; JVM also has bootstrap frames.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Methods name reusable behavior: declaration (modifiers, return type, name, parameters, body), call sites (arguments), and `return` semantics separate `void` actions from value-producing helpers. Guard clauses keep validation readable. Demos use `static` methods; instance methods and pass-by-value details come in the next chapters of this module.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Method · parameter · argument · return type · `void` · guard clause · local variable · invoke · `static` (preview)
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS §8.4 — Method Declarations](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4)
 - [JLS §6.3 — Scope of a Declaration](https://docs.oracle.com/javase/specs/jls/se21/html/jls-6.html#jls-6.3)
 - [JLS §15.12 — Method Invocation Expressions](https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html#jls-15.12)
 - `java.lang.Math` — library of `static` math helpers (contrast with your own methods)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [02-overloading-varargs-and-recursion.md](02-overloading-varargs-and-recursion.md) — same name, different parameter lists; varargs; recursion.
 - [03-pass-by-value-and-stack-frames.md](03-pass-by-value-and-stack-frames.md) — argument copying and call stacks.
@@ -501,8 +542,31 @@ Method · parameter · argument · return type · `void` · guard clause · loca
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; method declarations and calls at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Depth gate passed; progressive §7 examples
-- [x] MethodsBasicsDemo verified on Temurin JDK 21.0.12.1
-- [x] Revision and Mastery, exercises, solutions, JLS references
-- [x] Instance/static and pass-by-value previewed without deferring core method teaching
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (nested call ordering in §5)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 for MethodsBasicsDemo)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-10; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **§ Advanced examples (separate from §8.3)** — omitted; §8.3 `main` orchestration is sufficient for this profile.
+- **§ Language comparisons** — retained at §18; shallow orientation only, not a full comparative module.
+
+**Verification note:** MethodsBasicsDemo output matches Temurin JDK 21.0.12.1 re-run 2026-11-10 (`Hello, Ada!`, sum 8, clamp 100/0).

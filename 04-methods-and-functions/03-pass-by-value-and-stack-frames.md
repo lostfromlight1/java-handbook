@@ -4,7 +4,23 @@
 > **Module:** 04 — Methods and Functions  
 > **Target Java version:** 21  
 > **Last reviewed:** 2026-11-10  
+> **Chapter profile:** Technical / Deep-dive  
+> **Depth target:** Levels 3–4 (pass-by-value semantics; stack frames; JLS/JVMS/HotSpot labeled)  
 > **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -66,13 +82,32 @@ In languages with true pass-by-reference, the callee can rebind the **caller’s
 | “Java passes objects by reference” | False in the formal sense; object **identity** is shared via copied handles |
 | “I need pass-by-reference to swap variables” | Use a holder object, array slot, or return values—not parameter aliasing |
 
-### 4.6 Stack frames (activation records)
+### 4.6 Stack frames (preview)
 
-Each active method call has an **activation** (often called a **stack frame**) that holds, at minimum conceptually:
+Each active call has an **activation** (stack frame) holding parameters, locals, and return linkage. §5 traces invocation, value copying, and frame push/pop—including the diagram used with `PassByValueDemo`.
 
-- **Parameters** and **local variables**
-- Space for operand-stack work (JVM detail)
-- **Return continuation** — where to resume in the caller when the callee finishes
+## 5. Mechanism and Execution Flow
+
+### 5.1 Invocation: evaluate, copy, enter
+
+For every method call (JLS §15.12):
+
+1. Evaluate argument expressions **left-to-right**.
+2. Copy each result **value** into the callee’s parameter locals (**pass-by-value**—§4.1–4.4).
+3. Create a new **frame** and run the body.
+4. On `return`, discard the frame and resume the caller with the return value (if any).
+
+Primitives copy bits; references copy handles—never the object wholesale.
+
+### 5.2 `PassByValueDemo` frame trace (conceptual)
+
+When `main` calls `tryMutatePrimitive(x)`:
+
+1. `main`’s frame holds `x = 10`.
+2. Callee receives **`value = 10`** (copy). Assignment `value = 99` touches only callee locals.
+3. Return pops callee; `main` still prints `x = 10`.
+
+When `main` calls `mutateArrayContents(nums)`, both `main.nums` and parameter `arr` reference the **same array object**; `arr[0] = 100` mutates shared state. When `reassignArrayParameter` runs, `arr = new int[]{9,9,9}` rebinds only the **parameter copy**—`main.nums` is unchanged.
 
 ```mermaid
 flowchart TB
@@ -84,13 +119,19 @@ flowchart TB
   f3 -->|"return pops"| f2
 ```
 
-**JLS / JVMS:** The JVM Specification requires each thread to have a **Java Virtual Machine stack** composed of frames; a new frame is created on each method invocation and destroyed when the method returns. Frame layout (local variable array, operand stack, constant pool pointer) is specified in the JVMS—not in the JLS.
+### 5.3 JVMS frame contents vs HotSpot limits
 
-**HotSpot (implementation):** Oracle’s HotSpot JVM allocates frames on a per-thread stack. Default **maximum stack size** is platform-dependent and can be changed with `-Xss<size>` (e.g. `-Xss1m`). A `StackOverflowError` means the thread exhausted that stack—typical with **unbounded recursion**, not with normal depth.
+Each frame holds (JVMS §2.6, conceptual):
 
-**Recursion depth** is therefore “how many frames of this method can fit under the limit,” not a fixed Java language number.
+- **Local variable array** — parameters in the first slots (slot 0 often `this` on instance methods), then other locals
+- **Operand stack** — bytecode evaluation stack
+- **Return address** — where to resume in the caller
 
-## 5. Terminology
+**JLS guarantee:** Value semantics for arguments. **JVMS guarantee:** One frame created per invocation, destroyed on return. **HotSpot (implementation):** Frames live on a per-thread stack; default max depth is platform-dependent and tunable with `-Xss<size>`. `StackOverflowError` means the thread exhausted that stack—common with unbounded recursion (Ch.02), not a language-defined frame count.
+
+**Recursion depth** is therefore “how many frames fit under `-Xss`,” not a number in the JLS.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -101,7 +142,7 @@ flowchart TB
 | Stack frame | Data for one active method invocation on a thread’s call stack |
 | Activation record | Synonym for stack frame in many textbooks |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 Parameters are listed in the method signature; at each call site, argument expressions are evaluated **left to right**, then their values are copied into the callee’s parameter slots:
 
@@ -112,7 +153,7 @@ void demo(int n, int[] data) { /* n and data are locals */ }
 - `final` on a parameter prevents reassignment of the **local** parameter variable inside the callee; it does **not** make the referred object deeply immutable.
 - Varargs (Module 04 Ch.02) still pass by value—the varargs array reference is copied like any other reference.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 Runnable demo: [examples/core-java/pass-by-value-demo/](../examples/core-java/pass-by-value-demo/)
 
@@ -121,7 +162,7 @@ javac PassByValueDemo.java
 java PassByValueDemo
 ```
 
-### 7.1 Full demo walk-through
+### 8.1 Full demo walk-through
 
 Source (key methods):
 
@@ -151,7 +192,7 @@ static void tryReassignString(String text) {
 }
 ```
 
-**Verified output (Temurin JDK 21.0.12.1):**
+**Verified (Temurin JDK 21.0.12.1):**
 
 ```text
 after tryMutatePrimitive, x = 10
@@ -171,31 +212,31 @@ after tryReassignString, s = hello
 | `sb = Hi!` | Reassigning `builder` in callee does not change `main`’s `sb`. |
 | `s = hello` | `text = text + "!"` points parameter at new immutable string; caller’s `s` unchanged. |
 
-### 7.2 Minimal — primitive
+### 8.2 Minimal — primitive
 
 ```java
 void setZero(int n) { n = 0; }
 // caller's variable unchanged
 ```
 
-### 7.3 Realistic — service mutates a DTO
+### 8.3 Realistic — service mutates a DTO
 
 A method that fills fields on a shared configuration object mutates caller-visible state; a method that does `config = new Config()` inside the callee does not replace the caller’s reference unless the caller assigns the **return value**.
 
-### 7.4 Advanced — mental picture for `reassignArrayParameter`
+### 8.4 Advanced — mental picture for `reassignArrayParameter`
 
 Before call: `main.nums` → `int[]{1,2,3}`; parameter `arr` receives copy of that reference → same object.
 
 Inside callee after `arr = new int[]{9,9,9}`: `arr` → new array; `main.nums` → still `{1,2,3}` (with `[0]==100` from earlier).
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Collections:** Pass a `List` to a method that `add`s elements—caller sees changes; pass a list and assign `list = new ArrayList<>()` inside—caller does not.
 - **Builders and buffers:** Shared `StringBuilder` for efficient string assembly across helpers.
 - **Out-parameters:** Java idioms use return values, small holder objects, or `Optional` rather than reference parameters.
 - **Defensive copying:** APIs sometimes copy collections on ingress/egress to avoid unintended mutation through shared references (Module 36+ design).
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 **JLS guarantee:** Argument evaluation and value passing are defined by the language; behavior above follows from value semantics.
 
@@ -203,14 +244,14 @@ Inside callee after `arr = new int[]{9,9,9}`: `arr` → new array; `main.nums` �
 
 **HotSpot:** Frame size depends on bytecode (local count, stack depth). Deep recursion can throw `StackOverflowError`; increasing `-Xss` trades memory for depth—this is tuning, not a correctness fix for infinite recursion.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **`null` reference:** Copying `null` is legal; mutating throws `NullPointerException`.
 - **Arrays are objects:** Same rules as `StringBuilder`; length is object state—cannot grow array by reassigning caller’s variable without return/wrapper.
 - **Wrapper types (`Integer`):** Pass-by-value copies the reference to the **immutable** wrapper; `Integer x = 5; change(x)` cannot make caller’s box refer to another `Integer` without reassignment in caller.
 - **`final` parameter:** Cannot reassign parameter; can still mutate mutable referred object unless reference is to immutable type.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — expecting reassignment in callee to update caller
 
@@ -245,14 +286,14 @@ String fix(String s) {
 }
 ```
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Name methods to signal mutation (`fill`, `append`) vs replacement (`create`, `buildNew`).
 - Document whether a method mutates arguments.
 - Prefer returning new data over out-parameters when clarity matters.
 - When teaching, say “copy of the reference” instead of “passes the object.”
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | Pros | Cons |
 |----------|------|------|
@@ -262,25 +303,25 @@ String fix(String s) {
 
 Java chose uniform pass-by-value for simplicity and predictable scoping; other languages offer references at the cost of harder reasoning.
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Copying a reference is cheap (one machine word). Copying large primitives (`long`, `double`) is still cheap. Unnecessary defensive cloning of large collections costs CPU and memory—balance clarity and safety.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Mutable objects passed into untrusted code can be modified in place; wrap with unmodifiable views or copy when exposing internal state (Module 39).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Pass-by-value semantics are unchanged since Java 1.0. Verified on **21.0.12.1**.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 - **C++:** Can pass by reference with `&`; Java has no equivalent for parameters.
 - **C#:** `ref`/`out` parameters alias caller storage; Java has no direct equivalent.
 - **Python:** Names are bindings; reassignment vs mutation confusion sounds similar but semantics differ—compare carefully in interviews.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 **You should already know:** primitives vs references, heap vs stack locals (Module 00/02).
 
@@ -298,7 +339,7 @@ Pass-by-value semantics are unchanged since Java 1.0. Verified on **21.0.12.1**.
 
 **Exercise drill:** For each method in `PassByValueDemo`, draw caller/callee variable arrows before and after the call.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -315,31 +356,31 @@ Pass-by-value semantics are unchanged since Java 1.0. Verified on **21.0.12.1**.
 5. Skim JLS section on method invocation (argument evaluation order). When can evaluation order matter?
 6. Run a deep recursion until `StackOverflowError`; retry with a larger `-Xss`. Record observations—not a production pattern.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. **Is Java pass-by-reference?** — No; all arguments pass by value; references are copied.
 2. **Can a method change the caller’s `int`?** — Not through the parameter; return or holder/array element.
 3. **Why does `append` on `StringBuilder` work but `String` concat in callee does not?** — Mutable shared object vs new immutable string bound locally.
 4. **What lives in a stack frame?** — Parameters, locals, return linkage (conceptually); JVMS defines exact layout.
 
-## 21. Solutions
+## 22. Solutions
 
-1. Matches verified block in §7.1.
+1. Matches verified block in §8.1.
 2. Caller `n` unchanged; only local copy changes.
 3. Parameter swap cannot rebind caller vars; `holder[0]`/`holder[1]` mutation works because object is shared.
 4. `clear()` empties shared list; reassignment is local-only.
 5. Side effects in argument expressions (e.g. `i++` in multiple args) rely on left-to-right evaluation.
 6. `StackOverflowError` is resource limit; `-Xss` increases stack memory per thread.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Java always passes arguments **by value**. Primitives copy data; references copy handles. Mutating a shared object is visible; reassigning a parameter is not. Each call pushes a **stack frame** (JVMS); recursion depth is bounded by stack size (HotSpot `-Xss`).
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Pass-by-value · reference copy · mutate vs reassign · stack frame · call stack · activation · `StackOverflowError`
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS — Method Invocation Expressions](https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html#jls-15.12)
 - [JVMS — Frames](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html#jvms-2.6)
@@ -347,15 +388,37 @@ Pass-by-value · reference copy · mutate vs reassign · stack frame · call sta
 - [Module 00 Ch.02](../00-programming-foundations/02-how-computers-execute-programs.md) — call stack introduction
 - [Module 25](../25-jvm-internals/) — deeper frame and stack analysis (planned)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [04-static-instance-and-method-references.md](04-static-instance-and-method-references.md) — `static` vs instance behavior and `this`
 - Module 04 Ch.01–02 — method declarations, overloading, recursion (stack depth in practice)
 
 ## Review Checklist
 
-- [x] PassByValueDemo verified on Temurin JDK 21.0.12.1
-- [x] JLS vs JVMS vs HotSpot labeled
-- [x] Pass-by-reference myth addressed
-- [x] Depth gate passed
-- [x] Revision and Mastery included
+**Mandatory Depth Review:** Technical / Deep-dive profile; pass-by-value and frames at **Level 3** with **Level 4** on invoke/copy/frame mechanism (§5).
+
+- [x] Learning objectives covered
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5; stack diagram)
+- [x] Complex relationships illustrated with diagrams where useful (§5.2 mermaid)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 for PassByValueDemo)
+- [x] Explanations distinguish specification guarantees from implementation details (JLS/JVMS/HotSpot)
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-10; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **§ Language comparisons** — retained at §18; interview-oriented only.
+
+**Verification note:** PassByValueDemo output matches Temurin JDK 21.0.12.1 re-run 2026-11-10 (`x=10`, `nums[0]=100`, `sb=Hi!`, `s=hello`).

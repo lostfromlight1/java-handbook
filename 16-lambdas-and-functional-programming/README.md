@@ -1,6 +1,8 @@
 # Module 16 — Lambdas and Functional Programming
 
-**Status:** Completed — all chapters reviewed 2026-11-10 (Temurin JDK 21.0.12.1).
+**Standards alignment:** 2026-11-11 pass — Technical profile **L2–3**, §5 Mechanism and Execution Flow, master checklist + verification labels, expanded teaching depth Ch.01–03, demos re-verified on **Temurin JDK 21.0.12.1**.
+
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|

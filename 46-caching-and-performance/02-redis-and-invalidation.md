@@ -3,35 +3,54 @@
 > **Status:** Completed  
 > **Module:** 46 — Caching and Performance Engineering  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
+
+**Note:** Runnable Redis examples require a Redis server and client library (Lettuce/Jedis); command shapes below are **reference** for staging labs—not fabricate local scrape/session output.
 
 ## 1. Learning Objectives
 
-- Use **Redis** as distributed cache, session store, and rate limiter—**conceptually** when Redis is not installed locally.
-- Compare **Redis** to in-process **Caffeine** caches.
-- Design **invalidation** across app instances and **cache stampede** controls.
+- Use **Redis** as distributed cache, session store, and rate-limit counter for clustered Java services.
+- Compare **Redis** to in-process **Caffeine** caches and design **two-level** L1/L2 hierarchies.
+- Design **invalidation** across app instances and **cache stampede** controls tied to Ch.01 patterns.
 - Apply **security** basics: AUTH, TLS, no sensitive data without encryption (Module 43).
 
 ## 2. Prerequisites
 
-- Ch.01 caching strategies.
-- Module 39 sessions optional read.
+- [01-caching-strategies.md](01-caching-strategies.md) — cache-aside, TTL, thundering herd.
+- **Module 39** — session vs stateless JWT trade-offs (optional).
+- **Module 45** — event-driven invalidation consumers (optional).
 
 ## 3. Why This Concept Exists
 
-In-process caches do not **share** entries across JVMs. **Redis** (remote in-memory data store) centralizes cache, locks, and counters for clustered Java services.
+In-process caches (Caffeine, `ConcurrentHashMap`) do not **share** entries across JVMs. Each pod has its own hit ratio; after deploy, every instance is **cold**. **Redis** (remote in-memory data store) centralizes hot entries, session state, and coordination primitives (locks, counters) for horizontal scale—at the cost of network latency, operational ownership, and **split-brain** behavior if treated as authoritative without a database behind it.
 
-## 4. Redis data structures (usage)
+## 4. Conceptual Explanation
+
+### Redis as a cache backend
+
+Redis is **not** a replacement for PostgreSQL: it is a **fast tier** with optional durability (RDB/AOF) tuned for different goals. For handbook-style Spring services, treat Redis cache as **derivable** from DB unless you explicitly model Redis-native structures (counters, leaderboards).
+
+### Java client landscape
+
+| Client | Model | Notes |
+|--------|-------|-------|
+| **Lettuce** | Async/reactive, Netty | Default in Spring Data Redis |
+| **Jedis** | Blocking pool | Mature; tune pool size |
+| **Spring Data Redis** | `RedisTemplate`, cache abstraction | Hides command details |
+
+Nothing in the JDK speaks Redis; dependencies are explicit.
+
+### Redis data structures (usage)
 
 | Structure | Use |
 |-----------|-----|
 | **String** | Serialized JSON blob, counters |
 | **Hash** | Fielded objects |
 | **Set / ZSet** | Tags, leaderboards |
-| **List** | Queues (with care) |
+| **List** | Queues (with care; not Kafka) |
 | **Pub/Sub** | Cache invalidation fanout (not durable log) |
-
-Java clients: **Lettuce**, **Jedis** (not in JDK)—Spring Data Redis wraps templates.
 
 ```java
 // Conceptual — requires lettuce on classpath
@@ -39,83 +58,128 @@ Java clients: **Lettuce**, **Jedis** (not in JDK)—Spring Data Redis wraps temp
 // redis.get("product:42");
 ```
 
-## 5. Distributed cache-aside
+## 5. Mechanism and Execution Flow
 
-Same logic as Ch.01; cache backend is Redis:
+### Distributed cache-aside (same logic as Ch.01)
 
-1. `GET product:42`
-2. On miss, query DB, `SETEX` with TTL
-3. On update, `DEL product:42` or publish invalidation
+```mermaid
+sequenceDiagram
+  participant P as Pod A/B/C
+  participant R as Redis
+  participant D as Database
+  P->>R: GET product:42
+  alt hit
+    R-->>P: JSON blob
+  else miss
+    R-->>P: null
+    P->>D: SELECT
+    D-->>P: row
+    P->>R: SETEX product:42 TTL json
+  end
+```
 
-**Multiple app nodes** see same cache entries.
+On **update**, application commits DB then **DEL** keys or publishes an invalidation event so all pods drop L1 and L2.
 
-## 6. Local vs Redis two-level
+### Two-level L1 + L2
 
-**L1** Caffeine in JVM (microseconds) + **L2** Redis (milliseconds). Invalidate both on write.
+| Tier | Latency | Scope |
+|------|---------|-------|
+| **L1 Caffeine** | Microseconds | Single JVM |
+| **L2 Redis** | Milliseconds | Cluster-wide |
 
-Trade-off: complexity vs DB load.
+```mermaid
+flowchart TD
+  S[Service] --> L1[L1 Caffeine]
+  L1 -->|miss| L2[L2 Redis]
+  L2 -->|miss| DB[(Database)]
+```
 
-## 7. Invalidation strategies
+**Write path:** invalidate **both** L1 (local) and L2 (Redis) on authoritative DB update, or rely on versioned keys so stale L1 cannot serve wrong semantics.
 
-| Strategy | Mechanism |
-|----------|-----------|
-| **TTL only** | Simple; temporary staleness |
-| **Delete on write** | Stronger; must hit all keys |
-| **Version in key** | `product:42:v7` |
-| **Pub/Sub `invalidate`** | All nodes drop local L1 |
+### Invalidation strategies
+
+| Strategy | Mechanism | When |
+|----------|-----------|------|
+| **TTL only** | `SETEX` | Reference data; bounded staleness OK |
+| **Delete on write** | `DEL product:42` | Stronger; must list all derived keys |
+| **Version in key** | `product:42:v7` | Avoid delete races |
+| **Pub/Sub `invalidate`** | All nodes drop local L1 | After L2 delete |
 
 Event-driven: `ProductUpdated` consumer deletes keys (Module 45).
 
-## 8. Sessions and rate limiting
+### Sessions and rate limiting
 
-- **Session store:** Spring Session Redis for sticky-less scaling.
-- **Rate limit:** `INCR` + TTL bucket per client id at API gateway.
+- **Session store:** Spring Session Redis for sticky-less scaling; serializable session attributes only.
+- **Rate limit:** `INCR` + TTL bucket per client id at API gateway or servlet filter.
 
 Never store raw passwords or PAN in Redis; encrypt sensitive payloads if required.
 
-## 9. Real-World Use Cases
+## 6. Terminology
+
+| Term | Meaning |
+|------|---------|
+| **SETEX** | Set string with seconds TTL |
+| **SCAN** | Cursor-based key iteration (production-safe vs `KEYS *`) |
+| **Single-flight** | One loader per key (Ch.01); can be Redis `SETNX` lock |
+| **Split brain** | Redis and DB diverge after partial failure |
+
+## 7. Real-World Use Cases
 
 - Flash sale: Redis holds inventory counters with Lua atomic decrement.
 - Feature flags cached per tenant with 60s TTL.
-- JWT blocklist (logout) with TTL = token exp.
+- JWT blocklist (logout) with TTL = token expiration.
 
-## 10. Edge Cases
+## 8. Edge Cases
 
-- **Redis unavailable:** degrade to DB (circuit breaker) or fail closed for non-critical reads only—product decision.
-- **Large values:** >512MB strings are wrong tool—use object store.
+- **Redis unavailable:** degrade to DB (circuit breaker, Module 44) or fail closed for security reads—product decision, not library default.
+- **Large values:** multi-megabyte JSON is the wrong tool—use object store for blobs.
+- **Hot keys:** single Redis shard saturation; consider local L1 or key splitting.
 
-## 11. Common Mistakes
+## 9. Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
-| `KEYS *` in production | `SCAN` |
-| No connection pooling | Lettuce shared connection |
-| Same TTL for hot and cold data | Tiered TTL |
+| `KEYS *` in production | `SCAN` with pattern |
+| No connection pooling | Shared Lettuce connection / pool config |
+| Same TTL for hot and cold data | Tiered TTL by access pattern |
+| Redis as sole source of truth for orders | DB authoritative; Redis derivable |
 
-## 12. Conceptual note
+## 10. Conceptual Note
 
-This chapter does not require a running Redis instance. Treat command shapes as **reference**; validate in staging with real cluster topology (replicas, sentinel, cluster mode).
+This chapter does not require a running Redis instance for handbook completion. Validate command shapes and client timeouts in **staging** with real topology (replicas, Sentinel, cluster mode).
 
-## 13. Revision and Mastery
+## 11. Design Trade-offs
 
-- When Caffeine alone enough?
-- Invalidation vs TTL for prices?
-- Session in Redis vs JWT trade-offs?
+| Caffeine only | Redis only | L1 + L2 |
+|---------------|------------|---------|
+| Simplest ops | Shared cache | Best hit rate; complex invalidation |
 
-## 14. Exercises
+| Spring Session Redis | Stateless JWT |
+|----------------------|---------------|
+| Revocable server sessions | No central session store |
 
-1. Key naming convention for tenant-scoped cache.
-2. Invalidation flow diagram for product update API.
-3. Failure mode doc when Redis partition occurs.
+## 12. Revision and Mastery
 
-## 15. Chapter Summary
+- When is **Caffeine alone** enough vs when is Redis required?
+- Invalidation vs TTL for price updates during a sale?
+- Session in Redis vs JWT for a B2B API with instant revocation?
 
-Redis centralizes distributed caching and coordination; pair with clear invalidation, TTL discipline, and safe failure modes—not as silent source of truth without DB backing.
+## 13. Exercises
 
-## 16. Next Steps
+1. Key naming convention for tenant-scoped cache (`tenant:{id}:product:{id}`).
+2. Invalidation flow diagram for product update API (DB commit → bus → consumers).
+3. Failure mode doc when Redis partition occurs (read path, write path).
+
+## 14. Chapter Summary
+
+Redis centralizes distributed caching and coordination; pair with clear **invalidation**, **TTL discipline**, and **safe failure modes**—not as silent source of truth without database backing.
+
+## 15. Next Steps
 
 [03-load-testing-and-capacity.md](03-load-testing-and-capacity.md)
 
 ## Review Checklist
 
-- [x] Redis conceptual; invalidation; security note
+- [x] Technical L2–3; mechanism flows (cache-aside, L1/L2)
+- [x] Redis conceptual; invalidation; security note; no fabricated Redis output
+- [x] Preserved pattern catalog and exercises from prior draft

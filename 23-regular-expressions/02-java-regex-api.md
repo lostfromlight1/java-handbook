@@ -3,35 +3,52 @@
 > **Status:** Completed  
 > **Module:** 23 — Regular Expressions  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (Pattern/Matcher lifecycle, groups, flags)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
 
-## 1. Learning Objectives
+## 1. Learning Objectives *(mandatory)*
 
-- Compile patterns with **`Pattern`**, match with **`Matcher`**.
-- Iterate **`find()`** matches; use **`matches()`** for entire region.
-- Use **named groups** and replacement with **`replaceAll`**.
+- Compile reusable **`Pattern`** instances; match with **`Matcher`**.
+- Iterate with **`find()`** vs anchor with **`matches()`**.
+- Use **named groups** and replacement APIs safely.
 
-## 2. Prerequisites
+## 2. Prerequisites *(mandatory)*
 
-- Ch.01 regex fundamentals.
+- Ch.01 fundamentals; group numbering.
 
-## 3. Why This Concept Exists
+## 3. Why This Concept Exists *(mandatory)*
 
-`String` regex methods hide `Pattern` reuse and iterative matching. The **`java.util.regex`** API exposes flags, groups, and `Matcher` state for parsers and transformers.
+`String` regex methods hide matcher state and pattern reuse. **`java.util.regex`** exposes flags, iterative scanning, and `appendReplacement` for streaming transforms.
 
-## 4. Conceptual Explanation
+## 4. Conceptual Explanation *(mandatory)*
 
-- **`Pattern.compile(regex)`** — immutable, thread-safe pattern.
-- **`Matcher`** — stateful per input; `find()` scans; `matches()` anchors to entire sequence.
-- **Groups** — `group(1)` numbered; `(?<name>...)` with `group("name")`.
-- **Flags** — `CASE_INSENSITIVE`, `MULTILINE`, `DOTALL`, etc.
+- **`Pattern.compile`** — immutable, thread-safe.
+- **`Matcher`** — one per thread per input; **not thread-safe**.
+- **`find()`** — next subsequence; **`matches()`** — entire region.
+- **Named group** — `(?<dept>ENG)` → `group("dept")`.
+- **Flags** — `CASE_INSENSITIVE`, `MULTILINE`, `DOTALL`, `UNICODE_CHARACTER_CLASS`, etc.
 
-## 5. Step-by-Step Examples
+## 5. Mechanism and Execution Flow *(mandatory)*
+
+```mermaid
+flowchart TD
+    P[Pattern.compile]
+    M[matcher input]
+    F{find?}
+    G[group capture]
+    P --> M --> F
+    F -->|yes| G
+    F -->|no| Done[done]
+    G --> F
+```
+
+## 8. Step-by-Step Examples *(mandatory)*
 
 Demo: [java-regex-api-demo](../../examples/core-java/java-regex-api-demo/).
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 match=ENG-42 dept=ENG
@@ -42,48 +59,31 @@ findOnce=true
 namedId=42
 ```
 
-Multiple `find()` on input with two tokens. `replaceAll` with group refs. `matches()` false for partial remainder string; single token `find` yields `namedId=42`.
+Multiple `find()` over two tokens. `replaceAll` with group refs. Partial remainder fails `matches()` but single-token `find` yields `namedId=42`.
 
-## 6. Real-World Use Cases
+## 11. Edge Cases and Limitations *(strongly encouraged)*
 
-- Tokenizing structured tags (`DEPT-ID`).
-- Redacting PII in logs with `appendReplacement`.
-- Validating password rules with explicit `Matcher` walks.
+- Reuse matcher via `reset(CharSequence)`.
+- Lookbehind width limits in Java engine.
 
-## 7. Edge Cases and Limitations
+## 16. Security Considerations *(conditional)*
 
-- **`Matcher` not thread-safe** — create per thread or synchronize.
-- Reusing `Matcher` with `reset(CharSequence)` for performance.
-- Lookbehind length limits in Java regex engine.
+Untrusted regex + input → **ReDoS**; limit length, timeout, possessive quantifiers where appropriate.
 
-## 8. Common Mistakes
+## 19. Revision and Mastery *(Technical)*
 
-Calling `matches()` expecting substring find—use `find()`.
+- `find` vs `matches`?
+- When name groups over `group(2)`?
 
-## 9. Best Practices
+## 23. Chapter Summary *(mandatory)*
 
-- Cache **`Pattern`** statically for hot paths.
-- Use **named groups** for readable replacements.
-- Bound input length before regex on user content (ReDoS mitigation).
+**Pattern** reuse and **Matcher** iteration support production parsers; mind thread safety and ReDoS.
 
-## 10. Security Considerations
+## 26. Next Steps
 
-Untrusted regex + untrusted input can cause **ReDoS**—timeout or limit length; use possessive quantifiers where appropriate.
-
-## 11. Revision and Mastery
-
-- Difference `find` vs `matches`?
-- When is named group clearer than `group(2)`?
-
-## 12. Chapter Summary
-
-`Pattern`/`Matcher` provide iterative matching, groups, and replacements beyond `String` one-shots.
-
-## 13. Next Steps
-
-Module 24+ per roadmap (concurrency, etc.).
+Module **24** — Concurrency.
 
 ## Review Checklist
 
-- [x] Verified demo  
-- [x] ReDoS awareness
+- [x] Technical; Verified Temurin 21.0.12.1; ReDoS noted
+- [x] Mechanism diagram included

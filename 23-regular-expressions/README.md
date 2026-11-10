@@ -1,6 +1,6 @@
 # Module 23 — Regular Expressions
 
-**Status:** Completed — all chapters quality-pass 2026-11-10.
+**Status:** Completed — EXPAND-PRESERVE master template alignment 2026-11-11 (Temurin JDK 21.0.12.1 demos re-verified).
 
 | # | Chapter | Status |
 |---|---------|--------|

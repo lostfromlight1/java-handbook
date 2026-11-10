@@ -3,37 +3,42 @@
 > **Status:** Completed  
 > **Module:** 23 — Regular Expressions  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (syntax, String helpers, limits)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
 
-## 1. Learning Objectives
+## 1. Learning Objectives *(mandatory)*
 
-- Read basic **regex** syntax: literals, character classes, quantifiers, anchors, groups.
+- Read literals, classes, quantifiers, anchors, and capturing groups.
 - Use **`String.matches`**, **`split`**, **`replaceAll`** for simple tasks.
-- Know when regex is the wrong tool (parsing HTML, full grammars).
+- Know when regex is the wrong tool (HTML, grammars).
 
-## 2. Prerequisites
+## 2. Prerequisites *(mandatory)*
 
-- Module **11** strings.
+- Module **11** strings; Java escape rules (`\\d` in source).
 
-## 3. Why This Concept Exists
+## 3. Why This Concept Exists *(mandatory)*
 
-Much validation and extraction is pattern-shaped (emails, IDs, log lines). Regex engines offer compact declarative patterns—but with performance and readability limits.
+Validation and log tokenization are **pattern-shaped**. Regex offers compact declarative matching at the cost of readability and catastrophic backtracking risk.
 
-## 4. Conceptual Explanation
+## 4. Conceptual Explanation *(mandatory)*
 
-- **Literal** — match exact text (escape metacharacters `\.`).
-- **`.`** — any char (except line break by default); **`\\d`**, **`\\w`**, **`\\s`** shorthands.
-- **`*` `+` `?`** — quantifiers; `{n,m}` counts.
-- **`^` `$`** — start/end anchors for full string.
-- **`(...)`** — capturing group; **`$1`** in replacement.
-- Java strings need **double backslashes** for regex escapes: `"\\d+"`.
+- **Literal** — escape metacharacters (`\\.`, `\\+`).
+- **`.`** — any char (line break excluded by default); shorthands `\\d`, `\\w`, `\\s`.
+- **Quantifiers** — `*`, `+`, `?`, `{n,m}` greedy by default.
+- **Anchors** — `^` start, `$` end; `matches()` implies full-string anchor.
+- **Groups** — `(...)` capture; `$1` in replacement strings.
 
-## 5. Step-by-Step Examples
+## 5. Mechanism and Execution Flow *(mandatory)*
+
+`String.matches(regex)` compiles pattern internally each call—fine for one-offs; hot paths use `Pattern.compile` (Ch.02). Engine walks NFA/backtracking for alternatives.
+
+## 8. Step-by-Step Examples *(mandatory)*
 
 Demo: [regex-fundamentals-demo](../../examples/core-java/regex-fundamentals-demo/).
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 emailValid=true
@@ -42,44 +47,32 @@ splitCount=3
 secondWord=beta
 ```
 
-`matches` validates email-shaped pattern. `replaceAll` captures order id. `split` on whitespace.
+`replaceAll` uses capture `$1` for order id `1042`. `split` on whitespace yields three tokens; index 1 is `beta`.
 
-## 6. Real-World Use Cases
+## 11. Edge Cases and Limitations *(strongly encouraged)*
 
-- Input validation at API boundary (prefer library validators for email in production).
-- Parsing semi-structured log tokens.
-- Normalizing delimiters.
+- **Catastrophic backtracking** on nested quantifiers.
+- **`matches` entire string** — partial scans need `Matcher.find` (Ch.02).
+- **`"\\d"`** required in Java source—not `"\d"`.
 
-## 7. Edge Cases and Limitations
+## 12. Common Mistakes *(mandatory)*
 
-- **Catastrophic backtracking** on nested quantifiers—test performance.
-- **`matches` entire string** — partial finds need `Pattern`/`Matcher` (Ch.02).
-- Unicode categories need `UNICODE_CHARACTER_CLASS` flag for some patterns.
+Single backslash shorthands in string literals.
 
-## 8. Common Mistakes
+## 13. Best Practices *(include when guidance adds value)*
 
-### Incorrect
+- Comment complex patterns; unit-test edge strings.
+- Prefer dedicated parsers for nested structures.
 
-Single backslash in Java source: `"\d"` — illegal escape.
+## 23. Chapter Summary *(mandatory)*
 
-### Corrected
+Fundamentals plus `String` helpers cover simple validation; graduate to **`Pattern`/`Matcher`** for control.
 
-`"\\d+"`.
-
-## 9. Best Practices
-
-- Prefer **`Pattern.compile`** once for hot loops (Ch.02).
-- Comment complex patterns; add unit tests with edge strings.
-- For nested structures, use parser/json path—not regex alone.
-
-## 10. Chapter Summary
-
-Regex fundamentals plus `String` helpers cover simple validation and splitting; graduate to `Pattern`/`Matcher` for control.
-
-## 11. Next Steps
+## 26. Next Steps
 
 [02-java-regex-api.md](02-java-regex-api.md)
 
 ## Review Checklist
 
-- [x] Verified demo
+- [x] Technical; Verified Temurin 21.0.12.1
+- [x] Omissions: Language comparisons

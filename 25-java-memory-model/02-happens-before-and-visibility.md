@@ -3,81 +3,117 @@
 > **Status:** Completed  
 > **Module:** 25 — Java Memory Model  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive  
+> **Depth target:** Levels 3–4 (JLS §17.4 HB edges, volatile, races)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
 
-## 1. Learning Objectives
+## 1. Learning Objectives *(mandatory)*
 
-- State the **happens-before** relation from **JLS §17.4** (not informal folklore).
-- Use **`volatile`**, **`synchronized`**, and **`Thread.join`** as established HB edges.
-- Avoid claiming “usually works” for unsynchronized shared fields.
+- State **happens-before** from **JLS §17.4**, not cache folklore.
+- Apply **`volatile`**, **`synchronized`**, **`Thread.start`**, **`Thread.join`**, and executor **submit** HB edges.
+- Explain why unsynchronized plain-field races have **no well-defined semantics** (JLS).
+- Refuse “usually works” as a correctness argument.
 
-## 2. Prerequisites
+## 2. Prerequisites *(mandatory)*
 
-- Module **24** Ch.02; this chapter cites **JLS** rules, not blogs.
+- Module **24** Ch.02 synchronization; this chapter cites **JLS** rules.
 
-## 3. Why This Concept Exists
+## 3. Why This Concept Exists *(mandatory)*
 
-Without ordering rules, CPUs and JIT may reorder or cache writes so another thread never sees your updates. **Happens-before** defines when a read is **consistent** with a prior write across threads.
+CPUs, caches, and compilers reorder or buffer writes. Without portable rules, another thread might never see your update or might see **partial** construction. **Happens-before** defines when read **r** observes write **w**.
 
-## 4. Conceptual Explanation (JLS)
+## 4. Conceptual Explanation *(mandatory)*
 
-If action **a** happens-before **b**, then **a**’s effects are visible to **b** (JLS memory model). Key sources (non-exhaustive):
+If action **a** happens-before **b**, then **a's** effects are visible to **b** (and ordering constraints apply as specified).
 
-- Monitor unlock on **m** happens-before subsequent lock on **m**.
-- **Volatile** write happens-before volatile read of that variable.
-- **`Thread.start()`** happens-before any action in the started thread.
-- **`Thread.join()`** completion happens-before `join` return in the joining thread.
-- **`ExecutorService`** task submission happens-before task execution (per `java.util.concurrent` spec).
+**Selected HB sources (JLS §17.4.5):**
 
-**Not happens-before:** two unsynchronized writes/reads on ordinary fields — data race; no well-defined behavior for those accesses (JLS).
+| Edge | Rule (informal) |
+|------|-----------------|
+| Monitor | Unlock on *m* hb lock on *m* |
+| Volatile | Volatile write hb volatile read of same var |
+| Thread start | `start()` hb first action in started thread |
+| Thread join | Actions in joined thread hb successful `join` return |
+| Transitivity | hb chains compose |
 
-Do **not** cite “cache flush to main memory” as the spec — that is an implementation intuition; the contract is happens-before.
+**Not HB:** arbitrary unsynchronized access to the same plain field → **data race**; no portable semantics.
 
-## 5. Step-by-Step Examples
+**Do not** teach “flush to main memory” as the spec—the contract is **happens-before**.
+
+## 5. Mechanism and Execution Flow *(mandatory)*
+
+### Volatile publish pattern
+
+```mermaid
+sequenceDiagram
+    participant W as Writer
+    participant Mem as Volatile ready
+    participant R as Reader
+
+    W->>Mem: payload = 42 (plain, before volatile)
+    W->>Mem: ready = true (volatile write)
+    Note over Mem,R: volatile write hb volatile read (JLS)
+    R->>Mem: read ready until true
+    R->>R: read payload sees 42
+```
 
 Demo: [happens-before-demo](../../examples/jvm/happens-before-demo/).
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 payload=42
 publishDone=true
 ```
 
-Writer sets `payload` then `ready = true` on **`volatile`**. Reader spins until `ready`; HB from volatile write to read ensures `payload=42`.
+Writer sets `payload` then **`volatile` `ready = true`**. Reader spins until `ready`; HB ensures `payload=42`. Removing `volatile` from `ready` can yield `payload=0` (racy).
 
-Removing `volatile` from `ready` can yield `payload=0` — data race; demo is intentionally correct.
+## 6. Terminology *(mandatory)*
 
-## 6. Real-World Use Cases
+| Term | Meaning |
+|------|---------|
+| Happens-before | Partial order in JMM |
+| Data race | Conflicting unsynchronized accesses (JLS) |
+| Visibility | Observing effects of another thread per HB |
 
-- One-shot initialization flags, publish/subscribe handoff between threads.
-- Pairs with `ConcurrentHashMap`/`Atomics` where API documents ordering.
+## 11. Edge Cases and Limitations *(strongly encouraged)*
 
-## 7. Edge Cases and Limitations
+- **Double-checked locking** requires `volatile` on reference field (JLS-correct pattern).
+- **`boolean` plain fields** do not get a free pass when racy with other unsynchronized writes.
 
-- **Double-checked locking** requires `volatile` on the shared reference (JLS pattern).
-- **Incorrect** “every field is flushed on every synchronized” intuition — spec is HB edges only.
-
-## 8. Common Mistakes
+## 12. Common Mistakes *(mandatory)*
 
 ### Incorrect
 
-“`boolean` reads are always safe without sync.”
+“CPUs eventually flush—my flag will be seen.”
 
 ### Corrected
 
-Plain `boolean` fields racy with other unsynchronized writes have undefined behavior for those races.
+Establish documented HB (`volatile`, lock, `join`, etc.).
 
-## 9. Chapter Summary
+## 10. Internal Behavior *(conditional)*
 
-Correctness rests on **documented happens-before** edges; `volatile` and locks are your portable tools.
+- **JLS:** Full HB order is specification.
+- **HotSpot:** Barrier insertion implements JMM on mainstream platforms—implementation detail.
 
-## 10. Next Steps
+## 19. Revision and Mastery *(Deep-dive)*
+
+List three HB edges you used in production code.
+
+## 23. Chapter Summary *(mandatory)*
+
+Portable correctness uses **documented happens-before**; `volatile` and monitors are standard tools; races on plain fields are undefined.
+
+## 25. References and Further Reading *(mandatory)*
+
+- [JLS §17.4](https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.4)
+
+## 26. Next Steps
 
 [03-safe-publication.md](03-safe-publication.md)
 
 ## Review Checklist
 
-- [x] Verified demo
-- [x] JLS happens-before; no folk theorems
+- [x] Level 4 on HB; JLS cited; Verified demo
+- [x] No folk cache-flush theorems

@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 09 completed)
+**Last updated:** 2026-11-10 (Module 10 completed)
 
 ## Status values
 
@@ -284,10 +284,32 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `composition-vs-inheritance-demo` | `Sedan / 180hp`; `start=true`; audit log lines; `done:save` |
 
 **Module 09 status:** Completed  
-**Next recommended chapter:** [10-java-type-system/](10-java-type-system/) (static typing, `instanceof`, variance preview)
+**Next recommended chapter:** Module 10 (Completed below)
 
 ---
 
-## Modules 10–53
+## Module 10 — Java Type System
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-static-and-strong-typing.md](10-java-type-system/01-static-and-strong-typing.md) | Completed | Quality pass 2026-11-10 | Generics depth in M13 |
+| [02-instanceof-and-pattern-matching.md](10-java-type-system/02-instanceof-and-pattern-matching.md) | Completed | Quality pass 2026-11-10 | Overlaps M03 Ch.04 by design |
+| [03-variance-wildcards-and-erasure-preview.md](10-java-type-system/03-variance-wildcards-and-erasure-preview.md) | Completed | Quality pass 2026-11-10 | Bridges/bounds in M13 |
+| [Module assessment](assessments/module-assessments/10-java-type-system-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `typing-demo` | `3 items`; `number=42`; `runtime=Integer`; `len=5` |
+| `instanceof-patterns-demo` | `string:Ada`; `int:21`; `null`; `double:3.5`; `long=java` |
+| `variance-erasure-preview-demo` | `sum=3`; `first=1`; `objs=[7]`; `listClass=ArrayList` |
+
+**Module 10 status:** Completed  
+**Next recommended chapter:** [11-arrays-and-strings/](11-arrays-and-strings/) (arrays, strings, builders)
+
+---
+
+## Modules 11–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

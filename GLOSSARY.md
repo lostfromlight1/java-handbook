@@ -95,5 +95,16 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Single Responsibility Principle (SRP)** | A class should have one reason to change—one axis of responsibility at its abstraction level. | Module 09 Ch.02 |
 | **Delegation** | An object forwards a request to a collaborator that performs the work. | [Module 09 Ch.03](09-encapsulation-and-design/03-composition-versus-inheritance.md) |
 | **Fragile base class** | Superclass change that breaks subclasses without edits to subclass code. | Module 09 Ch.03 |
+| **Static typing** | Types of variables and expressions are checked at compile time before the program runs. | [Module 10 Ch.01](10-java-type-system/01-static-and-strong-typing.md) |
+| **Strong typing** | Incompatible types do not mix silently; mismatches are compile errors or require explicit casts. | Module 10 Ch.01 |
+| **Declared type** | The type written in source for a variable, parameter, or field; used by the compiler. | Module 10 Ch.01 |
+| **Runtime class** | The `Class<?>` of the object actually referenced at run time; may differ from declared type under polymorphism. | Module 10 Ch.01 |
+| **Type test** | Runtime check that a reference is assignment-compatible with a type, chiefly `instanceof`. | [Module 10 Ch.02](10-java-type-system/02-instanceof-and-pattern-matching.md) |
+| **Type pattern** | Pattern such as `case String s` or `instanceof String s` that tests a type and binds a variable when it matches. | Module 10 Ch.02 |
+| **Narrowing reference conversion** | Treating a supertype reference as a subtype after a safe proof (cast or pattern). | Module 10 Ch.02 |
+| **Invariance (generics)** | `G<A>` is not a subtype of `G<B>` even when `A` extends `B`; prevents unsafe writes through the wrong static type. | [Module 10 Ch.03](10-java-type-system/03-variance-wildcards-and-erasure-preview.md) |
+| **Wildcard** | Unknown or flexible type argument in generics: `?`, `? extends T`, or `? super T`. | Module 10 Ch.03 |
+| **PECS** | Producer Extends, Consumer Super—use `? extends T` when reading, `? super T` when writing. | Module 10 Ch.03 |
+| **Type erasure** | Compile-time generic type information is removed in bytecode; type parameters become their bounds or `Object` at runtime. | Module 10 Ch.03 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

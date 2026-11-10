@@ -17,3 +17,6 @@
 | [access-control-demo/](access-control-demo/) | 09 | Validated Temurin 21.0.12.1 |
 | [coupling-cohesion-demo/](coupling-cohesion-demo/) | 09 | Validated Temurin 21.0.12.1 |
 | [composition-vs-inheritance-demo/](composition-vs-inheritance-demo/) | 09 | Validated Temurin 21.0.12.1 |
+| [typing-demo/](typing-demo/) | 10 | Validated Temurin 21.0.12.1 |
+| [instanceof-patterns-demo/](instanceof-patterns-demo/) | 10 | Validated Temurin 21.0.12.1 |
+| [variance-erasure-preview-demo/](variance-erasure-preview-demo/) | 10 | Validated Temurin 21.0.12.1 |

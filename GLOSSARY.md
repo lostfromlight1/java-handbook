@@ -193,5 +193,32 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **JIT compilation** | HotSpot runtime compilation of hot bytecode to native code. | [Module 28 Ch.01](28-jit-and-performance/01-hotspot-and-tiered-compilation.md) |
 | **Tiered compilation** | HotSpot policy mixing interpreter, C1, and C2 compilers. | Module 28 Ch.01 |
 | **JMH** | Java Microbenchmark Harness for controlled microbenchmarks. | [Module 28 Ch.02](28-jit-and-performance/02-jmh-and-benchmarking.md) |
+| **JAR (Java ARchive)** | Zip-format archive packaging `.class` files and resources for classpath execution. | [Module 29 Ch.01](29-build-tools-and-dependency-management/01-classpath-jars-and-modules.md) |
+| **Fat (uber) JAR** | Single JAR containing application and dependency classes for one-jar deployment. | Module 29 Ch.01 |
+| **Maven coordinates** | `groupId:artifactId:version` tuple identifying a dependency artifact. | [Module 29 Ch.02](29-build-tools-and-dependency-management/02-maven.md) |
+| **Maven lifecycle** | Ordered build phases (`compile`, `test`, `package`, …) executed by Maven plugins. | Module 29 Ch.02 |
+| **JPMS** | Java Platform Module System — module path, `module-info.java`, `requires`/`exports`. | [Module 29 Ch.04](29-build-tools-and-dependency-management/04-java-platform-module-system.md) |
+| **Unit test** | Fast test of one component with collaborators replaced or isolated. | [Module 30 Ch.01](30-testing-and-quality/01-testing-fundamentals.md) |
+| **JUnit Jupiter** | JUnit 5 programming model and test engine (`@Test`, assertions API). | [Module 30 Ch.02](30-testing-and-quality/02-junit-and-mockito.md) |
+| **Mockito** | Library creating test doubles (mocks/stubs) for collaborator isolation. | Module 30 Ch.02 |
+| **Static analysis** | Tools inspecting source or bytecode without full production execution. | [Module 30 Ch.03](30-testing-and-quality/03-static-analysis-and-ci.md) |
+| **Continuous Integration (CI)** | Automated build, test, and quality checks on each change. | Module 30 Ch.03 |
+| **JDWP** | Java Debug Wire Protocol used by debuggers to control a JVM. | [Module 31 Ch.01](31-debugging-and-troubleshooting/01-ide-debugging.md) |
+| **Thread dump** | Snapshot of all thread stacks in a JVM (`jcmd Thread.print`). | [Module 31 Ch.02](31-debugging-and-troubleshooting/02-dumps-and-flight-recorder.md) |
+| **JFR (JDK Flight Recorder)** | Low-overhead event recorder producing `.jfr` profiles (HotSpot JDK). | Module 31 Ch.02 |
+| **TCP** | Reliable, ordered byte-stream transport protocol used under HTTP and JDBC. | [Module 32 Ch.01](32-networking-and-http/01-sockets-and-tcp.md) |
+| **HttpClient** | `java.net.http.HttpClient` — modern JDK HTTP/2-capable client (Java 11+). | [Module 32 Ch.02](32-networking-and-http/02-http-and-httpclient.md) |
+| **TLS** | Cryptographic protocol securing TCP traffic (HTTPS). | [Module 32 Ch.03](32-networking-and-http/03-tls-and-resilience-basics.md) |
+| **Circuit breaker** | Resilience pattern failing fast when a dependency is unhealthy. | Module 32 Ch.03 |
+| **JDBC** | Java Database Connectivity API (`java.sql`) implemented by vendor drivers. | [Module 33 Ch.02](33-databases-and-jdbc/02-jdbc-fundamentals.md) |
+| **PreparedStatement** | JDBC statement with `?` parameter placeholders for safe, precompiled SQL. | Module 33 Ch.02 |
+| **ACID** | Atomicity, Consistency, Isolation, Durability — transaction guarantees. | [Module 33 Ch.03](33-databases-and-jdbc/03-transactions-and-pooling.md) |
+| **Connection pool** | Reusable cache of database connections (e.g. HikariCP). | Module 33 Ch.03 |
+| **Schema migration** | Versioned, reviewed SQL/tool scripts evolving database schema. | [Module 34 Ch.02](34-sql-and-data-access/02-query-design-and-migrations.md) |
+| **ORM** | Object–relational mapping — objects persisted as relational rows. | [Module 35 Ch.01](35-hibernate-and-jpa/01-orm-and-entities.md) |
+| **JPA** | Jakarta Persistence API — portable entity and persistence context model. | Module 35 Ch.01 |
+| **EntityManager** | JPA interface for persistence operations (`persist`, `find`, `merge`). | Module 35 Ch.01 |
+| **LazyInitializationException** | Error accessing uninitialized lazy association outside an active persistence context. | [Module 35 Ch.02](35-hibernate-and-jpa/02-relationships-and-fetching.md) |
+| **Persistence context** | First-level cache of managed entities scoped to an `EntityManager` session. | [Module 35 Ch.03](35-hibernate-and-jpa/03-transactions-caching-and-performance.md) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

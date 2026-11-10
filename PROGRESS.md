@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Modules 24–28 completed)
+**Last updated:** 2026-11-10 (Modules 29–35 completed)
 
 ## Status values
 
@@ -717,10 +717,149 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `profiling-awareness-demo` | `cpuTimeSupported=true` |
 
 **Module 28 status:** Completed  
-**Next recommended chapter:** [29-build-tools-and-dependency-management/](29-build-tools-and-dependency-management/) (index only; not started)
+**Next recommended chapter:** Module 29 (Completed below)
 
 ---
 
-## Modules 29–53
+## Module 29 — Build Tools and Dependency Management
 
-Remaining modules: **Not started** (indexes only), except Modules 00–28 completed as tracked above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-classpath-jars-and-modules.md](29-build-tools-and-dependency-management/01-classpath-jars-and-modules.md) | Completed | Quality pass 2026-11-10 | Gradle wrapper lab optional |
+| [02-maven.md](29-build-tools-and-dependency-management/02-maven.md) | Completed | Quality pass 2026-11-10 | Multi-module POM later |
+| [03-gradle.md](29-build-tools-and-dependency-management/03-gradle.md) | Completed | Quality pass 2026-11-10 | Runnable Gradle project when wrapper added |
+| [04-java-platform-module-system.md](29-build-tools-and-dependency-management/04-java-platform-module-system.md) | Completed | Quality pass 2026-11-10 | jlink exercise later |
+| [Module assessment](assessments/module-assessments/29-build-tools-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `classpath-jars-demo` | `greet=Hello, Handbook!`; `fromJar=true` |
+| `maven-awareness-demo` | `mavenCompiled=ok`; `javaVersion=21.0.12.1` (Maven 3.9.6) |
+| `jpms-hello-demo` | `greeting=jpms-ok`; `module=app` |
+
+**Module 29 status:** Completed  
+**Next recommended chapter:** Module 30 (Completed below)
+
+---
+
+## Module 30 — Testing and Code Quality
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-testing-fundamentals.md](30-testing-and-quality/01-testing-fundamentals.md) | Completed | Quality pass 2026-11-10 | Parameterized tests expanded later |
+| [02-junit-and-mockito.md](30-testing-and-quality/02-junit-and-mockito.md) | Completed | Quality pass 2026-11-10 | Dedicated Mockito runnable module optional |
+| [03-static-analysis-and-ci.md](30-testing-and-quality/03-static-analysis-and-ci.md) | Completed | Quality pass 2026-11-10 | Sonar sample pipeline later |
+| [Module assessment](assessments/module-assessments/30-testing-quality-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `testing-fundamentals-demo` | three `pass:` lines; `allTests=ok` |
+| `h2-jdbc-demo` (JUnit) | `mvn -q test` BUILD SUCCESS |
+
+**Module 30 status:** Completed  
+**Next recommended chapter:** Module 31 (Completed below)
+
+---
+
+## Module 31 — Debugging and Troubleshooting
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-ide-debugging.md](31-debugging-and-troubleshooting/01-ide-debugging.md) | Completed | Quality pass 2026-11-10 | Remote JDWP lab |
+| [02-dumps-and-flight-recorder.md](31-debugging-and-troubleshooting/02-dumps-and-flight-recorder.md) | Completed | Quality pass 2026-11-10 | Capture live `jcmd` excerpt in appendix |
+| [03-production-incidents.md](31-debugging-and-troubleshooting/03-production-incidents.md) | Completed | Quality pass 2026-11-10 | — |
+| [Module assessment](assessments/module-assessments/31-debugging-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `debug-target-demo` | `count=1`; `expectedCorrect=1` |
+| `diagnostics-awareness-demo` | `threadCount=7`; `jvmName=OpenJDK 64-Bit Server VM` |
+
+**Module 31 status:** Completed  
+**Next recommended chapter:** Module 32 (Completed below)
+
+---
+
+## Module 32 — Networking and HTTP
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-sockets-and-tcp.md](32-networking-and-http/01-sockets-and-tcp.md) | Completed | Quality pass 2026-11-10 | NIO selector module later |
+| [02-http-and-httpclient.md](32-networking-and-http/02-http-and-httpclient.md) | Completed | Quality pass 2026-11-10 | HTTP/2 push notes optional |
+| [03-tls-and-resilience-basics.md](32-networking-and-http/03-tls-and-resilience-basics.md) | Completed | Quality pass 2026-11-10 | Resilience4j hands-on in backend track |
+| [Module assessment](assessments/module-assessments/32-networking-http-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `tcp-loopback-demo` | `echo=echo:ping`; `port=19042` |
+| `http-client-demo` | `status=200`; `bodyStartsWith=true`; `headerServer=cloudflare` |
+
+**Module 32 status:** Completed  
+**Next recommended chapter:** Module 33 (Completed below)
+
+---
+
+## Module 33 — Databases and JDBC
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-relational-and-sql-basics.md](33-databases-and-jdbc/01-relational-and-sql-basics.md) | Completed | Quality pass 2026-11-10 | Testcontainers note in Spring modules |
+| [02-jdbc-fundamentals.md](33-databases-and-jdbc/02-jdbc-fundamentals.md) | Completed | Quality pass 2026-11-10 | — |
+| [03-transactions-and-pooling.md](33-databases-and-jdbc/03-transactions-and-pooling.md) | Completed | Quality pass 2026-11-10 | HikariCP numeric tuning lab |
+| [Module assessment](assessments/module-assessments/33-databases-jdbc-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1; H2 2.3.232):**
+
+| Example | Result |
+|---------|--------|
+| `h2-jdbc-demo` | `name=Ada`; `rowCount=1`; `jdbcH2=ok` |
+
+**Module 33 status:** Completed  
+**Next recommended chapter:** Module 34 (Completed below)
+
+---
+
+## Module 34 — SQL and Data Access
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-sql-for-java-developers.md](34-sql-and-data-access/01-sql-for-java-developers.md) | Completed | Quality pass 2026-11-10 | Window function exercises |
+| [02-query-design-and-migrations.md](34-sql-and-data-access/02-query-design-and-migrations.md) | Completed | Quality pass 2026-11-10 | Flyway sample in project track |
+| [Module assessment](assessments/module-assessments/34-sql-data-access-assessment.md) | Completed | Solutions separate | — |
+
+**Module 34 status:** Completed (SQL verification via Module 33 `h2-jdbc-demo` count query)  
+**Next recommended chapter:** Module 35 (Completed below)
+
+---
+
+## Module 35 — Hibernate and JPA
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-orm-and-entities.md](35-hibernate-and-jpa/01-orm-and-entities.md) | Completed | Quality pass 2026-11-10 | Spring Data in Module 36 |
+| [02-relationships-and-fetching.md](35-hibernate-and-jpa/02-relationships-and-fetching.md) | Completed | Quality pass 2026-11-10 | Relationship demo module optional |
+| [03-transactions-caching-and-performance.md](35-hibernate-and-jpa/03-transactions-caching-and-performance.md) | Completed | Quality pass 2026-11-10 | 2LC tuning out of scope |
+| [Module assessment](assessments/module-assessments/35-hibernate-jpa-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1; Hibernate 6.6.4.Final):**
+
+| Example | Result |
+|---------|--------|
+| `jpa-h2-demo` | `name=Lin`; `idNotNull=true`; `jpaH2=ok` |
+
+**Module 35 status:** Completed  
+**Next recommended chapter:** [36-spring-framework/](36-spring-framework/) (index only; not started)
+
+---
+
+## Modules 36–53
+
+Remaining modules: **Not started** (indexes only), except Modules 00–35 completed as tracked above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

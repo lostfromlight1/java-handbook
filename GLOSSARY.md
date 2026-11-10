@@ -39,5 +39,10 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Widening** | Numeric conversion to a wider type without a cast. | [Module 02 Ch.04](02-java-fundamentals/04-type-conversion-and-inference.md) |
 | **Narrowing** | Numeric conversion that may lose information; requires a cast. | Module 02 Ch.04 |
 | **var** | Local-variable type inference (Java 10+); still statically typed. | Module 02 Ch.04 |
+| **Fall-through** | Classic switch continuing into the next case without `break`. | [Module 03 Ch.02](03-control-flow/02-switch-and-switch-expressions.md) |
+| **Switch expression** | A `switch` that produces a value (arrow form common). | Module 03 Ch.02 |
+| **Enhanced for** | For-each loop over an array or `Iterable`. | [Module 03 Ch.03](03-control-flow/03-loops.md) |
+| **Pattern matching** | Type test that binds a typed variable when it succeeds. | [Module 03 Ch.04](03-control-flow/04-branching-and-pattern-matching.md) |
+| **Exhaustiveness** | All possible values/types of a switch selector are handled. | Module 03 Ch.04 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

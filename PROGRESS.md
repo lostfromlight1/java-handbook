@@ -2,7 +2,7 @@
 
 **Target Java version:** 21 LTS  
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
-**Last updated:** 2026-11-10 (Module 02 completed)
+**Last updated:** 2026-11-10 (Module 03 completed)
 
 ## Status values
 
@@ -116,10 +116,34 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `examples/core-java/conversion-demo` | widen 42.0; narrow 3; `5/2=2`; `5/2.0=2.5`; var |
 
 **Module 02 status:** Completed  
-**Next recommended chapter:** `03-control-flow/01-conditionals.md`
+**Next recommended chapter after M02:** Module 03 (Completed below)
 
 ---
 
-## Modules 03–53
+## Module 03 — Control Flow
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-conditionals.md](03-control-flow/01-conditionals.md) | Completed | Self-review 2026-11-10 | — |
+| [02-switch-and-switch-expressions.md](03-control-flow/02-switch-and-switch-expressions.md) | Completed | Self-review 2026-11-10 | — |
+| [03-loops.md](03-control-flow/03-loops.md) | Completed | Self-review 2026-11-10 | — |
+| [04-branching-and-pattern-matching.md](03-control-flow/04-branching-and-pattern-matching.md) | Completed | Self-review 2026-11-10 | — |
+| [Module assessment](assessments/module-assessments/03-control-flow-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Oracle JDK 21.0.9):**
+
+| Example | Result |
+|---------|--------|
+| `conditionals-demo` | score 85 → grade B |
+| `switch-demo` | MON → weekday; label two |
+| `loops-demo` | for/while/continue-break as documented |
+| `pattern-control-demo` | patterns + sealed shape areas |
+
+**Module 03 status:** Completed  
+**Next recommended chapter:** `04-methods-and-functions/01-methods-basics.md`
+
+---
+
+## Modules 04–53
 
 Remaining modules: **Not started** (indexes only). See each module `README.md` for planned chapter lists. Do not treat indexes as written chapters.

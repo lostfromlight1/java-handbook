@@ -1,0 +1,223 @@
+# Loops
+
+> **Status:** Completed  
+> **Module:** 03 — Control Flow  
+> **Target Java version:** 21  
+> **Last reviewed:** 2026-11-10  
+> **Examples verified with:** Oracle JDK 21.0.9
+
+## 1. Learning Objectives
+
+After completing this chapter, you should be able to:
+
+- Write `for`, enhanced `for`, `while`, and `do-while` loops correctly.
+- Use `break` and `continue` intentionally.
+- Choose the loop form that matches the problem (counted vs condition vs traverse-all).
+- Avoid off-by-one and infinite-loop mistakes.
+- Nest loops carefully and know when to extract methods instead.
+
+## 2. Prerequisites
+
+- Modules 02–03 conditionals; Module 00 arrays/off-by-one lessons
+
+## 3. Why This Concept Exists
+
+Algorithms repeat work: scan arrays, retry until success, process lines. Loops express repetition without copy-paste. Wrong bounds create the classic bugs you already met in Module 00.
+
+## 4. Conceptual Explanation
+
+### 4.1 `for` (counted)
+
+```java
+for (int i = 1; i <= 3; i++) {
+    // body
+}
+```
+
+Parts: initialization; condition; update. Scope of `i` is the loop (Module 02).
+
+### 4.2 Enhanced `for` (for-each)
+
+```java
+for (int n : nums) {
+    // each element
+}
+```
+
+Best when you need every element and **not** the index. Do not remove elements from a collection while for-each iterating (Module 12 fail-fast).
+
+### 4.3 `while`
+
+```java
+while (condition) {
+    // may run zero times
+}
+```
+
+### 4.4 `do-while`
+
+```java
+do {
+    // runs at least once
+} while (condition);
+```
+
+### 4.5 `break` and `continue`
+
+- `break` — exit the innermost loop/switch immediately  
+- `continue` — skip to the next iteration  
+
+Labeled `break`/`continue` exist for nested loops—use sparingly; prefer clearer structure.
+
+### 4.6 Infinite loops
+
+`while (true)` with an internal `break` is a valid pattern (event loops). Accidental infinity usually means forgotten updates or wrong conditions.
+
+## 5. Terminology
+
+| Term | Meaning |
+|------|---------|
+| Iteration | One pass through a loop body |
+| Loop variable | Index/control variable |
+| Sentinel | Value that stops a loop |
+| Nested loop | Loop inside another |
+
+## 6. Syntax and Language Rules
+
+Enhanced for requires an array or `Iterable`. Condition must be boolean. Empty loop body with semicolon is a common bug: `while (x < 10);`.
+
+## 7. Step-by-Step Examples
+
+[examples/core-java/loops-demo/](../examples/core-java/loops-demo/)
+
+**Verified:**
+
+```text
+for: 1 2 3 
+enhanced-for: 10 20 30 
+while: 3 2 1 
+do-while: 0 
+continue/break: 1 3 
+```
+
+(`continue` skips evens; `break` stops after odds past 4—so prints `1 3`)
+
+## 8. Real-World Use Cases
+
+Batch processing, polling with timeout (careful!), rendering rows, summing metrics, parsing tokens.
+
+## 9. Internal Behavior
+
+Loops compile to conditional jumps backward/forward. JIT may unroll tiny loops—HotSpot detail (Module 28).
+
+## 10. Edge Cases and Limitations
+
+- Off-by-one: `i <= n` vs `i < n`  
+- Modifying a collection during enhanced for  
+- Floating loop variables (`double i`) invite error—prefer ints for counts  
+
+## 11. Common Mistakes
+
+### Incorrect
+
+```java
+for (int i = 0; i < nums.length; i++);
+    System.out.println(nums[i]); // i out of scope / empty for
+```
+
+### Corrected
+
+Brace the body; drop stray semicolons.
+
+### Incorrect
+
+`while (i < n)` forgetting `i++`.
+
+### Corrected
+
+Ensure progress toward termination.
+
+## 12. Best Practices
+
+- Prefer enhanced for when indexes aren’t needed.
+- Keep bodies short; extract methods for nested complexity.
+- Make termination obvious.
+
+## 13. Design Trade-offs
+
+| Loop | Best for | Avoid when |
+|------|----------|------------|
+| `for` | Known counts / indexes | Complex multi-condition exits only |
+| enhanced for | Read-only traversal | Need index or removal |
+| `while` | Unknown iteration count | Counted loops (less clear) |
+| `do-while` | Must run once | Often replaceable with clearer forms |
+
+## 14. Performance Considerations
+
+Nested loops → O(n²) risk (Module 00/05). Algorithm choice beats micro-tweaking loop syntax.
+
+## 15. Security Considerations
+
+Unbounded loops on user-controlled sizes can hang services—enforce limits (Module 43).
+
+## 16. Java Version and Compatibility Notes
+
+All four loop forms are foundational. Validated on **21.0.9**.
+
+## 17. Related Language Comparisons
+
+Same family as C-like loops. Python’s `for x in seq` ≈ enhanced for.
+
+## 18. Revision and Mastery
+
+Labeled breaks; `Iterable`/`Iterator`; stream replacements (Module 17) without losing loop fluency.
+
+## 19. Exercises
+
+### Beginner
+
+1. Run LoopsDemo; change `continue/break` rules and predict.
+2. Sum `1..n` with a `for` (compare Module 00 fix).
+
+### Intermediate
+
+3. Print a multiplication table with nested loops (small n).
+4. Use `while` to count digits of a positive int.
+
+### Advanced
+
+5. Rewrite a nested search with a labeled break—then rewrite without labels.
+6. Discuss when a stream would replace your loop (preview).
+
+## 20. Interview Questions
+
+1. **for vs while?** — Counted vs condition-driven style.  
+2. **break vs continue?** — Exit loop vs skip iteration.  
+3. **Enhanced for limitation?** — No index; careful with structural mods.  
+
+## 21. Solutions
+
+2. `for (int i=1;i<=n;i++) sum+=i;`  
+4. `while (n>0) { count++; n/=10; }`  
+
+## 22. Chapter Summary
+
+Loops repeat work: choose `for`, enhanced `for`, `while`, or `do-while` to match the problem; control with `break`/`continue`; watch bounds.
+
+## 23. Key Terminology
+
+Iteration · for · enhanced-for · while · do-while · break · continue
+
+## 24. References and Further Reading
+
+- JLS statements  
+- Next: [04-branching-and-pattern-matching.md](04-branching-and-pattern-matching.md)
+
+## 25. Next Steps
+
+[04-branching-and-pattern-matching.md](04-branching-and-pattern-matching.md)
+
+## Review Checklist
+
+- [x] LoopsDemo verified
+- [x] Depth gate passed

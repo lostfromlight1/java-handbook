@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 15 — Enums, Records, and Sealed Types  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (enum constants, identity, safe parsing)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -130,7 +146,27 @@ Use when profiling or API clarity warrants; ordinary `HashSet`/`HashMap` with en
 
 Module 07 and Ch.03 compare sealing with enums for closed worlds.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### 5.1 Class initialization creates singleton constants
+
+When the JVM first **uses** `Level` (referencing `Level.HIGH` or calling `values()`):
+
+1. **`javac`** emitted **static final fields** for each constant (`LOW`, `MEDIUM`, `HIGH`).
+2. The enum class **initializer** runs **once** per class loader, constructing **one instance per constant** via the **private** constructor (`HIGH("High")` passes label text).
+3. After initialization, **`Level.HIGH == Level.HIGH`** always; no second instance with the same identity exists in that loader.
+
+That is why **`==`** is idiomatic for enums and why **`ordinal()`** reflects **declaration order**, not business sort order.
+
+### 5.2 Parsing and `switch` dispatch
+
+`EnumsDemo` path:
+
+1. **`Level.valueOf("HIGH")`** performs a **name lookup** (exact match) → throws `IllegalArgumentException` on typos unless you use a tolerant `from` parser.
+2. **`switch (level)`** lowers to **table or hash dispatch** on the enum reference (implementation detail); the **language** guarantees **exhaustiveness** when all constants are covered (and with `default` when intentional).
+3. **`name()` / `ordinal()`** read **stable JVM fields** on the existing singleton—cheap, but **`ordinal()` must not encode business ordering** if constants may reorder.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -139,7 +175,7 @@ Module 07 and Ch.03 compare sealing with enums for closed worlds.
 | **Ordinal** | Integer position in the enum declaration |
 | **Type-safe enum** | Enum as a reference type instead of raw codes |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 - Enum constants must appear **first** in the body (before fields/methods) unless separated by semicolon after last constant with trailing members.
 - Constructors cannot be `public` or `protected`.
@@ -160,7 +196,7 @@ enum Planet {
 }
 ```
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 ### 7.1 Minimal — `EnumsDemo`
 
@@ -234,27 +270,27 @@ EnumSet<Feature> enabled = EnumSet.of(Feature.TLS, Feature.AUDIT);
 
 Each constant holds behavior; `EnumSet` tracks enabled flags compactly.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Domain state machines** — order status, payment state, job lifecycle.
 - **API error codes** — stable enum mapped to HTTP status in controllers.
 - **Configuration toggles** — environment names (`DEV`, `STAGING`, `PROD`).
 - **JUnit / test lifecycle** — framework enums for annotations and listeners.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 Enums are **classes**. `javac` emits a `class Level extends Enum<Level>` with static fields for each constant, static initializer block constructing them, and synthetic `values()` / `valueOf`. At class initialization time, constants are created **once** in declaration order (ordinal).
 
 Serialization (when used) has special handling so **constant identity** survives deserialization by name, not by ordinary object graph rules alone — still avoid storing mutable state on enums.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - Reordering constants changes **ordinal** and can break persisted ordinal-based data.
 - `values()` returns a **new array** each call (JDK implementation detail — treat as such).
 - **`valueOf("high")`** fails — names are case-sensitive; normalize external input first.
 - Enum constants in **switch** must use unqualified constant names (`case HIGH` not `case Level.HIGH` in older style; in switch rules use `case HIGH`).
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — business logic on `ordinal()`
 
@@ -291,7 +327,7 @@ enum Counter { A;
 
 Keep enum state **immutable**; accumulate in instances of ordinary classes.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Treat enums as **immutable** value objects.
 - Parse external strings at **boundaries**; fail with `IllegalArgumentException` or `Optional`.
@@ -299,7 +335,7 @@ Keep enum state **immutable**; accumulate in instances of ordinary classes.
 - Prefer **`EnumSet`/`EnumMap`** in performance-sensitive enum-keyed structures.
 - Document whether new constants require **database migration** or API version bumps.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -307,29 +343,29 @@ Keep enum state **immutable**; accumulate in instances of ordinary classes.
 | Sealed + records | Distinct shapes per variant | More types and files |
 | String in DB | Flexible schema | Validation burden at read time |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Enum `switch` often compiles to **tableswitch** or **lookupswitch** — O(1) on constant count. `EnumSet` uses bit vectors for up to 64 constants (implementation-dependent sizing). `values()` allocation matters only in tight loops — use `EnumSet.allOf` or cached arrays.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Do not trust unvalidated user strings passed to `valueOf` — treat as injection into application logic. Map wire values through allow-lists. Avoid exposing raw `ordinal()` across trust boundaries.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Enums since **Java 5**. Switch rules and exhaustiveness interact with modern pattern matching (Module 03 / Ch.03) but enum switches use **constant labels**, not type patterns. No Java 21-specific enum syntax change.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Rust and Kotlin use **algebraic enums** with per-variant data. Java splits that use case between **classic enums** (uniform shape) and **sealed + records** (variant data). C# enums are closer to Java but allow `[Flags]` bit masks without `EnumSet`.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** assuming `ordinal()` is stable business order; forgetting enums cannot extend classes.
 - **You should answer:** Why does `EnumsDemo` print `parse=LOW` from `"low"`?
 - **Advanced:** enum-specific `Serialization` and `readResolve` for singleton enforcement when customizing serialization.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -345,42 +381,65 @@ Rust and Kotlin use **algebraic enums** with per-variant data. Java splits that 
 
 5. Design: fixed set of error codes — enum only, or sealed `ErrorDetail`? Justify.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. Can you extend an enum?
 2. Difference between `name()` and `toString()` on enums?
 3. Why might `EnumSet` beat `HashSet<Level>`?
 
-## 21. Solutions
+## 22. Solutions
 
-1. See §7.1 verified output.
+1. See §8.1 verified output.
 2. `HIGH.ordinal()` becomes **3** (was 2).
 3. Loop `values()`, match `label()` case-insensitively or exact per spec.
 4. Same constant is singleton; `==` is null-safe and idiomatic; `equals` works but adds no value among constants.
 5. Uniform codes → enum; each code with different fields → sealed + records.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Enums** model **closed sets** of named constants as real types. Constructors attach data; methods encode behavior. Use **`name()`/`valueOf`** for identity strings, not ordinals, for domain rules. **`EnumsDemo`** shows labels, parsing, and comparison. Next: **records** for immutable data carriers without enum’s fixed constant set.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Enum · enum constant · ordinal · `valueOf` · `EnumSet` · exhaustiveness
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS 8.9 — Enum Types](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.9)
 - [Java Tutorial — Enum Types](https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html)
 - [Module 03 — switch](../03-control-flow/02-switch-statements.md)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [02-records.md](02-records.md) — compact immutable data classes
 - [03-sealed-types-and-patterns.md](03-sealed-types-and-patterns.md) — sealed hierarchies with pattern matching
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; enum types at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Depth gate met; `EnumsDemo` verified Temurin 21.0.12.1
-- [x] Enum vs sealed trade-off introduced
-- [x] Revision and Mastery, exercises, references
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (init order §5.1)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11)
+
+**Omissions (section → reason):**
+
+- **`EnumSet` / `EnumMap` tuning** — named for later collections performance notes.
+
+**Verification note:** `EnumsDemo` output unchanged on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

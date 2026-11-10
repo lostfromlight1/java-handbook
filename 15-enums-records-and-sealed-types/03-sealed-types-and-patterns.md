@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 15 — Enums, Records, and Sealed Types  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (sealed permits, pattern switches, exhaustiveness)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -122,7 +138,27 @@ Module 07 Ch.04 asked “enum or sealed?” — answer by **shape of data**, not
 
 You should recognize the **same language features** at increasing depth — not three unrelated syntaxes.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### 5.1 `permits` and the closed hierarchy
+
+For `sealed interface Expr permits Const, Add`:
+
+1. **`javac`** verifies every **direct subclass** is listed in **`permits`** (or nested inside the sealed type).
+2. Permitted subclasses must be **`final`**, **`sealed`**, or **`non-sealed`**—no hidden extra subclasses in other packages without permission.
+3. At runtime, **`instanceof Expr`** still uses ordinary reference types; sealing is primarily a **compile-time closed-world** guarantee for **exhaustive switches**.
+
+### 5.2 Pattern matching in `switch`
+
+`SealedPatternsDemo` **`eval(Expr)`** flow:
+
+1. **`switch (e)`** tests runtime type against **typed patterns** (`case Const(int value)`, `case Add(Expr l, Expr r)`).
+2. On match, **bindings** (`value`, `l`, `r`) are in scope in the case block—no manual cast.
+3. When all **permitted** variants are covered, the switch is **exhaustive**; adding a new permitted subtype without a new `case` is a **compile error** (unless `default`).
+
+`describe(Expr)` mirrors the same mechanism for **string labels**, showing **`desc=const:7`** and **`descAdd=add`** from the demo output.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -132,7 +168,7 @@ You should recognize the **same language features** at increasing depth — not 
 | **ADT (algebraic data type)** | Sum of variants, each optionally carrying data |
 | **Type pattern** | `Type name` testing and binding in switch/instanceof |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 sealed interface Node permits Leaf, Branch {}
@@ -151,7 +187,7 @@ static int size(Node n) {
 - **`sealed` class** may have state; **sealed interface** + **records** is the common ADT style.
 - Pattern `switch` on **non-sealed** types still needs **`default`** unless selector is `null`-handled and all known subtypes listed with patterns — sealing is what enables proof.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 ### 7.1 Minimal — `SealedPatternsDemo`
 
@@ -207,20 +243,20 @@ For **sealed** `Expr`, prefer listing **`Neg`**, **`Const`**, and **`Add(...)`**
 
 Refactor note: on **fully sealed** root, replace `default` with remaining variant cases for exhaustiveness.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Expression and query ASTs** — SQL, JSONPath, rule engines.
 - **Domain events** — `OrderEvent` variants with different payloads.
 - **Parser output** — sealed syntax tree, single `interpret` function.
 - **Compiler internals** — JDK and IDEs use sealed types extensively (language reflecting on itself).
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 Pattern matching `switch` (Java 21) is specified by JLS — the compiler type-checks patterns, dominance, and exhaustiveness. Bytecode uses **type tests** and **invokedynamic** / conditional chains (implementation detail). Sealed hierarchies enable **closed switch** bytecode similar to **enum tables** when all types are known in the compilation unit.
 
 No runtime penalty inherent in sealing itself; benefits are **safety and refactor speed**.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Adding a variant** is a **breaking change** for exhaustive switches across the codebase — intentional.
 - **Reflection** can still instantiate permitted types; sealing does not block reflection, only **subclassing**.
@@ -228,7 +264,7 @@ No runtime penalty inherent in sealing itself; benefits are **safety and refacto
 - **Generics and patterns** — limited combinations; erasure still applies at runtime (Module 13).
 - **Cross-module** sealing requires permitted types in agreed packages/modules.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — open hierarchy with “exhaustive” claim
 
@@ -258,7 +294,7 @@ switch (o) {
 
 Order **specific** patterns first (Module 03 dominance).
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Keep sealed families **small and domain-meaningful**; split unrelated variants into separate sealed roots.
 - Put **record leaves** beside sealed parent in same package when possible.
@@ -266,7 +302,7 @@ Order **specific** patterns first (Module 03 dominance).
 - Document **`non-sealed`** branches with why openness is required.
 - After adding a variant, run tests — compiler catches most switch sites.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -274,32 +310,32 @@ Order **specific** patterns first (Module 03 dominance).
 | Visitor pattern | Open to new operations without editing variants | Boilerplate, double dispatch |
 | Enum | Simplest constants | No per-constant distinct fields (without hacks) |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Recursive `eval` on deep trees risks **stack overflow** — iterative trampolines or explicit stacks for very deep inputs. Pattern switch itself is not the bottleneck in typical business logic.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Sealing does not validate **content** — `Const` can hold user-supplied integers; still sanitize on output. Do not deserialize into sealed types without trusted producers.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 - **Sealed classes** — final in **17** (JEP 409).
 - **Record patterns** — final in **21** (JEP 440).
 - **Pattern matching for switch** — final in **21** (JEP 441).
 - Module 07 and 03 chapters were written for **21** without preview flags.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Haskell/ML **algebraic types**; Kotlin **sealed class**; Rust **enum** with data payloads. Java composes **existing inheritance** with sealing rather than a separate `enum` with payloads keyword.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** confusing M07 intro with full pattern depth; using `default` on sealed switches unnecessarily.
 - **You should answer:** Why does `SealedPatternsDemo` compile `eval` without `default`?
 - **Advanced:** module boundaries and `permits` across JPMS modules; serialization of sealed graphs.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -315,29 +351,29 @@ Haskell/ML **algebraic types**; Kotlin **sealed class**; Rust **enum** with data
 
 5. Model `Option<T>` as `sealed interface Option<T> permits Some, None` vs `java.util.Optional` — trade-offs.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. What does `permits` enforce?
 2. When is a `default` branch unnecessary in Java 21?
 3. How do record patterns reduce casting?
 
-## 21. Solutions
+## 22. Solutions
 
-1. See §7.1.
+1. See §8.1.
 2. Nothing if `eval` already has `Neg` case; if you add new permitted type, `javac` fails until `eval` and `describe` updated.
 3. `case Add(var left, var right) -> eval(left) + eval(right);`
 4. Yes — type patterns on sealed interfaces with record implementors.
 5. Custom `Option` is closed and null-free by design; JDK `Optional` is a single class, nullable inside, ecosystem-standard.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 This chapter **unifies** enums, records, and sealing: **sealed** roots define allowed variants; **records** hold per-variant data; **pattern switches** express exhaustive operations. **`SealedPatternsDemo`** evaluates a small expression language — the same ideas as Module 07’s `Result`/`Shape`, deepened with recursion and record patterns. **Module 16** applies similar functional style to **lambdas** and **streams**.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Sealed type · permits · exhaustiveness · type pattern · record pattern · ADT
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS 8.1.4, 8.1.6 — Sealed classes](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html)
 - [JEP 409: Sealed Classes](https://openjdk.org/jeps/409)
@@ -345,14 +381,37 @@ Sealed type · permits · exhaustiveness · type pattern · record pattern · AD
 - [Module 07 Ch.04 — sealed classes](../07-inheritance-and-polymorphism/04-sealed-classes.md)
 - [Module 03 Ch.04 — patterns](../03-control-flow/04-branching-and-pattern-matching.md)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [Module 16 — Lambdas and Functional Programming](../16-lambdas-and-functional-programming/README.md)
 - Revisit [pattern-control-demo](../../examples/core-java/pattern-control-demo/) for null and guard practice
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; sealed types and patterns at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Depth gate met; `SealedPatternsDemo` verified Temurin 21.0.12.1
-- [x] Cross-links to M07 and M03
-- [x] Revision and Mastery, exercises, references
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (exhaustive switch §5.2)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11)
+
+**Omissions (section → reason):**
+
+- **JPMS cross-module `permits`** — advanced modules module-graph material.
+
+**Verification note:** `SealedPatternsDemo` output unchanged on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

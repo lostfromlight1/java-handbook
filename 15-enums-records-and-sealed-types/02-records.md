@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 15 — Enums, Records, and Sealed Types  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (records, canonical constructor, value semantics)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -137,7 +153,28 @@ Records are implicitly **final** unless nested in a way that changes visibility 
 
 `equals` compares **all components**. Two `new Point(3, 4)` instances are **equal** despite different identities — correct for value objects, wrong for entities with database IDs (use regular classes or careful modeling).
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### 5.1 Compiler-generated members
+
+For `record Point(int x, int y)` the compiler synthesizes:
+
+1. **Private final fields** `x`, `y`.
+2. A **canonical constructor** that assigns components (you may **compact-validate** in the canonical constructor body).
+3. **Accessors** `x()` and `y()` (not JavaBean `getX` unless you add them).
+4. **`equals` / `hashCode` / `toString`** based on **all components** (spec-defined equality).
+
+`RecordsDemo` prints `Point[x=3, y=4]` from **`toString`** and `equals=true` for two instances with the same components.
+
+### 5.2 Construction and immutability path
+
+1. Caller invokes **`new Point(3, 4)`** (or `Point.of` factory if you add one).
+2. Canonical constructor runs; **no mutators** exist unless you add instance methods that return **new** records.
+3. **`hashCode`** stability follows from component values—safe keys in **`HashSet`** / **`HashMap`** when components are immutable.
+
+Mutable components (e.g. `List<String>` inside a record) break **value semantics** unless you **defensively copy** in the canonical constructor.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -146,7 +183,7 @@ Records are implicitly **final** unless nested in a way that changes visibility 
 | **Compact constructor** | Validation-only constructor block without formal parameter list |
 | **Data carrier** | Type whose main job is holding data, often immutable |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 public record User(String id, String email) {
@@ -165,7 +202,7 @@ public record User(String id, String email) {
 - **Generic records** are allowed: `record Box<T>(T value) {}`.
 - **`var` with records** in patterns appears in Ch.03.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
 ### 7.1 Minimal — `RecordsDemo`
 
@@ -212,14 +249,14 @@ record Add(Expr left, Expr right) implements Expr {}
 
 Full evaluation with patterns in Ch.03 `SealedPatternsDemo`.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **REST/gRPC DTOs** — request/response payloads in services.
 - **Domain value objects** — `Money`, `EmailAddress`, `GeoPoint`.
 - **Compiler / tooling AST nodes** — often sealed + records.
 - **Configuration snapshots** — immutable config loaded at startup.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 `javac` desugars a record to a **final class** extending `java.lang.Record` with:
 
@@ -229,14 +266,14 @@ Full evaluation with patterns in Ch.03 `SealedPatternsDemo`.
 
 Reflection exposes `RecordComponent` metadata (`getRecordComponents()`). At runtime the type is a normal class with generated methods — no special JVM opcode beyond ordinary method calls.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Mutable components** — if a record holds a `List` or array without copying, **shallow immutability** breaks: `record R(List<String> xs)` does not copy unless compact ctor does.
 - **Serialization** — fields are serialized; migration needs custom forms if components change.
 - **JPA entities** — records are poor **entity** mappings (identity, proxies, lazy fields); prefer classes for ORM-managed rows.
 - **Subclassing** — only **sealed** hierarchies may involve records as permitted subtypes; records do not extend arbitrary classes.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — assuming `getX()` accessors
 
@@ -265,7 +302,7 @@ record Holder(List<String> names) {
 }
 ```
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Keep records **small and focused**; large flattened DTOs hurt readability — group nested records.
 - Validate in **compact constructor**; fail fast with clear exceptions.
@@ -273,7 +310,7 @@ record Holder(List<String> names) {
 - Use records for **values**; use classes for **entities** with lifecycle and identity.
 - Document whether accessors expose **internal** mutable state.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Approach | Pros | Cons |
 |----------|------|------|
@@ -281,29 +318,29 @@ record Holder(List<String> names) {
 | **Immutable class + builder** | Flexible construction steps | More code |
 | **Mutable POJO** | Framework familiarity | Invariants harder to enforce |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Generated `equals`/`hashCode` are straightforward — fine for typical DTO sizes. Very large component lists in `equals` are expensive — don't use records with huge graphs for frequent equality checks without custom logic.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Records in public APIs still leak data in `toString` — scrub secrets (`password`, tokens) from components or override `toString` carefully (loses default transparency — document trade-off).
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Records **final in Java 16** (JEP 395). **Java 21** adds **record patterns** in `switch` and `instanceof` (Ch.03). No preview flag required in 21 for records themselves.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Kotlin **data classes**, Scala **case classes**, C# **records** (9+). Java records intentionally omit **copy-with** syntax; use constructor or helper method.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** treating records as JPA entities; forgetting compact ctor does not assign fields manually.
 - **You should answer:** Why do `p1` and `p2` in `RecordsDemo` have `equals=true` but different references?
 - **Advanced:** customization of `equals` is not supported — if you need partial equality, use a class.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -319,42 +356,65 @@ Kotlin **data classes**, Scala **case classes**, C# **records** (9+). Java recor
 
 5. When would you refuse a record for a `Money` type (currency, scale)?
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. What does the compiler generate for a record?
 2. Can a record extend another class?
 3. Difference between compact and canonical constructor?
 
-## 21. Solutions
+## 22. Solutions
 
-1. See §7.1.
+1. See §8.1.
 2. `if (first.isBlank() || last.isBlank()) throw new IllegalArgumentException(...)` in compact block.
 3. `equals` contract requires equal objects to have equal hash codes.
 4. `return new Point(x + dx, y + dy);`
 5. When you need **normalized arithmetic**, **rounding policy**, or **currency mismatch checks** beyond simple field holding — wrap in a class with behavior.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Records** are **immutable data classes** with compiler-generated accessors and equality. **Compact constructors** validate without boilerplate. **`RecordsDemo`** shows transparency, equality, and custom methods. Records pair naturally with **sealed types** for expressive domain models — next chapter.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Record · component · compact constructor · canonical constructor · data carrier
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [JLS 8.10 — Record Classes](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.10)
 - [JEP 395: Records](https://openjdk.org/jeps/395)
 - [Module 06 Ch.03 — immutability](../06-classes-and-objects/03-immutability-and-builders.md)
 - [Module 07 Ch.04 — sealed + records](../07-inheritance-and-polymorphism/04-sealed-classes.md)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [03-sealed-types-and-patterns.md](03-sealed-types-and-patterns.md) — ADTs, record patterns, exhaustive switches
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; records at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Depth gate met; `RecordsDemo` verified Temurin 21.0.12.1
-- [x] Immutability and mutable-component caveats
-- [x] Revision and Mastery, exercises, references
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (compiler synthesis §5.1)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11)
+
+**Omissions (section → reason):**
+
+- **JPA / serialization of records** — later persistence modules.
+
+**Verification note:** `RecordsDemo` output unchanged on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

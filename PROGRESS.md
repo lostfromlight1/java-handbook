@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 05 completed)
+**Last updated:** 2026-11-10 (Module 06 completed)
 
 ## Status values
 
@@ -190,10 +190,34 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `composition-demo` | Civic I4; Sherlock London; ORD-1 total 7500 cents |
 
 **Module 05 status:** Completed  
-**Next recommended chapter:** `06-classes-and-objects/` (constructors, equals/hashCode, …)
+**Next recommended chapter:** Module 06 (Completed below)
 
 ---
 
-## Modules 06–53
+## Module 06 — Classes and Object Design
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-initialization-and-constructors.md](06-classes-and-objects/01-initialization-and-constructors.md) | Completed | Quality pass 2026-11-10 | `super()` chaining in M07 |
+| [02-nested-and-inner-classes.md](06-classes-and-objects/02-nested-and-inner-classes.md) | Completed | Quality pass 2026-11-10 | Lambdas vs anonymous deep dive in M09 |
+| [03-immutability-and-builders.md](06-classes-and-objects/03-immutability-and-builders.md) | Completed | Quality pass 2026-11-10 | Records as alternative carriers |
+| [04-equals-hashcode-and-tostring.md](06-classes-and-objects/04-equals-hashcode-and-tostring.md) | Completed | Quality pass 2026-11-10 | Collection internals in M18 |
+| [Module assessment](assessments/module-assessments/06-classes-and-objects-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `constructors-demo` | `ada/ada`, `lin/Lin`, `created=2`, `point=(3,4)` |
+| `nested-classes-demo` | StaticNested, inner, local, anonymous lines as documented |
+| `immutability-builder-demo` | `1250 USD`; GET request line |
+| `equals-hashcode-demo` | equals/hash true/false; `setSize=2` |
+
+**Module 06 status:** Completed  
+**Next recommended chapter:** `07-inheritance-and-polymorphism/` (advanced inheritance, contracts)
+
+---
+
+## Modules 07–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

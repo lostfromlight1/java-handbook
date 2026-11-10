@@ -64,6 +64,16 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Inheritance** | `extends` relationship where a subclass is-a specialized superclass. | [Module 05 Ch.03](05-object-oriented-programming/03-inheritance-and-polymorphism-intro.md) |
 | **Polymorphism** | Same call site; runtime type decides which overridden instance method runs. | Module 05 Ch.03 |
 | **Composition** | Has-a design where an object uses/owns another object as a part or collaborator. | [Module 05 Ch.04](05-object-oriented-programming/04-composition-and-object-relationships.md) |
+| **Constructor chaining** | One constructor invoking another in the same class via `this(...)` as the first statement. | [Module 06 Ch.01](06-classes-and-objects/01-initialization-and-constructors.md) |
+| **Static initializer** | `static { }` block or static field initializers run once when the class is initialized. | Module 06 Ch.01 |
+| **Static nested class** | Nested class declared `static`; no implicit reference to an enclosing instance. | [Module 06 Ch.02](06-classes-and-objects/02-nested-and-inner-classes.md) |
+| **Inner class** | Non-static nested class; each instance is tied to an enclosing outer instance. | Module 06 Ch.02 |
+| **Anonymous class** | Class without a name, declared and instantiated in one `new SuperType() { }` expression. | Module 06 Ch.02 |
+| **Immutability** | Object state is not intended to change after construction; updates modeled by new instances. | [Module 06 Ch.03](06-classes-and-objects/03-immutability-and-builders.md) |
+| **Value object** | Type defined by its field values rather than object identity; often immutable. | Module 06 Ch.03 |
+| **Builder pattern** | Mutable helper assembles optional configuration, then produces an immutable product in `build()`. | Module 06 Ch.03 |
+| **Equals contract** | Reflexive, symmetric, transitive, consistent equality; `null` yields false. | [Module 06 Ch.04](06-classes-and-objects/04-equals-hashcode-and-tostring.md) |
+| **hashCode contract** | Equal objects must share the same hash code; used by hash-based collections. | Module 06 Ch.04 |
 | **Functional interface** | Interface with a single abstract method; target type for lambdas and method references. | Module 04 Ch.04 (preview; Module 16) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

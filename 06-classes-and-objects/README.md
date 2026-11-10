@@ -1,14 +1,18 @@
 # Module 06 — Classes and Object Design
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Initialization and Constructors | Not started |
-| 02 | Nested and Inner Classes | Not started |
-| 03 | Immutability and Builders | Not started |
-| 04 | equals, hashCode, and toString | Not started |
+| 01 | [Initialization and Constructors](01-initialization-and-constructors.md) | Completed |
+| 02 | [Nested and Inner Classes](02-nested-and-inner-classes.md) | Completed |
+| 03 | [Immutability and Builders](03-immutability-and-builders.md) | Completed |
+| 04 | [equals, hashCode, and toString](04-equals-hashcode-and-tostring.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** [Module 05 — Object-Oriented Programming](../05-object-oriented-programming/README.md); see [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [06-classes-and-objects-assessment.md](../assessments/module-assessments/06-classes-and-objects-assessment.md) (solutions separate)
+
+**Examples:** `examples/core-java/constructors-demo`, `nested-classes-demo`, `immutability-builder-demo`, `equals-hashcode-demo` — verified Temurin JDK 21.0.12.1.
+
+**Last reviewed:** 2026-11-10

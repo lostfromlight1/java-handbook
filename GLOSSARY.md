@@ -24,5 +24,12 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Big-O** | Notation classifying how cost grows as input size grows. | [Module 00 Ch.05](00-programming-foundations/05-complexity-and-debugging-mindset.md) |
 | **Off-by-one** | Boundary error in loops or indexes (wrong by a single step). | Module 00 Ch.05 |
 | **Logic bug** | Program runs without crashing but produces incorrect results. | Module 00 Ch.05 |
+| **PATH** | OS list of directories searched for executables. | [Module 01 Ch.02](01-java-getting-started/02-installing-java-and-environment.md) |
+| **JAVA_HOME** | Environment variable pointing at the JDK root directory. | Module 01 Ch.02 |
+| **IDE** | Integrated Development Environment (editor + project + run/debug). | [Module 01 Ch.03](01-java-getting-started/03-ide-and-command-line-workflow.md) |
+| **Exit code** | Integer status a process returns to the OS (0 often means success). | [Module 01 Ch.04](01-java-getting-started/04-first-java-program-deep-dive.md) |
+| **Package** | Namespace for Java types; usually mirrors directories. | [Module 01 Ch.05](01-java-getting-started/05-project-structure-and-jshell.md) |
+| **Classpath** | Locations where the JVM searches for user classes. | Module 01 Ch.05 |
+| **JShell** | Official Java REPL included with the JDK. | Module 01 Ch.05 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 07 completed)
+**Last updated:** 2026-11-10 (Module 08 completed)
 
 ## Status values
 
@@ -238,10 +238,34 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `sealed-classes-demo` | ok/err lines; area=12.566370614359172 |
 
 **Module 07 status:** Completed  
-**Next recommended chapter:** [08-interfaces-and-abstraction/](08-interfaces-and-abstraction/) (interfaces, `default` methods)
+**Next recommended chapter:** Module 08 (Completed below)
 
 ---
 
-## Modules 08–53
+## Module 08 — Interfaces and Abstraction
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-interface-fundamentals.md](08-interfaces-and-abstraction/01-interface-fundamentals.md) | Completed | Quality pass 2026-11-10 | Streams / `java.util.function` in M16 |
+| [02-default-static-and-private-methods.md](08-interfaces-and-abstraction/02-default-static-and-private-methods.md) | Completed | Quality pass 2026-11-10 | JVM default resolution in later JVM module |
+| [03-functional-and-marker-interfaces.md](08-interfaces-and-abstraction/03-functional-and-marker-interfaces.md) | Completed | Quality pass 2026-11-10 | Deep stream usage M16 |
+| [04-api-design-with-interfaces.md](08-interfaces-and-abstraction/04-api-design-with-interfaces.md) | Completed | Quality pass 2026-11-10 | DI frameworks in later modules |
+| [Module assessment](assessments/module-assessments/08-interfaces-and-abstraction-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `interfaces-fundamentals-demo` | card:1500; wallet:900; email:paid; audit=CARD-1 |
+| `interface-methods-demo` | hello Ada; HELLO ADA; *** team *** |
+| `functional-marker-demo` | add=5; mul=6; sum=10; entity=true |
+| `api-interfaces-demo` | created:ada; exists:ada; find=ada |
+
+**Module 08 status:** Completed  
+**Next recommended chapter:** [09-encapsulation-and-design/](09-encapsulation-and-design/) (SOLID, packaging)
+
+---
+
+## Modules 09–53
 
 Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

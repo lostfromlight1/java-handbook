@@ -80,6 +80,13 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Builder pattern** | Mutable helper assembles optional configuration, then produces an immutable product in `build()`. | Module 06 Ch.03 |
 | **Equals contract** | Reflexive, symmetric, transitive, consistent equality; `null` yields false. | [Module 06 Ch.04](06-classes-and-objects/04-equals-hashcode-and-tostring.md) |
 | **hashCode contract** | Equal objects must share the same hash code; used by hash-based collections. | Module 06 Ch.04 |
-| **Functional interface** | Interface with a single abstract method; target type for lambdas and method references. | Module 04 Ch.04 (preview; Module 16) |
+| **Interface** | Reference type declaring operations (`implements`) that concrete classes must fulfill; enables multiple independent contracts per class. | [Module 08 Ch.01](08-interfaces-and-abstraction/01-interface-fundamentals.md) |
+| **Programming contract** | Obligations at a type boundary: syntactic signatures plus documented behavioral guarantees callers and implementors must honor. | Module 08 Ch.01 |
+| **`implements`** | Keyword declaring that a class satisfies one or more interface contracts. | Module 08 Ch.01 |
+| **Default method** | Interface instance method with a body; inherited by implementors unless overridden (Java 8+). | [Module 08 Ch.02](08-interfaces-and-abstraction/02-default-static-and-private-methods.md) |
+| **Functional interface** | Interface with exactly one abstract instance method (SAM); target type for lambdas and method references. | [Module 08 Ch.03](08-interfaces-and-abstraction/03-functional-and-marker-interfaces.md) |
+| **Single abstract method (SAM)** | The one abstract instance method a functional interface exposes to lambda implementations. | Module 08 Ch.03 |
+| **Marker interface** | Interface declaring no methods; tags a type for frameworks or domain rules (e.g. `Serializable`). | Module 08 Ch.03 |
+| **Dependency Inversion Principle (DIP)** | High-level modules depend on abstractions; concrete details implement those abstractions at wiring time. | [Module 08 Ch.04](08-interfaces-and-abstraction/04-api-design-with-interfaces.md) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

@@ -1,13 +1,13 @@
 # Module 40 — Backend Architecture
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed  
+**Last reviewed:** 2026-11-10  
+**Validation JDK:** Temurin 21.0.12.1
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Layered and Hexagonal Architecture | Not started |
-| 02 | DDD Basics | Not started |
-| 03 | Modular Monolith versus Microservices | Not started |
+| 01 | [Layered and Hexagonal Architecture](01-layered-and-hexagonal-architecture.md) | Completed |
+| 02 | [DDD Basics](02-ddd-basics.md) | Completed |
+| 03 | [Modular Monolith versus Microservices](03-modular-monolith-versus-microservices.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
-
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [40-backend-architecture-assessment](../assessments/module-assessments/40-backend-architecture-assessment.md)

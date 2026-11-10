@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 06 — Classes and Object Design  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (equals/hashCode contracts, `HashSet` behavior)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -124,7 +140,37 @@ public String toString() {
 
 Not a substitute for structured logging, but invaluable in tests and dev.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### 5.1 Calling `equals` at runtime
+
+1. Evaluate the receiver and argument references.
+2. If either side is `null`, reference equality short-circuits (`==` false; `equals` on non-null returns false for null argument per contract).
+3. **Fast path:** if `this == o`, return `true`.
+4. **Type check:** `instanceof` (or `getClass`) rejects unrelated types.
+5. Compare participating fields with `==` for primitives and `Objects.equals` for references.
+
+Overridden `equals` is **virtual dispatch**—the runtime type of the receiver decides which implementation runs (dynamic dispatch preview from Module 05).
+
+### 5.2 `HashSet.add` and hash-based lookup (OpenJDK model)
+
+When `set.add(x)` runs on a `HashSet`:
+
+1. Compute `hash = x.hashCode()` (mask/sign handling is implementation detail).
+2. Map hash to a **bucket** (table index).
+3. Walk the bucket’s linked chain (or tree for long chains) comparing **`equals`** on candidates with matching hash.
+4. If an **equal** element exists, `add` returns `false` and size is unchanged—demo: `a` and `b` equal → `setSize=2`.
+5. If no equal element, insert and grow size.
+
+**Contract bridge:** step 3 assumes equal objects share hash codes—otherwise equal `b` might land in a different bucket and appear as a duplicate entry (broken `hashCode` while `equals` overridden).
+
+Module 18 deepens table resizing, load factor, and `LinkedHashSet`/`TreeSet` alternatives—this chapter's goal is the **call sequence** collections rely on.
+
+### 5.3 `toString` in diagnostics
+
+Default `Object.toString` uses class name + `@` + identity hash—fine for identity types, poor for values. Overridden `toString` does not affect `equals`/`hashCode` unless you mistakenly include unstable fields.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -135,16 +181,16 @@ Not a substitute for structured logging, but invaluable in tests and dev.
 | **Collision** | Distinct unequal objects sharing same `hashCode` |
 | **Value type** | Type defined by field values (`Sku`, `Money`) |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 - Override with **`@Override`** so compiler catches signature typos.
 - **`equals` parameter type is `Object`**, not your class—required for polymorphism.
 - Do not make `equals` **overloaded** with `equals(Sku other)`—that **hides**; `set.contains` still uses `Object.equals`.
 - **`record`** generates `equals`/`hashCode`/`toString` from components automatically.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal: broken identity-only equality
+### 8.1 Minimal: broken identity-only equality
 
 ```java
 class BadSku {
@@ -155,7 +201,7 @@ class BadSku {
 
 Two `BadSku` with same code are **not** equal under `equals`.
 
-### 7.2 Module demo and HashSet
+### 8.2 Module demo and HashSet (**Verified**)
 
 **Source:** [`examples/core-java/equals-hashcode-demo/EqualsHashCodeDemo.java`](../examples/core-java/equals-hashcode-demo/EqualsHashCodeDemo.java)
 
@@ -165,7 +211,7 @@ javac EqualsHashCodeDemo.java
 java EqualsHashCodeDemo
 ```
 
-**Verified output (Temurin JDK 21.0.12.1):**
+**Verified (Temurin JDK 21.0.12.1):**
 
 ```text
 a.equals(b)=true
@@ -194,7 +240,7 @@ System.out.println("setSize=" + set.size());
 
 If `hashCode` were **not** overridden while `equals` was, `HashSet` might store **both** `a` and `b` → size 3—classic bug.
 
-### 7.3 Advanced: null-safe fields
+### 8.3 Advanced: null-safe fields
 
 ```java
 return Objects.equals(this.code, other.code) && this.version == other.version;
@@ -202,7 +248,7 @@ return Objects.equals(this.code, other.code) && this.version == other.version;
 
 Use when either side could be null by design (not in `Sku` demo where `code` is `requireNonNull`).
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 | Area | Need |
 |------|------|
@@ -214,7 +260,7 @@ Use when either side could be null by design (not in `Sku` demo where `code` is 
 
 API JSON equality is **not** automatic—serialize then compare, or compare domain objects after parsing.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 **`HashSet.add`** (OpenJDK 21): compute `hashCode`, find bucket, walk bucket list comparing **`equals`** on candidates. Contract ensures equal elements replace or reject duplicate per `Set` spec.
 
@@ -222,7 +268,7 @@ API JSON equality is **not** automatic—serialize then compare, or compare doma
 
 Label: **Java Collections Framework specification** + **OpenJDK implementation** details.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Mutable fields in equals/hashCode:** if `Sku.code` could change after insertion into a `HashSet`, bucket lookup breaks—**do not mutate fields used in equals** (immutability helps).
 - **Subclass equality:** symmetry breaks if parent and child compare differently.
@@ -230,7 +276,7 @@ Label: **Java Collections Framework specification** + **OpenJDK implementation**
 - **Inheritance + `getClass`:** subclasses not equal to superclass instances.
 - **Enums:** `equals` is identity; do not override.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect: override `equals` only
 
@@ -253,7 +299,7 @@ public boolean equals(Sku other) { ... } // not an override!
 
 Use `Objects.equals` or `String.equals`.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Override **`equals` and `hashCode` together** whenever you override either for value semantics.
 - Use **`Objects.requireNonNull`** on required fields in constructor.
@@ -261,7 +307,7 @@ Use `Objects.equals` or `String.equals`.
 - Generate with IDE or use **`record`** when appropriate—hand-write for learning and custom rules.
 - **Do not** use significant fields that change over object lifetime.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Strategy | Pros | Cons |
 |----------|------|------|
@@ -270,34 +316,34 @@ Use `Objects.equals` or `String.equals`.
 | `record` | Less boilerplate | All components participate |
 | Business-key only in `equals` | Matches DB uniqueness | Ignore non-key fields intentionally—document |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 `equals` and `hashCode` run on **every** map get and set add. Keep them cheap—avoid N+1 I/O. Cache `hashCode` in a `final` field only if fields are immutable and you measure benefit.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 **`equals` must not** use secrets alone without constant-time comparison where timing attacks matter (cryptographic keys use `MessageDigest.isEqual` on bytes, not `String.equals` timing).
 
 `toString` must **not** leak passwords, tokens, or PII in production logs—override with redaction.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 - **`instanceof` patterns** — Java 16+ (`if (!(o instanceof Sku other))`).
 - **`Objects.hash` / `Objects.equals`** — Java 7+.
 - **Records** — generated equality from state components (Java 16+).
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Python `__eq__` / `__hash__` (mutables often unhashable); Kotlin `data class`; C# `Equals`/`GetHashCode`. Java’s explicit contracts mirror `Object` documentation.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Interview classic:** why `equals` and `hashCode` together?
 - **Trick:** two equal objects in `HashSet` — how many entries?
 - **Gap:** thinking `String` uses `==` for content.
 - **Advanced:** canonicalization and interning (String pool) for memory and equality performance.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -313,7 +359,7 @@ Python `__eq__` / `__hash__` (mutables often unhashable); Kotlin `data class`; C
 
 5. Explain why changing only `equals` to include a new field without updating `hashCode` breaks persisted hash sets (conceptually).
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. `==` vs `equals`?
 2. `equals` contract in one sentence each property?
@@ -321,7 +367,7 @@ Python `__eq__` / `__hash__` (mutables often unhashable); Kotlin `data class`; C
 4. What happens adding equal objects to `HashSet`?
 5. When use `record` instead of hand-written equality?
 
-## 21. Solutions
+## 22. Solutions
 
 1. Likely **3** — `HashSet` uses `Object.hashCode` identity for `b` vs value-based `equals` mismatch path (broken contract).
 2. **`false`**.
@@ -329,15 +375,15 @@ Python `__eq__` / `__hash__` (mutables often unhashable); Kotlin `data class`; C
 4. Omit or mask sensitive header fields.
 5. Stored buckets keyed by old hash no longer find object—rehash needed; illustrates immutability of equality fields.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 Use **`==`** for **identity**. Override **`equals`** for **value** sameness honoring the contract. Override **`hashCode`** with the **same fields**. **`toString`** aids humans. **`HashSet`** proves the contract: equal **`b`** does not duplicate **`a`**. Immutable value types and consistent equality underpin reliable collections and domain logic.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Reference equality · value equality · equals contract · hashCode contract · collision · `HashSet` · `@Override` · `Objects.hash`
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [Java SE — `Object.equals`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object))
 - [Java SE — `Object.hashCode`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode())
@@ -345,7 +391,7 @@ Reference equality · value equality · equals contract · hashCode contract · 
 - [Java SE — `HashSet`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashSet.html)
 - Effective Java (Bloch) — Items 10–11 (equals/hashCode)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - Module 07 — inheritance and `equals` across subtypes.
 - Module 18 — collections interfaces and hash table internals.
@@ -353,8 +399,30 @@ Reference equality · value equality · equals contract · hashCode contract · 
 
 ## Review Checklist
 
-- [x] Learning objectives covered; HashSet demo explained
-- [x] Contracts, implementation, mistakes at depth gate
-- [x] EqualsHashCodeDemo verified Temurin 21.0.12.1
-- [x] Revision and Mastery, exercises, solutions
-- [x] Collections behavior explained (not deferred-only)
+**Mandatory Depth Review:** Technical profile; equality and hashing at **Levels 2–3**.
+
+- [x] Learning objectives covered
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (`HashSet.add` steps §5.2)
+- [x] First-appearance concepts explained now; M18 table internals named, not deferred-only
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 for EqualsHashCodeDemo)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- None beyond template-conditional sections already absent in this chapter.
+
+**Verification note:** EqualsHashCodeDemo lines through `setSize=2` match Temurin JDK 21.0.12.1 (2026-11-11).

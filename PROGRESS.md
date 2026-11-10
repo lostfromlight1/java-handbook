@@ -102,18 +102,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-variables-and-types.md](02-java-fundamentals/01-variables-and-types.md) | Completed | Quality pass 2026-11-10 | References, defaults, overflow, autoboxing |
-| [02-operators-and-expressions.md](02-java-fundamentals/02-operators-and-expressions.md) | Completed | Quality pass 2026-11-10 | Precedence, short-circuit, `==`/`equals` |
-| [03-scope-naming-and-comments.md](02-java-fundamentals/03-scope-naming-and-comments.md) | Completed | Quality pass 2026-11-10 | Shadowing, Javadoc, parameter scope |
-| [04-type-conversion-and-inference.md](02-java-fundamentals/04-type-conversion-and-inference.md) | Completed | Quality pass 2026-11-10 | Widening ladder, `var` failures, casts |
+| [01-variables-and-types.md](02-java-fundamentals/01-variables-and-types.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | References, defaults, overflow, autoboxing |
+| [02-operators-and-expressions.md](02-java-fundamentals/02-operators-and-expressions.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Precedence, short-circuit, `==`/`equals` |
+| [03-scope-naming-and-comments.md](02-java-fundamentals/03-scope-naming-and-comments.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Shadowing, Javadoc, parameter scope |
+| [04-type-conversion-and-inference.md](02-java-fundamentals/04-type-conversion-and-inference.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Widening ladder, `var` failures, casts |
 | [Module assessment](assessments/module-assessments/02-java-fundamentals-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Oracle JDK 21.0.9):**
+**Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|
 | `examples/core-java/primitives-demo` | All primitive samples + String printed |
-| `examples/core-java/operators-demo` | `10/3=3`, precedence 14/20, `++` behavior |
+| `examples/core-java/operators-demo` | `a/b=3`, precedence 14/20, postfix/prefix `++` |
 | `examples/core-java/scope-demo` | Block/loop scope as documented |
 | `examples/core-java/conversion-demo` | widen 42.0; narrow 3; `5/2=2`; `5/2.0=2.5`; var |
 
@@ -126,13 +126,13 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-conditionals.md](03-control-flow/01-conditionals.md) | Completed | Quality pass 2026-11-10 | Grades, guards, ternary guidance |
-| [02-switch-and-switch-expressions.md](03-control-flow/02-switch-and-switch-expressions.md) | Completed | Quality pass 2026-11-10 | Fall-through, exhaustiveness, `yield` |
-| [03-loops.md](03-control-flow/03-loops.md) | Completed | Quality pass 2026-11-10 | Continue/break walk-through, labels |
-| [04-branching-and-pattern-matching.md](03-control-flow/04-branching-and-pattern-matching.md) | Completed | Quality pass 2026-11-10 | Sealed Shape, `when`, dominance |
+| [01-conditionals.md](03-control-flow/01-conditionals.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Grades, guards, ternary guidance |
+| [02-switch-and-switch-expressions.md](03-control-flow/02-switch-and-switch-expressions.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Fall-through, exhaustiveness, `yield` |
+| [03-loops.md](03-control-flow/03-loops.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Continue/break walk-through, labels |
+| [04-branching-and-pattern-matching.md](03-control-flow/04-branching-and-pattern-matching.md) | Completed | standards-alignment pass 2026-11-10 Temurin re-verify | Sealed Shape, `when`, dominance |
 | [Module assessment](assessments/module-assessments/03-control-flow-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Oracle JDK 21.0.9):**
+**Examples compiled (Temurin JDK 21.0.12.1):**
 
 | Example | Result |
 |---------|--------|

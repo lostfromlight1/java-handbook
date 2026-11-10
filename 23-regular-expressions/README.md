@@ -1,12 +1,14 @@
 # Module 23 — Regular Expressions
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed — all chapters quality-pass 2026-11-10.
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Regex Fundamentals | Not started |
-| 02 | Java Regex API | Not started |
+| 01 | [Regex Fundamentals](01-regex-fundamentals.md) | Completed |
+| 02 | [Java Regex API](02-java-regex-api.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Module 11 strings; [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [23-regular-expressions-assessment.md](../assessments/module-assessments/23-regular-expressions-assessment.md).
+
+**Examples:** `regex-fundamentals-demo`, `java-regex-api-demo`.

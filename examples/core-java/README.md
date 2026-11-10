@@ -34,3 +34,17 @@
 | [null-npe-demo/](null-npe-demo/) | 18 | Validated Temurin 21.0.12.1 |
 | [optional-api-demo/](optional-api-demo/) | 18 | Validated Temurin 21.0.12.1 |
 | [optional-design-demo/](optional-design-demo/) | 18 | Validated Temurin 21.0.12.1 |
+| [java21-features-demo/](java21-features-demo/) | 19 | Validated Temurin 21.0.12.1 |
+| [features-after-21-demo/](features-after-21-demo/) | 19 | Validated Temurin 21.0.12.1 |
+| [preview-incubator-demo/](preview-incubator-demo/) | 19 | Validated Temurin 21.0.12.1 (preview flags) |
+| [java-lang-util-demo/](java-lang-util-demo/) | 20 | Validated Temurin 21.0.12.1 |
+| [stdlib-overview-demo/](stdlib-overview-demo/) | 20 | Validated Temurin 21.0.12.1 |
+| [reflection-annotations-process-demo/](reflection-annotations-process-demo/) | 20 | Validated Temurin 21.0.12.1 |
+| [files-streams-demo/](files-streams-demo/) | 21 | Validated Temurin 21.0.12.1 |
+| [nio2-demo/](nio2-demo/) | 21 | Validated Temurin 21.0.12.1 |
+| [serialization-formats-demo/](serialization-formats-demo/) | 21 | Validated Temurin 21.0.12.1 |
+| [java-time-demo/](java-time-demo/) | 22 | Validated Temurin 21.0.12.1 |
+| [zones-formatting-demo/](zones-formatting-demo/) | 22 | Validated Temurin 21.0.12.1 |
+| [locale-i18n-demo/](locale-i18n-demo/) | 22 | Validated Temurin 21.0.12.1 |
+| [regex-fundamentals-demo/](regex-fundamentals-demo/) | 23 | Validated Temurin 21.0.12.1 |
+| [java-regex-api-demo/](java-regex-api-demo/) | 23 | Validated Temurin 21.0.12.1 |

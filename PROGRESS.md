@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Modules 16–18 completed)
+**Last updated:** 2026-11-10 (Modules 19–23 completed)
 
 ## Status values
 
@@ -491,10 +491,118 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `optional-design-demo` | `good=Ada`; `missing=unknown`; `hasUser1=true` |
 
 **Module 18 status:** Completed  
-**Next recommended chapter:** [19-modern-java-features/](19-modern-java-features/)
+**Next recommended chapter:** Module 19 (Completed below)
 
 ---
 
-## Modules 19–53
+## Module 19 — Modern Java Features
 
-Remaining modules: **Not started** (indexes only), except Modules 13–18 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-java-21-feature-tour.md](19-modern-java-features/01-java-21-feature-tour.md) | Completed | Quality pass 2026-11-10 | Carrier pinning ops detail in concurrency module |
+| [02-features-after-java-21.md](19-modern-java-features/02-features-after-java-21.md) | Completed | Quality pass 2026-11-10 | Expand JEP table when appendix history grows |
+| [03-preview-and-incubator-features.md](19-modern-java-features/03-preview-and-incubator-features.md) | Completed | Quality pass 2026-11-10 | Re-verify JEP phase on JDK upgrades |
+| [Module assessment](assessments/module-assessments/19-modern-java-features-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `java21-features-demo` | `virtualThread=vt-ready`; `recordPattern=3+4=7`; `textBlockLines=2` |
+| `features-after-21-demo` | `feature=21`; `handbookPrimary=21-LTS` |
+| `preview-incubator-demo` | `structuredConcurrency=scoped-result` (with `--enable-preview --release 21`) |
+
+**Module 19 status:** Completed  
+**Next recommended chapter:** Module 20 (Completed below)
+
+---
+
+## Module 20 — Java Standard Library
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-java-lang-and-java-util.md](20-java-standard-library/01-java-lang-and-java-util.md) | Completed | Quality pass 2026-11-10 | — |
+| [02-io-nio-net-and-time-overview.md](20-java-standard-library/02-io-nio-net-and-time-overview.md) | Completed | Quality pass 2026-11-10 | HTTP client depth in networking modules |
+| [03-reflection-annotations-and-process-apis.md](20-java-standard-library/03-reflection-annotations-and-process-apis.md) | Completed | Quality pass 2026-11-10 | Annotation processors in build module |
+| [Module assessment](assessments/module-assessments/20-java-standard-library-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `java-lang-util-demo` | `strip=Ada Lovelace`; `join=Bob-Ada-Lin`; `first=Bob` |
+| `stdlib-overview-demo` | `pathFileName=notes.txt`; `uriHost=example.com` |
+| `reflection-annotations-process-demo` | `reflectInvoke=hello Ada`; `processRan=true` |
+
+**Module 20 status:** Completed  
+**Next recommended chapter:** Module 21 (Completed below)
+
+---
+
+## Module 21 — File I/O and Serialization
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-files-and-streams.md](21-file-io-and-serialization/01-files-and-streams.md) | Completed | Quality pass 2026-11-10 | WatchService in advanced I/O |
+| [02-nio2.md](21-file-io-and-serialization/02-nio2.md) | Completed | Quality pass 2026-11-10 | — |
+| [03-serialization-and-data-formats.md](21-file-io-and-serialization/03-serialization-and-data-formats.md) | Completed | Quality pass 2026-11-10 | Jackson module cross-link later |
+| [Module assessment](assessments/module-assessments/21-file-io-serialization-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `files-streams-demo` | `tempLines=3`; `bufferedTransform=ONE`/`TWO` |
+| `nio2-demo` | `read=nio2-line`; `listCount=2` |
+| `serialization-formats-demo` | `deserialized=Ada:97`; `propertiesStored=true` |
+
+**Module 21 status:** Completed  
+**Next recommended chapter:** Module 22 (Completed below)
+
+---
+
+## Module 22 — Date, Time, and Internationalization
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-java-time.md](22-date-time-and-internationalization/01-java-time.md) | Completed | Quality pass 2026-11-10 | `Clock` testing patterns in unit-test module |
+| [02-time-zones-and-formatting.md](22-date-time-and-internationalization/02-time-zones-and-formatting.md) | Completed | Quality pass 2026-11-10 | DST edge cases expanded later |
+| [03-locale-and-internationalization.md](22-date-time-and-internationalization/03-locale-and-internationalization.md) | Completed | Quality pass 2026-11-10 | `MessageFormat` plural rules |
+| [Module assessment](assessments/module-assessments/22-date-time-i18n-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `java-time-demo` | `ageYears=36`; `durationMinutes=150` |
+| `zones-formatting-demo` | `yangon=22:00`; `formatted=2026-11-10 22:00 MMT` |
+| `locale-i18n-demo` | `greeting=Hello`; `usdCode=USD`; `deCurrency=EUR` |
+
+**Module 22 status:** Completed  
+**Next recommended chapter:** Module 23 (Completed below)
+
+---
+
+## Module 23 — Regular Expressions
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-regex-fundamentals.md](23-regular-expressions/01-regex-fundamentals.md) | Completed | Quality pass 2026-11-10 | Unicode category flags |
+| [02-java-regex-api.md](23-regular-expressions/02-java-regex-api.md) | Completed | Quality pass 2026-11-10 | `Matcher.quoteReplacement` in log pipelines |
+| [Module assessment](assessments/module-assessments/23-regular-expressions-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `regex-fundamentals-demo` | `emailValid=true`; `capturedId=1042` |
+| `java-regex-api-demo` | `namedId=42`; `fullMatch=false` |
+
+**Module 23 status:** Completed  
+**Next recommended chapter:** [24-concurrency-and-multithreading/](24-concurrency-and-multithreading/) (index only; not started)
+
+---
+
+## Modules 24–53
+
+Remaining modules: **Not started** (indexes only), except Modules 00–23 completed as tracked above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

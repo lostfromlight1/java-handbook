@@ -153,5 +153,20 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Parallel stream** | Stream executed with split/combine on the common `ForkJoinPool`; requires thread-safe, associative work. | [Module 17 Ch.04](17-stream-api/04-parallel-streams-and-pitfalls.md) |
 | **NullPointerException (NPE)** | Unchecked exception when dereferencing a null reference. | [Module 18 Ch.01](18-optional-and-null-handling/01-null-and-nullpointerexception.md) |
 | **Optional** | `java.util.Optional` container for zero or one non-null reference; intended mainly for return types. | [Module 18 Ch.02](18-optional-and-null-handling/02-optional-api.md) |
+| **Virtual thread** | JVM-managed lightweight thread for high-volume blocking workloads; mounted on carrier platform threads. | [Module 19 Ch.01](19-modern-java-features/01-java-21-feature-tour.md) |
+| **Preview feature** | Language or API feature requiring `--enable-preview`; semantics not final until promoted. | [Module 19 Ch.03](19-modern-java-features/03-preview-and-incubator-features.md) |
+| **Sequenced collection** | Collection with defined encounter order and unified first/last/reversed operations (`SequencedCollection`). | Module 19 Ch.01 |
+| **Record pattern** | Pattern that deconstructs a record’s components in `instanceof` or `switch`. | Module 19 Ch.01 |
+| **Reflection** | Runtime inspection and invocation of types, methods, and fields via `java.lang.reflect`. | [Module 20 Ch.03](20-java-standard-library/03-reflection-annotations-and-process-apis.md) |
+| **Retention policy** | Annotation metadata controlling whether annotations are visible at source, class file, or runtime. | Module 20 Ch.03 |
+| **NIO.2** | File API (`java.nio.file`) centered on `Path` and `Files` static helpers. | [Module 21 Ch.02](21-file-io-and-serialization/02-nio2.md) |
+| **Java serialization** | Native binary graph encoding via `ObjectOutputStream` / `ObjectInputStream`; risky with untrusted input. | [Module 21 Ch.03](21-file-io-and-serialization/03-serialization-and-data-formats.md) |
+| **Instant** | `java.time` UTC timeline point on the epoch; preferred for storing global timestamps. | [Module 22 Ch.01](22-date-time-and-internationalization/01-java-time.md) |
+| **ZoneId** | Region or offset identifier for time-zone rules applied to local date-time. | [Module 22 Ch.02](22-date-time-and-internationalization/02-time-zones-and-formatting.md) |
+| **Locale** | Language/country/variant tag selecting formatting and resource bundle conventions. | [Module 22 Ch.03](22-date-time-and-internationalization/03-locale-and-internationalization.md) |
+| **ResourceBundle** | Localized key-value message lookup from classpath property files. | Module 22 Ch.03 |
+| **Pattern** | Compiled, immutable regular expression (`java.util.regex.Pattern`). | [Module 23 Ch.02](23-regular-expressions/02-java-regex-api.md) |
+| **Matcher** | Stateful regex engine for a `Pattern` against an input `CharSequence`. | Module 23 Ch.02 |
+| **ReDoS** | Regular expression denial of service via catastrophic backtracking on crafted input. | Module 23 Ch.02 |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

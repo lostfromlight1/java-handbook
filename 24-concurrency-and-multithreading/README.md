@@ -1,6 +1,6 @@
 # Module 24 — Concurrency and Multithreading
 
-**Status:** Completed
+**Status:** Completed — EXPAND-PRESERVE master template alignment 2026-11-11 (Temurin JDK 21.0.12.1 demos re-verified).
 
 | # | Chapter | Status |
 |---|---------|--------|

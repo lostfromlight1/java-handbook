@@ -3,36 +3,65 @@
 > **Status:** Completed  
 > **Module:** 24 — Concurrency and Multithreading  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Deep-dive  
+> **Depth target:** Levels 3–4 (virtual vs platform, pinning, preview structured concurrency)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
 
-## 1. Learning Objectives
+**Section policy:** Omissions in Review Checklist.
 
-- Create **virtual threads** (Java **21 final**, JEP 444).
-- Use **`Executors.newVirtualThreadPerTaskExecutor()`** for per-task carriers.
-- Describe **structured concurrency** as a **preview** API (not required on Java 21 without `--enable-preview`).
+## 1. Learning Objectives *(mandatory)*
 
-## 2. Prerequisites
+After completing this chapter, you should be able to:
 
-- Ch.01–03; Module **19** Java 21 tour.
+- Create **virtual threads** with **`Thread.ofVirtual().start(...)`** or **`Executors.newVirtualThreadPerTaskExecutor()`**.
+- Test **`Thread.currentThread().isVirtual()`** and explain that virtual threads are **threads** in the API model (Java 21 final, JEP 444).
+- Contrast **blocking I/O at scale** (many virtual threads) vs **CPU-bound** work (still bounded by cores).
+- Describe **structured concurrency** as **preview** in Java 21—explicit `--enable-preview`, not production default.
+- Name **pinning** as a **HotSpot / JDK 21** concern with some `synchronized` and native code—not a JVMS portability guarantee.
 
-## 3. Why This Concept Exists
+## 2. Prerequisites *(mandatory)*
 
-Platform threads are scarce; blocking I/O on a large platform thread pool wastes memory. **Virtual threads** are JVM-managed, cheap to create; blocking parks the virtual thread instead of holding an OS thread (HotSpot implementation on JDK 21 — not a JVMS guarantee for all JVMs).
+- Ch.01–03 — threads and executors.
+- **Module 19** — Java 21 feature tour may reference preview demos.
 
-## 4. Conceptual Explanation
+## 3. Why This Concept Exists *(mandatory)*
 
-- **`Thread.startVirtualThread(Runnable)`** or **`Thread.ofVirtual().start(...)`** — starts a virtual thread.
-- **`Thread.currentThread().isVirtual()`** — distinguishes carrier task type.
-- **CPU-bound work** still needs sizing to cores; virtual threads do not multiply CPU throughput.
+**Platform threads** are scarce OS resources. A server that maps **one platform thread per blocking request** caps throughput under I/O latency. **Virtual threads** let you write **blocking style** code while the JVM mounts many virtual threads on a **small carrier pool**, unmounting when blocked (JDK implementation).
 
-**Structured Concurrency (Preview):** `StructuredTaskScope` groups subtasks with a single failure/cancellation boundary. In Java 21 it is **preview** — enable with `--enable-preview --release 21` and re-check JEP status on upgrades. Module **19** demo runs a minimal preview sample; this chapter does not treat preview APIs as production defaults.
+CPU-bound parallelism still requires **sizing to cores**—virtual threads add **concurrency of blocking**, not magic multiplication of compute.
 
-## 5. Step-by-Step Examples
+## 4. Conceptual Explanation *(mandatory)*
+
+### 4.1 Virtual vs platform
+
+| | Platform | Virtual |
+|---|----------|---------|
+| API | `new Thread(...)` | `Thread.ofVirtual()...` |
+| Cost | OS thread | Lightweight JVM scheduling |
+| Best for | CPU pools, legacy | Massive blocking I/O |
+
+### 4.2 Structured Concurrency (Preview)
+
+`StructuredTaskScope` groups subtasks: failure or cancellation boundaries encompass **all** forked work. In Java 21 this remains **preview API**—check JEP status on upgrade; compile with `--enable-preview`.
+
+**This chapter does not treat preview APIs as default production dependencies.**
+
+## 5. Mechanism and Execution Flow *(mandatory)*
+
+```mermaid
+flowchart TB
+    VT[Virtual threads many]
+    CP[Carrier pool platform threads few]
+    VT --> CP
+    CP --> OS[OS threads]
+```
+
+When virtual thread blocks on I/O (HotSpot), carrier may mount another virtual thread—**implementation detail**.
 
 Demo: [virtual-threads-demo](../../examples/core-java/virtual-threads-demo/).
 
-**Verified output:**
+**Verified output (Temurin JDK 21.0.12.1):**
 
 ```text
 isVirtual=true
@@ -43,45 +72,99 @@ platformIsVirtual=false
 
 Empty `vtName` is normal for default-named virtual threads on this JDK.
 
-## 6. Real-World Use Cases
+## 6. Terminology *(mandatory)*
+
+| Term | Meaning |
+|------|---------|
+| Carrier thread | Platform thread running mounted virtual thread (HotSpot) |
+| Pinning | Virtual thread cannot unmount (e.g. some synchronized/native) |
+| Structured concurrency | Parent scope owns child task lifetimes |
+
+## 7. Syntax and Language Rules *(include when the topic is language/API surface)*
+
+```java
+Thread.startVirtualThread(() -> { });
+try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+    ex.submit(() -> { /* blocking work */ });
+}
+```
+
+## 8. Step-by-Step Examples *(mandatory)*
+
+### 8.1 Verified demo
+
+See paths above; compares virtual vs platform `isVirtual()`.
+
+### 8.2 Incorrect
+
+Millions of CPU-spinning virtual threads expecting linear speedup.
+
+### 8.3 Corrected
+
+Bound CPU work with fixed platform pool or deliberate parallelism.
+
+## 9. Real-World Use Cases *(conditional)*
 
 - HTTP servers: one virtual thread per request with blocking JDBC/HTTP clients.
-- Fan-out I/O where tasks spend time waiting.
+- Massive fan-out I/O orchestration.
 
-## 7. Internal Behavior
+## 10. Internal Behavior *(conditional)*
 
-- **Java SE API (final):** Virtual threads are standard threads from the language model’s perspective for `Thread` APIs.
-- **HotSpot:** Mount virtual threads on a **carrier** platform thread pool; **pinning** can occur with some `synchronized` blocks or native code — monitor in production (JEP / release notes, not folklore).
+- **Java SE API (final):** Virtual threads are `Thread` instances with `isVirtual()`.
+- **HotSpot:** Carrier pool, pinning with synchronized/native—monitor in production JDK notes.
 
-## 8. Edge Cases and Limitations
+## 11. Edge Cases and Limitations *(strongly encouraged)*
 
-- Thread-local heavy code may need audit at scale.
-- Do not use huge platform thread pools and virtual threads interchangeably without measurement.
+- Thread-local heavy code at huge scale.
+- Pinning reduces carrier reuse—measure on your JDK vendor/version.
+- Do not confuse virtual-thread executors with unbounded CPU parallelism.
 
-## 9. Common Mistakes
+## 12. Common Mistakes *(mandatory)*
 
 ### Incorrect
 
-Spinning CPU-heavy work on millions of virtual threads expecting linear speedup.
+Replacing every fixed pool without profiling pinning and thread-local usage.
 
 ### Corrected
 
-Bound CPU work to cores (`ExecutorService` with fixed platform pool or parallel streams sized deliberately).
+Adopt for **blocking** workloads; keep CPU pools sized to cores.
 
-## 10. Best Practices
+## 13. Best Practices *(include when guidance adds value)*
 
-- Use virtual threads for **many blocking tasks**; keep existing pool for legacy libraries if pinning appears.
-- Record JDK vendor/version when comparing pinning behavior.
+- Record **JDK vendor/version** when comparing pinning behavior.
+- Prefer virtual threads for blocking I/O; use structured concurrency preview only with explicit preview gates.
 
-## 11. Chapter Summary
+## 14. Design Trade-offs *(conditional)*
 
-Java 21 ships **virtual threads** as final API; structured concurrency remains **preview** — label and enable explicitly.
+| Platform pool | Virtual per task |
+|---------------|------------------|
+| Predictable for CPU | Excellent for blocking scale |
 
-## 12. Next Steps
+## 17. Java Version and Compatibility Notes *(conditional)*
+
+- Virtual threads **final** in Java 21 (JEP 444).
+- Structured concurrency: **preview** in 21—flags required.
+
+## 19. Revision and Mastery *(Deep-dive)*
+
+**Questions:** What does `isVirtual()` prove? When does pinning matter?
+
+## 23. Chapter Summary *(mandatory)*
+
+Java 21 **final** virtual threads scale **blocking** concurrency; **structured concurrency** remains **preview**; distinguish **API threads** from **HotSpot carriers and pinning**.
+
+## 25. References and Further Reading *(mandatory)*
+
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
+- [Java SE `Thread`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html)
+
+## 26. Next Steps
 
 Module **25** — Java Memory Model (happens-before).
 
 ## Review Checklist
 
-- [x] Verified demo
-- [x] Preview vs final labeled
+- [x] Deep-dive; final vs preview labeled
+- [x] Verified Temurin 21.0.12.1
+- [x] HotSpot pinning not stated as JVMS law
+- [x] Omissions: Security, language comparisons

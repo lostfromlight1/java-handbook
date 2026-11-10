@@ -1,6 +1,6 @@
 # Module 14 — Exceptions and Error Handling
 
-**Status:** Completed — 2026-11-10 (Temurin JDK 21.0.12.1)
+**Status:** Completed — standards alignment 2026-11-11 (Technical **L2–3**, §5 Mechanism, master checklist; Temurin JDK 21.0.12.1)
 
 | # | Chapter | Status |
 |---|---------|--------|

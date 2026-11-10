@@ -1,0 +1,15 @@
+---
+description: Depth gate, consistency, citations, and no shallow chapters for handbook markdown
+globs:
+  - "**/*.md"
+alwaysApply: false
+---
+
+# Documentation quality
+
+- Apply the **depth gate** in `DOCUMENTATION-STANDARDS.md`: definition + one sample is not enough for major concepts.
+- Define terms on first use; add shared terms to `GLOSSARY.md`.
+- Keep headings and chapter structure consistent with `templates/chapter-template.md`.
+- Prefer cross-links to prerequisites and follow-ups over duplicating long explanations.
+- Cite official sources for version-sensitive and specification claims; never fabricate citations or results.
+- Do not mark chapters `Completed` without passing the review checklist.

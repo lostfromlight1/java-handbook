@@ -1,0 +1,16 @@
+---
+description: Java 21 technical accuracy for handbook prose and examples
+globs:
+  - "**/*.md"
+  - "**/*.java"
+alwaysApply: false
+---
+
+# Java technical standards
+
+- Primary language level: **Java 21 LTS**. Prefer stable, production-ready APIs.
+- Use idiomatic Java: clear names, explicit imports, consistent formatting.
+- Avoid outdated APIs unless teaching legacy Java; label legacy material clearly.
+- Never invent API behavior, compiler messages, or JVM guarantees.
+- For post-21 features, state version introduced and status (final / preview / incubator / deprecated / removed).
+- Distinguish JLS, Java SE API, JVMS, HotSpot, and framework behavior.

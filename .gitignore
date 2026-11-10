@@ -1,0 +1,45 @@
+# Compiled Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# Build outputs
+target/
+build/
+out/
+bin/
+.gradle/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE / editor
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and temp
+*.log
+*.tmp
+*.temp
+.classpath
+.project
+.settings/
+
+# Native / binary artifacts (never commit)
+*.exe
+*.dll
+*.so
+*.dylib
+*.o

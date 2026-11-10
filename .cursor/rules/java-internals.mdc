@@ -1,0 +1,22 @@
+---
+description: Spec vs HotSpot labeling for JVM, memory, GC, bytecode, and JMM topics
+globs:
+  - "**/25*/**"
+  - "**/26*/**"
+  - "**/27*/**"
+  - "**/28*/**"
+  - "**/jvm*/**"
+  - "**/concurrency*/**"
+  - "**/*memory*"
+  - "**/*garbage*"
+  - "**/*bytecode*"
+alwaysApply: false
+---
+
+# Java internals
+
+- Label every claim as JLS, JVMS requirement, HotSpot implementation detail, or general engineering advice.
+- Prefer practical experiments (javap, jcmd, GC logs, JFR) with recorded real output.
+- Do not present HotSpot-specific behavior as universal JVM guarantees.
+- For concurrency and JMM: teach happens-before and visibility carefully; avoid folk theorems.
+- Never invent benchmark numbers or diagnostic output.

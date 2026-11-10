@@ -1,13 +1,16 @@
 # Module 49 — Cloud and Containerization
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed  
+**Last reviewed:** 2026-11-10
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Cloud-Native Java | Not started |
-| 02 | Kubernetes Basics for Java | Not started |
-| 03 | GraalVM and Native Image Concepts | Not started |
+| 01 | [Cloud-Native Java](01-cloud-native-java.md) | Completed |
+| 02 | [Kubernetes Basics for Java](02-kubernetes-basics-for-java.md) | Completed |
+| 03 | [GraalVM and Native Image Concepts](03-graalvm-and-native-image-concepts.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Module 48; Modules 37–40 for Spring/cloud context.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [49-cloud-containerization-assessment.md](../assessments/module-assessments/49-cloud-containerization-assessment.md)
+
+**Next module:** [50-advanced-java](../50-advanced-java/)

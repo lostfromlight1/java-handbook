@@ -3,8 +3,24 @@
 > **Status:** Completed  
 > **Module:** 12 — Collections Framework  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical
+> **Depth target:** Level 3 (`ArrayList`, `LinkedList`, indexed access)
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -88,7 +104,27 @@ Use **`LinkedList`** (or often better, **`ArrayDeque`**) when the workload is **
 
 **`subList(from, to)`** returns a **view** backed by the original list—structural changes through either reference affect the other. **`List.of`** returns immutable lists with no sublist mutation surprises.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+### 5.1 `ArrayList` growth
+
+On `list.add(e)` when `size == capacity`:
+
+1. **`ArrayList`** increments **`modCount`** (fail-fast story in Ch.05).
+2. It allocates a **larger reference array** (typically ~1.5×), copies elements, then stores `e` at `size++`.
+3. **`get(i)`** is **O(1)**—direct array index.
+
+### 5.2 `LinkedList` node chain
+
+1. Each element lives in a **`Node`** with `prev`/`next`.
+2. **`add` at ends** splices nodes in **O(1)**; **`get(i)`** walks **O(n)** from nearer end.
+3. **`ListsDemo`** **`poll`** on a deque view removes the head node and returns the element—distinct from indexed remove cost.
+
+### 5.3 Heterogeneous `List` (raw / legacy caution)
+
+`List` without generics (legacy) stores **`Object`** references—**`get`** returns `Object` and may require cast. Prefer **`List<ConcreteType>`** with Module 13 generics at API boundaries.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -99,7 +135,7 @@ Use **`LinkedList`** (or often better, **`ArrayDeque`**) when the workload is **
 | **Deque** | Double-ended queue: add/remove first and last (`Deque` interface) |
 | **Fail-fast** | Iterator detects concurrent structural modification (Ch.05) |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 ```java
 import java.util.ArrayList;
@@ -120,9 +156,9 @@ String x = deck.poll();      // remove head, null if empty
 - **`List.copyOf(collection)`** — immutable snapshot (Java 10+).
 - Do not use **`Vector`** / **`Stack`** in new code except when maintaining legacy APIs.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — index insert on ArrayList
+### 8.1 Minimal — index insert on ArrayList
 
 ```java
 List<String> a = new ArrayList<>();
@@ -135,7 +171,7 @@ System.out.println(a.get(1)); // 1.5
 
 Insert at index **1** shifts `"two"` right—cheap for three elements, expensive at scale.
 
-### 7.2 Realistic — ListsDemo
+### 8.2 Realistic — ListsDemo
 
 Full source: [`ListsDemo.java`](../../examples/core-java/lists-demo/ListsDemo.java).
 
@@ -160,7 +196,7 @@ linkedAfter=[tail]
 - **`linked.addFirst` / `addLast`** — pointer rewiring, not array shift.
 - **`poll()`** — **`Deque`** removal from head; list becomes `[tail]`.
 
-### 7.3 Advanced — algorithmic contrast table
+### 8.3 Advanced — algorithmic contrast table
 
 | Operation | `ArrayList` | `LinkedList` |
 |-----------|-------------|--------------|
@@ -172,14 +208,14 @@ linkedAfter=[tail]
 
 For **frequent middle inserts**, neither structure is ideal—tree or gap buffers are specialized; most Java business code still uses **`ArrayList`** plus occasional **`ArrayList` rebuild** or **`LinkedList`** only when profiling proves need.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **REST pagination** — `List<RowDto>` returned from repository; random access to page slice via index math on in-memory window.
 - **Event sourcing replay** — ordered `List<Event>` append-only like tail `add`.
 - **Task scheduler deque** — `LinkedList` or `ArrayDeque` for poll from head while producers add at tail.
 - **Sorting pipeline** — `Collections.sort(list)` requires random access; **`ArrayList`** preferred.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
 
 **`ArrayList.grow`** allocates new array, **`Arrays.copyOf`**, assigns to `elementData`. Capacity trim is not automatic on remove—`trimToSize()` exists.
 
@@ -187,14 +223,14 @@ For **frequent middle inserts**, neither structure is ideal—tree or gap buffer
 
 HotSpot: bounds checks on array access; linked traversal prevents CPU cache locality compared to dense arrays.
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Huge lists** — `ArrayList` max size bounded by array limits (`Integer.MAX_VALUE - 8` soft cap in OpenJDK).
 - **`null` elements** — allowed once in `ArrayList`/`LinkedList`; `indexOf(null)` works.
 - **Concurrent use** — neither is thread-safe; use `Collections.synchronizedList` or `CopyOnWriteArrayList` (concurrency modules).
 - **Casting sublist** — sublist is not a full copy; clearing parent affects child.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — LinkedList for heavy `get(i)` in a loop
 
@@ -230,14 +266,14 @@ while (!list.isEmpty()) {
 // or use Deque / Iterator.remove
 ```
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Default **`List`** implementation: **`ArrayList`**.
 - Pre-size when building from known count: `new ArrayList<>(n)`.
 - Use **enhanced for** or **stream** when index is unnecessary.
 - For stacks/queues, prefer **`ArrayDeque`** over **`LinkedList`** unless you need **`List`** methods at both ends with linked semantics.
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -246,29 +282,29 @@ while (!list.isEmpty()) {
 | Immutable `List.of` | Safe shared constants | No mutation |
 | Sort in place | No extra list | Comparator must see all elements |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Micro-benchmark folklore (“linked lists are always slower”) is misleading—measure **your** access pattern. JVM **JIT** optimizes tight `ArrayList` loops well because of sequential memory. Linked structures scatter nodes on the heap.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Untrusted input that controls **index** must be bounds-checked before `get`. Do not return internal `ArrayList` from a singleton service without copying if clients can mutate.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 **`ArrayList`** since 1.2; current growth strategy in OpenJDK 21 uses `grow` helper. **SequencedCollection** (Java 21) adds `getFirst`/`getLast` on lists—`ArrayList` participates.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Python `list` is a dynamic array like `ArrayList`. C++ `std::vector` similar; `std::list` doubly-linked like `LinkedList`. Rust `Vec` default resizable.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** assuming `List` implies `ArrayList`; using `LinkedList` without deque need.
 - **You should answer:** Why is `get(500_000)` on `LinkedList` expensive?
 - **Advanced:** `ArrayList` iterator `remove` vs `list.remove(index)` during traversal.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -284,13 +320,13 @@ Python `list` is a dynamic array like `ArrayList`. C++ `std::vector` similar; `s
 
 5. Explain why sorting a `LinkedList` may internally copy to array (OpenJDK `List.sort`).
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. `ArrayList` vs `LinkedList` for 1M random reads?
 2. What happens to indices after `remove(2)`?
 3. Is `LinkedList` thread-safe?
 
-## 21. Solutions
+## 22. Solutions
 
 1. `[1, 99, 2, 3]`, `99`.
 2. `[tail]`.
@@ -298,28 +334,51 @@ Python `list` is a dynamic array like `ArrayList`. C++ `std::vector` similar; `s
 4. Snapshot into random-access list for algorithms needing indexes.
 5. `List.sort` may use array copy for linked implementations to meet access needs of TimSort.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **`List`** gives **indexed, ordered** sequences. **`ArrayList`** backs a **growable array**—best default for append and random access. **`LinkedList`** is a **doubly-linked** structure—best when **deque** operations at ends dominate, not random `get(i)`. **`ListsDemo`** contrasts middle insert on array storage with head poll on a linked deque.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 `ArrayList` · `LinkedList` · random access · capacity · amortized · `Deque` · `poll`
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - [Java SE `List`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html)
 - [Java SE `ArrayList`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html)
 - [Java SE `LinkedList`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html)
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [03-sets-and-queues.md](03-sets-and-queues.md) — uniqueness and FIFO processing
 - Module 13 — `List<String>` wildcards in APIs
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; list mutations and backing structure costs at **Level 3**.
+
 - [x] Learning objectives covered
-- [x] ArrayList vs LinkedList structure/trade-offs taught
-- [x] `ListsDemo` verified Temurin 21.0.12.1
-- [x] Revision and Mastery, exercises, references
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **`CopyOnWriteArrayList`** — concurrent module scope.
+
+**Verification note:** `ListsDemo` (`arrayList=[one, 1.5, two]`; `get1=1.5`; `linked=[head, tail]`; `poll=head`) on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

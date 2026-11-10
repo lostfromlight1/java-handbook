@@ -17,7 +17,8 @@ Predict demos first; verify with Temurin JDK 21 as needed.
 4. `map` vs `flatMap`?
 5. `reduce` with identity `0` and `Integer::sum` on empty stream?
 6. Default map value type for `groupingBy` without downstream?
-7. Which pool backs default `parallelStream()`?
+6b. Name the four conceptual parts of a `Collector` (supplier / …).
+7. Which pool backs default `parallelStream()`? Is its parallelism a JLS guarantee?
 8. Is `forEach` on parallel stream ordered?
 9. Why `toList()` terminal vs `collect(toList())` difference (Java 21)?
 10. Short-circuit terminal example?

@@ -19,7 +19,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | Item | Status | Notes |
 |------|--------|-------|
 | Repository structure | Completed | Modules 00–53 indexes; examples; assessments; projects |
-| DOCUMENTATION-STANDARDS.md | Completed | Depth gate + explain-now / expand-later (2026-11-10) |
+| DOCUMENTATION-STANDARDS.md | Completed | Profiles, Mechanism flow, verification labels, source hierarchy, M17 pilot lessons (2026-11-10) |
 | README / CONTRIBUTING / GLOSSARY / REFERENCES | Completed | Glossary seeded from Ch.01; README/CONTRIBUTING aligned to teaching standards |
 | LEARNING-ROADMAP.md | Completed | Dual tracks + dependency map + progressive-explanation table |
 | Templates | Completed | chapter template updated for standalone / progressive teaching |
@@ -453,10 +453,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-stream-fundamentals.md](17-stream-api/01-stream-fundamentals.md) | Completed | Quality pass 2026-11-10 | Reactive streams out of scope |
-| [02-intermediate-and-terminal-operations.md](17-stream-api/02-intermediate-and-terminal-operations.md) | Completed | Quality pass 2026-11-10 | Primitive stream performance tuning in perf module |
-| [03-collectors-and-grouping.md](17-stream-api/03-collectors-and-grouping.md) | Completed | Quality pass 2026-11-10 | `teeing` collector in advanced notes later |
-| [04-parallel-streams-and-pitfalls.md](17-stream-api/04-parallel-streams-and-pitfalls.md) | Completed | Quality pass 2026-11-10 | Custom `ForkJoinPool` wrapper in concurrency module |
+| [01-stream-fundamentals.md](17-stream-api/01-stream-fundamentals.md) | Completed | Template pilot Technical L3 2026-11-10 | Reactive streams out of scope |
+| [02-intermediate-and-terminal-operations.md](17-stream-api/02-intermediate-and-terminal-operations.md) | Completed | Template pilot Technical L3 2026-11-10 | Primitive stream performance tuning in perf module |
+| [03-collectors-and-grouping.md](17-stream-api/03-collectors-and-grouping.md) | Completed | Template pilot Technical L3 2026-11-10 | `teeing` collector in advanced notes later |
+| [04-parallel-streams-and-pitfalls.md](17-stream-api/04-parallel-streams-and-pitfalls.md) | Completed | Template pilot Deep-dive L3–4 2026-11-10 | Custom `ForkJoinPool` wrapper in concurrency module |
 | [Module assessment](assessments/module-assessments/17-stream-api-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -466,9 +466,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `stream-fundamentals-demo` | `listCount=3`; `rangeSum=15`; lazy `filter:` Ada/Lin; `firstL=Lin` |
 | `stream-operations-demo` | `evensDouble=[8, 16, 20]`; `sum=32`; `max=10`; `anyBig=true` |
 | `collectors-grouping-demo` | `byDept={ops=[Zoe], eng=[Ada, Lin]}`; `csv=Ada, Lin, Zoe`; `counts={ops=1, eng=2}` |
-| `parallel-streams-demo` | `sequential`/`parallel` mapped lists; `sideEffect=5`; `badSize=5` (anti-pattern documented) |
+| `parallel-streams-demo` | `sequential`/`parallel` mapped lists; `sideEffect=5`; `badSize=5` (**not** proof of safety; anti-pattern documented) |
 
-**Module 17 status:** Completed  
+**Module 17 status:** Completed (master-template pilot: Technical Ch.01–03, Deep-dive Ch.04; demos Verified Temurin 21.0.12.1)  
 **Next recommended chapter:** Module 18 (Completed below)
 
 ---
@@ -864,9 +864,9 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-ioc-and-dependency-injection.md](36-spring-framework/01-ioc-and-dependency-injection.md) | Completed | Quality pass 2026-11-10 | Optional Spring Boot repro when Maven available |
-| [02-bean-lifecycle-and-aop.md](36-spring-framework/02-bean-lifecycle-and-aop.md) | Completed | Quality pass 2026-11-10 | AspectJ weaving mention only |
-| [03-spring-data-mvc-security-overview.md](36-spring-framework/03-spring-data-mvc-security-overview.md) | Completed | Quality pass 2026-11-10 | — |
+| [01-ioc-and-dependency-injection.md](36-spring-framework/01-ioc-and-dependency-injection.md) | Completed | Depth L3+L4 pass 2026-11-10 | Composition root, bean definitions, constructor resolution |
+| [02-bean-lifecycle-and-aop.md](36-spring-framework/02-bean-lifecycle-and-aop.md) | Completed | Depth L3+L4 pass 2026-11-10 | Lifecycle stages, proxies, `@Transactional` |
+| [03-spring-data-mvc-security-overview.md](36-spring-framework/03-spring-data-mvc-security-overview.md) | Completed | Depth L3 pass 2026-11-10 | MVC pipeline, DTO/OSIV, security overview |
 | [Module assessment](assessments/module-assessments/36-spring-framework-assessment.md) | Completed | Solutions separate | — |
 
 **Examples compiled (Temurin JDK 21.0.12.1):**
@@ -885,13 +885,20 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-spring-boot-fundamentals.md](37-spring-boot/01-spring-boot-fundamentals.md) | Completed | Quality pass 2026-11-10 | Conceptual; no Maven on validation host |
-| [02-configuration-and-profiles.md](37-spring-boot/02-configuration-and-profiles.md) | Completed | Quality pass 2026-11-10 | — |
-| [03-web-layer-and-validation.md](37-spring-boot/03-web-layer-and-validation.md) | Completed | Quality pass 2026-11-10 | — |
-| [04-actuator-testing-and-production.md](37-spring-boot/04-actuator-testing-and-production.md) | Completed | Quality pass 2026-11-10 | Testcontainers optional lab |
+| [01-spring-boot-fundamentals.md](37-spring-boot/01-spring-boot-fundamentals.md) | Completed | Depth L3+L4 pass 2026-11-10 | `spring-boot-minimal` via `mvnw` |
+| [02-configuration-and-profiles.md](37-spring-boot/02-configuration-and-profiles.md) | Completed | Depth L3 pass 2026-11-10 | — |
+| [03-web-layer-and-validation.md](37-spring-boot/03-web-layer-and-validation.md) | Completed | Depth L3 pass 2026-11-10 | — |
+| [04-actuator-testing-and-production.md](37-spring-boot/04-actuator-testing-and-production.md) | Completed | Depth L3 pass 2026-11-10 | Testcontainers optional lab |
 | [Module assessment](assessments/module-assessments/37-spring-boot-assessment.md) | Completed | Solutions separate | — |
 
-**Module 37 status:** Completed (Spring snippets conceptual; HTTP verified via `rest-httpserver-demo`)  
+**Examples verified (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `rest-httpserver-demo` | `GET /users/1 status=200`; `POST /users status=201`; `restDemo=ok` |
+| `spring-boot-minimal` | `mvnw test`: 1 passed; fat JAR `GET /hello` → `{"message":"bootMinimal=ok"}` |
+
+**Module 37 status:** Completed (`spring-boot-minimal` verified with Maven Wrapper)  
 **Next recommended chapter:** Module 38 (Completed below)
 
 ---

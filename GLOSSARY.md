@@ -149,8 +149,12 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Stream** | Lazy sequence of elements from a source, processed via intermediate and terminal operations (not a `Collection`). | [Module 17 Ch.01](17-stream-api/01-stream-fundamentals.md) |
 | **Intermediate operation** | Stream pipeline stage returning another stream; lazy until a terminal runs. | Module 17 Ch.01 |
 | **Terminal operation** | Stream operation that completes the pipeline and produces a result or side effect. | Module 17 Ch.02 |
-| **Collector** | Mutable reduction strategy used with `Stream.collect` (e.g. `groupingBy`, `joining`). | [Module 17 Ch.03](17-stream-api/03-collectors-and-grouping.md) |
+| **Short-circuiting operation** | Terminal (or intermediate like `limit`) that can stop consuming the source early. | Module 17 Ch.01–02 |
+| **Spliterator** | Source splitter/iterator that feeds a stream; `trySplit` enables parallel decomposition. | Module 17 Ch.01 / Ch.04 |
+| **Collector** | Reduction strategy with supplier, accumulator, combiner, and optional finisher (`Stream.collect`). | [Module 17 Ch.03](17-stream-api/03-collectors-and-grouping.md) |
+| **Downstream collector** | Inner collector used inside `groupingBy` / `partitioningBy` (e.g. `mapping`, `counting`). | Module 17 Ch.03 |
 | **Parallel stream** | Stream executed with split/combine on the common `ForkJoinPool`; requires thread-safe, associative work. | [Module 17 Ch.04](17-stream-api/04-parallel-streams-and-pitfalls.md) |
+| **Common ForkJoinPool** | Shared JDK pool used by default parallel streams; sizing is an implementation detail, not a language guarantee. | Module 17 Ch.04 |
 | **NullPointerException (NPE)** | Unchecked exception when dereferencing a null reference. | [Module 18 Ch.01](18-optional-and-null-handling/01-null-and-nullpointerexception.md) |
 | **Optional** | `java.util.Optional` container for zero or one non-null reference; intended mainly for return types. | [Module 18 Ch.02](18-optional-and-null-handling/02-optional-api.md) |
 | **Virtual thread** | JVM-managed lightweight thread for high-volume blocking workloads; mounted on carrier platform threads. | [Module 19 Ch.01](19-modern-java-features/01-java-21-feature-tour.md) |
@@ -222,10 +226,16 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Persistence context** | First-level cache of managed entities scoped to an `EntityManager` session. | [Module 35 Ch.03](35-hibernate-and-jpa/03-transactions-caching-and-performance.md) |
 | **Inversion of Control (IoC)** | Object-graph and lifecycle decisions moved to a container or composition root instead of each class calling `new`. | [Module 36 Ch.01](36-spring-framework/01-ioc-and-dependency-injection.md) |
 | **Dependency Injection (DI)** | Collaborators supplied from outside, usually via constructor, rather than created inside the consumer. | Module 36 Ch.01 |
+| **Composition root** | Single place that builds the application object graph (`main`, Spring configuration, or tests). | Module 36 Ch.01 |
+| **Bean definition** | Spring metadata (type, name, scope, factory) stored before a bean instance is created. | Module 36 Ch.01 |
+| **ApplicationContext** | Spring `BeanFactory` plus application services (environment, events, resources, AOP integration). | Module 36 Ch.01 |
 | **Bean (Spring)** | Object instance managed by the Spring `ApplicationContext` with defined scope and lifecycle. | Module 36 Ch.01 |
-| **Aspect-Oriented Programming (AOP)** | Modularizing cross-cutting behavior (logging, transactions) via advice on join points, often through proxies. | [Module 36 Ch.02](36-spring-framework/02-bean-lifecycle-and-aop.md) |
+| **BeanPostProcessor** | Hook that can wrap or customize beans around initialization (used heavily for proxies). | [Module 36 Ch.02](36-spring-framework/02-bean-lifecycle-and-aop.md) |
+| **Aspect-Oriented Programming (AOP)** | Modularizing cross-cutting behavior (logging, transactions) via advice on join points, often through proxies. | Module 36 Ch.02 |
+| **Self-invocation** | Calling `this.method()` inside a proxied bean, bypassing the proxy and its advice (e.g. `@Transactional`). | Module 36 Ch.02 |
 | **Autoconfiguration** | Spring Boot conditional `@Configuration` activated from classpath to register default beans. | [Module 37 Ch.01](37-spring-boot/01-spring-boot-fundamentals.md) |
 | **Spring profile** | Named configuration slice (`dev`, `prod`) selecting beans and property files. | [Module 37 Ch.02](37-spring-boot/02-configuration-and-profiles.md) |
+| **ConfigurationProperties** | Type-safe binding of a property prefix to a Java type (often validated). | Module 37 Ch.02 |
 | **DTO (Data Transfer Object)** | Type shaping an API or boundary contract, separate from persistence entities. | [Module 38 Ch.02](38-rest-api-development/02-dtos-errors-and-versioning.md) |
 | **ProblemDetail** | RFC 7807-style structured HTTP error payload (`title`, `status`, `detail`, …). | Module 38 Ch.02 |
 | **OpenAPI** | Machine-readable HTTP API description (paths, schemas, operations) for docs and contract tests. | [Module 38 Ch.03](38-rest-api-development/03-openapi-and-api-testing.md) |

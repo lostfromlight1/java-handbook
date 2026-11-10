@@ -10,7 +10,8 @@
 4. `map` 1:1; `flatMap` 1:many flatten nested streams.
 5. Returns **`0`** (identity).
 6. `Map<K, List<T>>`.
-7. **`ForkJoinPool.commonPool()`** (implementation default).
+6b. **Supplier**, **accumulator**, **combiner**, **finisher** (finisher may be identity).
+7. **`ForkJoinPool.commonPool()`** by default on typical JDKs — an **implementation** detail, **not** a JLS guarantee of pool choice or parallelism.
 8. **Not guaranteed** — use `forEachOrdered` if order required.
 9. `Stream.toList()` → **unmodifiable** list (Java 16+); `collect(Collectors.toList())` → mutable `ArrayList` traditionally.
 10. `findFirst`, `anyMatch`, `limit` with terminal, etc.

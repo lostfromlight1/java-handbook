@@ -9,10 +9,11 @@ alwaysApply: true
 - Write one chapter at a time at full textbook depth. Prefer one finished chapter over many shallow drafts.
 - Never create empty chapter placeholders or empty module assessments marked complete.
 - Status values: `Not started`, `In progress`, `Drafted`, `Needs review`, `Needs revision`, `Completed`.
-- Mark `Completed` only after the depth gate and review checklist in `DOCUMENTATION-STANDARDS.md` pass.
-- Follow `.cursor/skills/java-documentation/SKILL.md`.
+- Mark `Completed` only after the depth gate, **Mandatory Depth Review (Levels 1–4)**, chapter profile fit, and review checklist in `DOCUMENTATION-STANDARDS.md` pass.
+- Follow `.cursor/skills/java-documentation/SKILL.md` and `templates/chapter-template.md` (conditional sections; verification labels).
 - Attribute a subagent review only if that agent was actually invoked or its review was genuinely performed.
 - After a full module's chapters are `Completed`, create its assessment under `assessments/module-assessments/` with solutions in a separate file.
 - Update `PROGRESS.md` only to match reality; never mark complete merely because content was edited or skimmed.
-- Target Java **21**. Verify version-sensitive claims against official docs. Record real `javac`/`java` results.
+- Target Java **21**. Verify version-sensitive claims against official docs. Record real `javac`/`java` results. Never invent Verified output.
 - When improving existing chapters: preserve useful explanations; expand shallow definitions; fix deferred-without-explanation gaps; do not regenerate whole chapters without cause.
+- Prefer understanding and technical depth over finishing chapters quickly. Do not begin handbook-wide retrofits without an explicit scoped pass.

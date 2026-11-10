@@ -17,16 +17,16 @@ Reusable workflow for this repository. Details live in linked files; keep this s
 
 ## Create or expand a chapter
 
-1. **Curriculum** — scope, prerequisites, objectives; note which concepts need a first introduction here vs a later deep dive (`curriculum-architect` role).
-2. **Research** — official JLS/JVMS/JDK/OpenJDK docs; note claims to verify (`java-internals-researcher`).
-3. **Draft** — full template sections that add value; apply the **depth gate** (`java-instructor`).
+1. **Curriculum** — scope, prerequisites, objectives; choose **chapter profile** (Conceptual / Technical / Deep-dive); note first introductions vs later deep dives (`curriculum-architect`).
+2. **Research** — follow source hierarchy: JLS → JVMS → API docs → OpenJDK → framework docs → authoritative books (`java-internals-researcher`).
+3. **Draft** — use master template; include **mandatory** sections; omit conditional sections that lack value (record omissions); write **Mechanism and Execution Flow** when applicable (`java-instructor`).
 4. **Explain-before-use** — define terminology and unfamiliar syntax before examples rely on them.
-5. **Standalone pass** — ensure a reader can understand this chapter without constantly opening others; brief prerequisite refreshers + links for depth.
-6. **Internals** — verify JVM/runtime claims; label guarantees vs HotSpot (`jvm-specialist` when relevant).
+5. **Standalone pass** — reader can understand without constantly opening others; brief prerequisite refreshers + links for depth.
+6. **Internals** — verify JVM/runtime claims; label guarantees vs HotSpot; never treat HotSpot as universal JVM law (`jvm-specialist` when relevant).
 7. **Backend** — production examples when the module level allows (`backend-engineer`).
-8. **Examples** — place under `examples/`; compile and run on JDK 21; record real output; explain important lines (`java-code-reviewer`).
+8. **Examples** — place under `examples/`; label **Verified** / **Compile-verified** / **Illustrative**; compile and run Verified on JDK 21; record real output; explain important lines and why (`java-code-reviewer`).
 9. **Review** — apply [review-checklist.md](review-checklist.md); fix issues (`documentation-reviewer`).
-10. **Progress** — update statuses only after a real pass of the depth gate and checklist.
+10. **Progress** — update statuses only after depth gate, Mandatory Depth Review, and checklist pass.
 
 ## Depth gate (mandatory)
 
@@ -40,6 +40,30 @@ For each major concept include when applicable:
 - Internal behavior when relevant
 - Practical and advanced applications
 - Design trade-offs
+
+## Mandatory Depth Review (Levels 1–4) and profiles
+
+Coverage ≠ understanding. Before `Completed`, apply `DOCUMENTATION-STANDARDS.md` Levels 1–4, chapter profiles, and the ten-question teaching review.
+
+| Profile | Typical depth |
+|---------|---------------|
+| Conceptual | Levels 1–2 |
+| Technical | Levels 2–3 (core APIs usually ≥ 3) |
+| Deep-dive | Levels 3–4 (Level 4 on critical mechanisms) |
+
+Reject Level-1-only drafts that only list terms, tables, and annotation recipes. Do not force identical section sets across profiles.
+
+### How to achieve depth (writing order per major concept)
+
+1. Motivation (concrete problem)
+2. Full definition with a concrete collaborator/scenario
+3. Mechanism and execution flow (then internals if needed)
+4. Contrast with the wrong approach
+5. Progressive examples with verification labels and important lines explained
+6. Limits, trade-offs, version/framework caveats (labeled)
+7. Revision and Mastery for Track B / Technical / Deep-dive
+
+Do not inflate line counts with repetition. Expand explanations; do not regenerate whole chapters without cause when improving existing work.
 
 ## Progressive explanation rules
 
@@ -73,9 +97,9 @@ For each major concept include when applicable:
 
 ## Diagrams and citations
 
-- Mermaid only when it teaches structure or flow; explain every diagram.
-- Source priority: JLS/JVMS → official JDK docs → JEPs/release notes → OpenJDK → reputable books.
-- Never fabricate citations or execution results.
+- Mermaid when it teaches structure or flow (required for complex pipelines, concurrency, DI/lifecycle, GC, etc. when useful); explain every diagram; never force diagrams for simple topics.
+- Source hierarchy: JLS → JVMS → official API docs → OpenJDK → framework docs/source → authoritative books/articles.
+- Never fabricate citations or execution results; never label Verified without a real run.
 
 ## Additional resources
 

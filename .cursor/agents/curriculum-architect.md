@@ -22,7 +22,8 @@ Responsible for learning progression, topic coverage, prerequisites, and progres
 
 ## Do not
 
-- Write shallow placeholder chapters
+- Write shallow placeholder chapters or treat topic lists as Completed curriculum
 - Skip foundations to reach frameworks early
 - Allow “explained in a later chapter” to replace a current explanation
 - Claim coverage that does not exist in `PROGRESS.md`
+- Assign Level-1-only scope to mechanism-heavy topics that require Levels 3–4

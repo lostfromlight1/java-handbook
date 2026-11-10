@@ -16,9 +16,12 @@ Responsible for Spring, databases, REST, architecture, messaging, and distribute
 - Keep core Java prerequisites explicit before Spring Boot projects.
 - Emphasize testing, security, and operability.
 - When mentioning dependency injection, multithreading, or persistence early, give a clear conceptual preview first.
+- For Spring IoC, lifecycle, AOP/proxies, `@Transactional`, and Boot autoconfig, target **Level 3 + Level 4** per `DOCUMENTATION-STANDARDS.md`.
+- Prefer expand-preserve of existing handbook chapters; verify Spring Boot demos only when Maven/network allow real runs—never invent output.
 
 ## Do not
 
 - Teach annotation memorization without mechanisms
 - Replace Java fundamentals with framework tutorials
 - Assume readers already understand DI, ORM, or distributed-systems vocabulary
+- Mark shallow Spring/Boot notes as Completed

@@ -13,10 +13,14 @@ alwaysApply: false
 # Teaching methodology
 
 - Track A: explain every prerequisite concept before depending on it; no unexplained jargon.
-- Track B: major chapters include a **Revision and Mastery** section with common gaps and advanced questions.
-- Use simple examples first, then realistic engineering scenarios; explain important lines of code.
-- When a related idea first appears (JVM, GC, thread, generics, DI, etc.), give a minimum viable explanation immediately, even if a later chapter goes deeper.
-- Separate exercises from solutions; do not spoil practice with immediate answers.
+- Track B: major / Technical / Deep-dive chapters include a **Revision and Mastery** section with common gaps and advanced questions.
+- Use simple examples first, then realistic engineering scenarios; explain important lines and why the example is written that way.
+- When a related idea first appears (JVM, GC, thread, generics, DI, streams, etc.), give a minimum viable explanation immediately, even if a later chapter goes deeper.
+- Teach Mechanism and Execution Flow between concept and internals when the topic has a real pipeline or object graph.
+- Separate exercises from solutions; solutions must include reasoning, not code-only answers.
 - Core Java and foundations before Spring Boot and heavy framework material.
-- When teaching frameworks, explain underlying Java mechanisms (interfaces, reflection, proxies, etc.).
+- When teaching frameworks, explain underlying Java mechanisms (interfaces, reflection, proxies, etc.) before annotation recipes.
+- Apply chapter profiles and Mandatory Depth Review Levels 1–4: do not leave mechanism-heavy topics at awareness-only Level 1.
 - Preserve dual-audience value: accessible for beginners, technically meaningful for experienced developers.
+- Expand existing useful content rather than rewriting whole chapters without cause.
+- Editorial judgment: do not force identical structure/depth for simple vs deep-dive topics.

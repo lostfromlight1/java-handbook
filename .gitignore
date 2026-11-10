@@ -15,6 +15,9 @@ bin/
 .gradle/
 .mvn/wrapper/maven-wrapper.jar
 
+# Local tool caches (portable Maven, etc.)
+.tools/
+
 # IDE / editor
 .idea/
 *.iml

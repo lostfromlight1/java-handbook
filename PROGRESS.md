@@ -2,7 +2,7 @@
 
 **Target Java version:** 21 LTS  
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
-**Last updated:** 2026-11-10
+**Last updated:** 2026-11-10 (Module 00 completed)
 
 ## Status values
 
@@ -49,15 +49,24 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-what-is-programming-and-what-is-java.md](00-programming-foundations/01-what-is-programming-and-what-is-java.md) | Completed | Self-review 2026-11-10 (checklist passed) | — |
-| 02-how-computers-execute-programs.md | Not started | | |
-| 03-algorithms-and-problem-solving.md | Not started | | |
-| 04-data-and-basic-structures.md | Not started | | |
-| 05-complexity-and-debugging-mindset.md | Not started | | |
-| Module assessment | Not started | | After all chapters Completed |
+| [01-what-is-programming-and-what-is-java.md](00-programming-foundations/01-what-is-programming-and-what-is-java.md) | Completed | Self-review 2026-11-10 | — |
+| [02-how-computers-execute-programs.md](00-programming-foundations/02-how-computers-execute-programs.md) | Completed | Self-review 2026-11-10 | — |
+| [03-algorithms-and-problem-solving.md](00-programming-foundations/03-algorithms-and-problem-solving.md) | Completed | Self-review 2026-11-10 | — |
+| [04-data-and-basic-structures.md](00-programming-foundations/04-data-and-basic-structures.md) | Completed | Self-review 2026-11-10 | — |
+| [05-complexity-and-debugging-mindset.md](00-programming-foundations/05-complexity-and-debugging-mindset.md) | Completed | Self-review 2026-11-10 | — |
+| [Module assessment](assessments/module-assessments/00-programming-foundations-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled:** `examples/beginner/hello-world` — `javac`/`java` on Oracle JDK 21.0.9; output `Hello, Java!`  
-**Module 00 status:** In progress (1/5 chapters Completed; module not complete)  
+**Examples compiled (Oracle JDK 21.0.9):**
+
+| Example | Result |
+|---------|--------|
+| `examples/beginner/hello-world` | `Hello, Java!` |
+| `examples/beginner/execution-order` | Ordered prints 1–6 as documented |
+| `examples/beginner/find-max` | `Maximum score: 91` |
+| `examples/beginner/scoreboard` | Names/scores + average `91.66666666666667` |
+| `examples/beginner/debug-off-by-one` | Bug `10`, fixed `15` |
+
+**Module 00 status:** Completed  
 **Next recommended chapter:** `01-java-getting-started/01-jdk-jre-jvm-and-tooling.md`
 
 ---

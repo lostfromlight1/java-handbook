@@ -28,9 +28,10 @@ Optional orientation:
 - [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md) — both learning tracks
 - [appendix/java-version-history.md](../appendix/java-version-history.md) — why this handbook targets Java 21
 
-Follow-up chapters (planned):
+Follow-up chapters:
 
-- Module 00: how computers execute programs; algorithms and problem solving
+- [02-how-computers-execute-programs.md](02-how-computers-execute-programs.md)
+- [03-algorithms-and-problem-solving.md](03-algorithms-and-problem-solving.md)
 - Module 01: JDK/JRE/JVM tooling, installation, IDE and CLI workflow
 
 ## 3. Why This Concept Exists
@@ -526,7 +527,8 @@ Programming · source code · algorithm · compiler · bytecode · JDK · JRE ·
 - Continue Module 00 foundations (computers, algorithms) **or**
 - Go to Module 01 for JDK installation, environment variables, IDE vs CLI, and project structure—recommended next for most beginners after running HelloWorld:
 
-**Next recommended chapter:** `01-java-getting-started/01-jdk-jre-jvm-and-tooling.md` (planned)
+**Next chapter:** [02-how-computers-execute-programs.md](02-how-computers-execute-programs.md)  
+After Module 00: `01-java-getting-started/01-jdk-jre-jvm-and-tooling.md`
 
 ## Review Checklist
 

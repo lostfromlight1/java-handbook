@@ -1,14 +1,14 @@
 # Module 04 — Methods and Functions
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed (all four chapters)
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Method Basics | Not started |
-| 02 | Overloading, Varargs, and Recursion | Not started |
-| 03 | Pass-by-Value and Stack Frames | Not started |
-| 04 | Static, Instance, and Method References | Not started |
+| 01 | Method Basics | Completed |
+| 02 | Overloading, Varargs, and Recursion | Completed |
+| 03 | Pass-by-Value and Stack Frames | Completed |
+| 04 | Static, Instance, and Method References | Completed |
 
 **Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [04-methods-and-functions-assessment.md](../assessments/module-assessments/04-methods-and-functions-assessment.md) (solutions separate).

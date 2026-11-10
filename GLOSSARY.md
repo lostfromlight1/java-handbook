@@ -48,5 +48,22 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Enhanced for** | For-each loop over an array or `Iterable`. | [Module 03 Ch.03](03-control-flow/03-loops.md) |
 | **Pattern matching** | Type test that binds a typed variable when it succeeds. | [Module 03 Ch.04](03-control-flow/04-branching-and-pattern-matching.md) |
 | **Exhaustiveness** | All possible values/types of a switch selector are handled. | Module 03 Ch.04 |
+| **Method** | Named block of code on a class that can take parameters and optionally return a value. | [Module 04 Ch.01](04-methods-and-functions/01-methods-basics.md) |
+| **Overloading** | Multiple methods in the same class sharing a name but differing in parameter lists. | [Module 04 Ch.02](04-methods-and-functions/02-overloading-varargs-and-recursion.md) |
+| **Varargs** | Trailing `Type... name` parameter accepting zero or more arguments as an array. | Module 04 Ch.02 |
+| **Recursion** | A method calling itself (directly or indirectly) with a base case that stops the chain. | Module 04 Ch.02 |
+| **Pass-by-value** | Method argument mechanism where the callee receives a copy of each argument value. | [Module 04 Ch.03](04-methods-and-functions/03-pass-by-value-and-stack-frames.md) |
+| **Stack frame** | Storage for one active method invocation on a thread’s JVM stack (locals, parameters, return linkage). | Module 00 Ch.02 / Module 04 Ch.03 |
+| **Static method** | Method belonging to a class, invoked without a receiver object. | [Module 04 Ch.04](04-methods-and-functions/04-static-instance-and-method-references.md) |
+| **Instance method** | Method invoked on an object; implicit `this` receiver. | Module 04 Ch.04 |
+| **Method reference** | `Type::name` or `obj::name` shorthand for a lambda that calls an existing method. | Module 04 Ch.04 |
+| **Class** | Blueprint defining fields and methods for a type. | [Module 05 Ch.01](05-object-oriented-programming/01-oop-fundamentals.md) |
+| **Object** | Runtime instance of a class, typically created with `new`. | Module 05 Ch.01 |
+| **Encapsulation** | Hiding representation and controlling access so invariants can be enforced. | [Module 05 Ch.02](05-object-oriented-programming/02-encapsulation-and-abstraction.md) |
+| **Abstraction** | Exposing essential operations while hiding implementation details. | Module 05 Ch.02 |
+| **Inheritance** | `extends` relationship where a subclass is-a specialized superclass. | [Module 05 Ch.03](05-object-oriented-programming/03-inheritance-and-polymorphism-intro.md) |
+| **Polymorphism** | Same call site; runtime type decides which overridden instance method runs. | Module 05 Ch.03 |
+| **Composition** | Has-a design where an object uses/owns another object as a part or collaborator. | [Module 05 Ch.04](05-object-oriented-programming/04-composition-and-object-relationships.md) |
+| **Functional interface** | Interface with a single abstract method; target type for lambdas and method references. | Module 04 Ch.04 (preview; Module 16) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

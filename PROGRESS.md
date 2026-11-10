@@ -2,8 +2,9 @@
 
 **Target Java version:** 21 LTS  
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
+**Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (documentation quality standards + Modules 00–03 explanation pass)
+**Last updated:** 2026-11-10 (Module 05 completed)
 
 ## Status values
 
@@ -141,12 +142,58 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | `pattern-control-demo` | patterns + sealed shape areas |
 
 **Module 03 status:** Completed  
-**Next recommended chapter:** `04-methods-and-functions/01-methods-basics.md`
+**Next recommended chapter:** Module 04 (see below)
 
 ---
 
-## Modules 04–53
+## Module 04 — Methods and Functions
 
-Remaining modules: **Not started** (indexes only; module `README.md` files list planned chapters). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-methods-basics.md](04-methods-and-functions/01-methods-basics.md) | Completed | Quality pass 2026-11-10 | Guards, return/`void`, static preview |
+| [02-overloading-varargs-and-recursion.md](04-methods-and-functions/02-overloading-varargs-and-recursion.md) | Completed | Quality pass 2026-11-10 | Ambiguity, varargs, recursion vs iteration |
+| [03-pass-by-value-and-stack-frames.md](04-methods-and-functions/03-pass-by-value-and-stack-frames.md) | Completed | Quality pass 2026-11-10 | Pass-by-value myth; stack frames; JLS/JVMS/HotSpot |
+| [04-static-instance-and-method-references.md](04-methods-and-functions/04-static-instance-and-method-references.md) | Completed | Quality pass 2026-11-10 | `this`, static fields, method references preview |
+| [Module assessment](assessments/module-assessments/04-methods-and-functions-assessment.md) | Completed | Solutions separate | — |
 
-**Next recommended chapter:** `04-methods-and-functions/01-methods-basics.md` (not started).
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `methods-basics-demo` | greet Ada; sum 8; passing/failing; clamp 100/0 |
+| `overloading-demo` | max 9/9/2.25; join; factorial 120; sumTo 10 |
+| `pass-by-value-demo` | x=10; nums[0]=100; sb=Hi!; s=hello |
+| `static-instance-demo` | ids 1–2; ticks 2/1; ADA/LIN/ZOE; sum 6 |
+
+**Module 04 status:** Completed  
+**Next recommended chapter:** Module 05 (Completed below)
+
+---
+
+## Module 05 — Object-Oriented Programming
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-oop-fundamentals.md](05-object-oriented-programming/01-oop-fundamentals.md) | Completed | Quality pass 2026-11-10 | Class/object, `new`, identity, encapsulation preview |
+| [02-encapsulation-and-abstraction.md](05-object-oriented-programming/02-encapsulation-and-abstraction.md) | Completed | Quality pass 2026-11-10 | Access modifiers, invariants, Temperature API |
+| [03-inheritance-and-polymorphism-intro.md](05-object-oriented-programming/03-inheritance-and-polymorphism-intro.md) | Completed | Quality pass 2026-11-10 | `extends`, `super`, polymorphism intro |
+| [04-composition-and-object-relationships.md](05-object-oriented-programming/04-composition-and-object-relationships.md) | Completed | Quality pass 2026-11-10 | has-a, object graphs |
+| [Module assessment](assessments/module-assessments/05-object-oriented-programming-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `oop-fundamentals-demo` | withdraw ok; Alice 85 cents; Bob 50; sameRef true |
+| `encapsulation-demo` | celsius 25.0; fahrenheit 77.0; absolute zero rejected |
+| `inheritance-poly-demo` | pays 50000/60000/40000; polymorphic 65000 |
+| `composition-demo` | Civic I4; Sherlock London; ORD-1 total 7500 cents |
+
+**Module 05 status:** Completed  
+**Next recommended chapter:** `06-classes-and-objects/` (constructors, equals/hashCode, …)
+
+---
+
+## Modules 06–53
+
+Remaining modules: **Not started** (indexes only). Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

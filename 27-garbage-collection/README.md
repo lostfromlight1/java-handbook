@@ -1,13 +1,13 @@
 # Module 27 — Garbage Collection
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | GC Fundamentals | Not started |
-| 02 | Collectors: G1, ZGC, Shenandoah | Not started |
-| 03 | Tuning and Memory Leaks | Not started |
+| 01 | [GC Fundamentals](01-gc-fundamentals.md) | Completed |
+| 02 | [Collectors: G1, ZGC, Shenandoah](02-collectors-g1-zgc-shenandoah.md) | Completed |
+| 03 | [Tuning and Memory Leaks](03-tuning-and-memory-leaks.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Modules 25–26.
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [27-garbage-collection-assessment.md](../assessments/module-assessments/27-garbage-collection-assessment.md)

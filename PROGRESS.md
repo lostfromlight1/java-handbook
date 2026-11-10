@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-10 (Module 15 completed)
+**Last updated:** 2026-11-10 (Modules 16–18 completed)
 
 ## Status values
 
@@ -427,6 +427,74 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 ---
 
-## Modules 16–53
+## Module 16 — Lambdas and Functional Programming
 
-Remaining modules: **Not started** (indexes only), except Modules 13–15 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-functional-fundamentals.md](16-lambdas-and-functional-programming/01-functional-fundamentals.md) | Completed | Quality pass 2026-11-10 | Virtual-thread executors in later concurrency modules |
+| [02-lambdas-and-functional-interfaces.md](16-lambdas-and-functional-programming/02-lambdas-and-functional-interfaces.md) | Completed | Quality pass 2026-11-10 | Custom SAM in framework modules as needed |
+| [03-method-references-and-composition.md](16-lambdas-and-functional-programming/03-method-references-and-composition.md) | Completed | Quality pass 2026-11-10 | — |
+| [Module assessment](assessments/module-assessments/16-lambdas-functional-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `functional-fundamentals-demo` | `apply=15`; `sorted=[fig, kiwi, apple]`; `transformed=[10, 20, 30]` |
+| `lambdas-interfaces-demo` | `greeting=Hello`; `lenAda=3`; `nonBlankCount=2`; `mapped=[ADA, BOB]` |
+| `method-references-demo` | `normalized=[ADA, LIN]`; `pipeline=14`; `compose=14` |
+
+**Module 16 status:** Completed  
+**Next recommended chapter:** Module 17 (Completed below)
+
+---
+
+## Module 17 — Stream API
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-stream-fundamentals.md](17-stream-api/01-stream-fundamentals.md) | Completed | Quality pass 2026-11-10 | Reactive streams out of scope |
+| [02-intermediate-and-terminal-operations.md](17-stream-api/02-intermediate-and-terminal-operations.md) | Completed | Quality pass 2026-11-10 | Primitive stream performance tuning in perf module |
+| [03-collectors-and-grouping.md](17-stream-api/03-collectors-and-grouping.md) | Completed | Quality pass 2026-11-10 | `teeing` collector in advanced notes later |
+| [04-parallel-streams-and-pitfalls.md](17-stream-api/04-parallel-streams-and-pitfalls.md) | Completed | Quality pass 2026-11-10 | Custom `ForkJoinPool` wrapper in concurrency module |
+| [Module assessment](assessments/module-assessments/17-stream-api-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `stream-fundamentals-demo` | `listCount=3`; `rangeSum=15`; lazy `filter:` Ada/Lin; `firstL=Lin` |
+| `stream-operations-demo` | `evensDouble=[8, 16, 20]`; `sum=32`; `max=10`; `anyBig=true` |
+| `collectors-grouping-demo` | `byDept={ops=[Zoe], eng=[Ada, Lin]}`; `csv=Ada, Lin, Zoe`; `counts={ops=1, eng=2}` |
+| `parallel-streams-demo` | `sequential`/`parallel` mapped lists; `sideEffect=5`; `badSize=5` (anti-pattern documented) |
+
+**Module 17 status:** Completed  
+**Next recommended chapter:** Module 18 (Completed below)
+
+---
+
+## Module 18 — Optional and Null Handling
+
+| Chapter | Status | Review | Outstanding |
+|---------|--------|--------|-------------|
+| [01-null-and-nullpointerexception.md](18-optional-and-null-handling/01-null-and-nullpointerexception.md) | Completed | Quality pass 2026-11-10 | JSpecify/nullness annotations in advanced tooling module |
+| [02-optional-api.md](18-optional-and-null-handling/02-optional-api.md) | Completed | Quality pass 2026-11-10 | — |
+| [03-optional-design-and-misuse.md](18-optional-and-null-handling/03-optional-design-and-misuse.md) | Completed | Quality pass 2026-11-10 | Jackson Optional config in web modules |
+| [Module assessment](assessments/module-assessments/18-optional-null-assessment.md) | Completed | Solutions separate | — |
+
+**Examples compiled (Temurin JDK 21.0.12.1):**
+
+| Example | Result |
+|---------|--------|
+| `null-npe-demo` | `safe=unknown`; `npe=NullPointerException`; `user=Ada`; `display=<anonymous>` |
+| `optional-api-demo` | `present=Ada`; `upper=ADA`; `fromEmpty=fallback`; `len=2` |
+| `optional-design-demo` | `good=Ada`; `missing=unknown`; `hasUser1=true` |
+
+**Module 18 status:** Completed  
+**Next recommended chapter:** [19-modern-java-features/](19-modern-java-features/)
+
+---
+
+## Modules 19–53
+
+Remaining modules: **Not started** (indexes only), except Modules 13–18 completed above. Do not treat indexes as written chapters. Future chapters must follow the explain-now / expand-later standards in `DOCUMENTATION-STANDARDS.md` and the progressive-explanation table in `LEARNING-ROADMAP.md`.

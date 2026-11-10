@@ -24,3 +24,13 @@
 | [strings-demo/](strings-demo/) | 11 | Validated Temurin 21.0.12.1 |
 | [stringbuilder-textblock-demo/](stringbuilder-textblock-demo/) | 11 | Validated Temurin 21.0.12.1 |
 | [encoding-perf-demo/](encoding-perf-demo/) | 11 | Validated Temurin 21.0.12.1 |
+| [functional-fundamentals-demo/](functional-fundamentals-demo/) | 16 | Validated Temurin 21.0.12.1 |
+| [lambdas-interfaces-demo/](lambdas-interfaces-demo/) | 16 | Validated Temurin 21.0.12.1 |
+| [method-references-demo/](method-references-demo/) | 16 | Validated Temurin 21.0.12.1 |
+| [stream-fundamentals-demo/](stream-fundamentals-demo/) | 17 | Validated Temurin 21.0.12.1 |
+| [stream-operations-demo/](stream-operations-demo/) | 17 | Validated Temurin 21.0.12.1 |
+| [collectors-grouping-demo/](collectors-grouping-demo/) | 17 | Validated Temurin 21.0.12.1 |
+| [parallel-streams-demo/](parallel-streams-demo/) | 17 | Validated Temurin 21.0.12.1 |
+| [null-npe-demo/](null-npe-demo/) | 18 | Validated Temurin 21.0.12.1 |
+| [optional-api-demo/](optional-api-demo/) | 18 | Validated Temurin 21.0.12.1 |
+| [optional-design-demo/](optional-design-demo/) | 18 | Validated Temurin 21.0.12.1 |

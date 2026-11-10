@@ -141,5 +141,17 @@ Shared terminology for this handbook. Prefer linking here instead of redefining 
 | **Try-with-resources** | `try` declaring `AutoCloseable` resources; `close()` runs automatically in defined order. | [Module 14 Ch.02](14-exceptions-and-error-handling/02-try-catch-finally-and-try-with-resources.md) |
 | **Suppressed exception** | Secondary failure recorded on a primary throwable (e.g. `close()` after body throws) via `getSuppressed()`. | Module 14 Ch.02 |
 | **Stack trace** | Ordered list of call frames captured when a throwable is created, used for debugging. | Module 14 Ch.01 |
+| **Lambda expression** | Concise syntax implementing a functional interface's SAM without a named class. | [Module 16 Ch.01](16-lambdas-and-functional-programming/01-functional-fundamentals.md) |
+| **Target typing** | Context (assignment, argument, cast) that determines which functional interface a lambda implements. | Module 16 Ch.02 |
+| **Effectively final** | Local variable never reassigned after initialization; may be captured by lambdas. | Module 16 Ch.01 |
+| **Predicate** | `java.util.function` SAM `test(T) -> boolean`; used for filtering and validation. | [Module 16 Ch.02](16-lambdas-and-functional-programming/02-lambdas-and-functional-interfaces.md) |
+| **Function composition** | Chaining `Function` stages with `andThen` / `compose` or `Comparator`/`Predicate` combinators. | [Module 16 Ch.03](16-lambdas-and-functional-programming/03-method-references-and-composition.md) |
+| **Stream** | Lazy sequence of elements from a source, processed via intermediate and terminal operations (not a `Collection`). | [Module 17 Ch.01](17-stream-api/01-stream-fundamentals.md) |
+| **Intermediate operation** | Stream pipeline stage returning another stream; lazy until a terminal runs. | Module 17 Ch.01 |
+| **Terminal operation** | Stream operation that completes the pipeline and produces a result or side effect. | Module 17 Ch.02 |
+| **Collector** | Mutable reduction strategy used with `Stream.collect` (e.g. `groupingBy`, `joining`). | [Module 17 Ch.03](17-stream-api/03-collectors-and-grouping.md) |
+| **Parallel stream** | Stream executed with split/combine on the common `ForkJoinPool`; requires thread-safe, associative work. | [Module 17 Ch.04](17-stream-api/04-parallel-streams-and-pitfalls.md) |
+| **NullPointerException (NPE)** | Unchecked exception when dereferencing a null reference. | [Module 18 Ch.01](18-optional-and-null-handling/01-null-and-nullpointerexception.md) |
+| **Optional** | `java.util.Optional` container for zero or one non-null reference; intended mainly for return types. | [Module 18 Ch.02](18-optional-and-null-handling/02-optional-api.md) |
 
 Add new terms when chapters introduce them. Keep definitions beginner-accessible and technically precise.

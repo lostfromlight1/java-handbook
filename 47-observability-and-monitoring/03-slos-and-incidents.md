@@ -3,7 +3,9 @@
 > **Status:** Completed  
 > **Module:** 47 — Observability and Monitoring  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3
 
 ## 1. Learning Objectives
 
@@ -14,13 +16,16 @@
 
 ## 2. Prerequisites
 
-- Chapters 01–02; Module 44 resilience.
+- Chapters 01–02 — measurable metrics and alerts.
+- **Module 44** — resilience (breakers, timeouts) as mitigation tools.
 
 ## 3. Why This Concept Exists
 
-**Uptime percentages** without user-centered goals invite wrong trade-offs. SLOs align engineering with **reliability customers feel**; error budgets balance feature velocity vs stability.
+**Uptime percentages** without user-centered goals invite wrong trade-offs (optimizing CPU while checkout fails). **SLOs** align engineering with **reliability customers feel**; **error budgets** balance feature velocity vs stability.
 
-## 4. Terminology
+## 4. Conceptual Explanation
+
+### Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -29,17 +34,17 @@
 | **SLA** | Contract with customer consequences (legal) |
 | **Error budget** | Allowed unreliability before freeze (`1 - SLO`) |
 
-## 5. Example SLO
+### Example SLO
 
 **Checkout API:**
 
 - **SLI:** ratio of `POST /checkout` completing < 1s without 5xx.
 - **SLO:** 99.5% over 30 days.
-- **Budget:** ~3.6 hours downtime equivalent per month (illustrative math—tune per window definition).
+- **Budget:** roughly 3.6 hours of “unreliable” equivalent per month (illustrative—tune window math with product).
 
 When budget burns fast → pause risky deploys; invest in resilience (Module 44).
 
-## 6. SLI selection
+### SLI selection
 
 Good SLIs are:
 
@@ -49,7 +54,9 @@ Good SLIs are:
 
 Avoid too many SLOs—start with **one golden path** per service.
 
-## 7. Incident lifecycle
+## 5. Mechanism and Execution Flow
+
+### Incident lifecycle
 
 ```mermaid
 flowchart LR
@@ -67,20 +74,29 @@ flowchart LR
 | **Resolve** | Root cause fix, verify metrics green |
 | **Postmortem** | Timeline, contributing factors, actions |
 
-## 8. Java-specific incident plays
+### Error budget policy (mechanism)
+
+```mermaid
+flowchart TD
+  B[Measure SLI over window] --> E{Budget remaining?}
+  E -->|yes| F[Normal deploy cadence]
+  E -->|no| G[Freeze risky changes / reliability sprint]
+```
+
+## 6. Java-Specific Incident Plays
 
 - **Thread/pool exhaustion:** thread dump (`jcmd`), reduce traffic, increase pool only if DB allows.
-- **GC pause storm:** heap dump analysis; tune or scale.
-- **Deploy regression:** compare golden signals canary vs stable.
+- **GC pause storm:** heap analysis; tune or scale (Modules 27–28).
+- **Deploy regression:** compare golden signals canary vs stable (Module 48).
 - **Cascading failure:** open breakers (Module 44), disable non-critical consumers.
 
-## 9. Communication
+## 7. Communication
 
 - Status page updates for customer-visible SLO breaches.
 - Internal timeline with **UTC** timestamps.
 - Do not speculate root cause before evidence.
 
-## 10. Postmortem template
+## 8. Postmortem Template
 
 1. **Summary** — impact, duration.
 2. **Timeline** — detection → mitigation.
@@ -90,18 +106,18 @@ flowchart LR
 
 **Blameless:** focus on systems and process.
 
-## 11. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - Payment provider outage: mitigate with queued orders + customer messaging.
 - Cache stampede after deploy: postmortem adds single-flight (Module 46).
 - Missing AuthZ test: add security regression (Module 43).
 
-## 12. Edge Cases
+## 10. Edge Cases
 
 - **Multi-tenant:** SLO per tenant tier (enterprise vs free).
 - **Maintenance windows:** exclude from SLA if contracted—still measure internally.
 
-## 13. Common Mistakes
+## 11. Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
@@ -109,22 +125,33 @@ flowchart LR
 | No error budget policy | Define freeze thresholds |
 | Postmortem without tracked actions | Ticket each action item |
 
-## 14. Revision and Mastery
+## 12. Design Trade-offs
+
+| Tight SLO (99.99%) | Relaxed SLO |
+|--------------------|-------------|
+| Higher ops cost | Faster feature pace |
+
+| Page on every ERROR log | SLO-based paging |
+|-------------------------|------------------|
+| Alert fatigue | User-symptom focus |
+
+## 13. Revision and Mastery
 
 - SLI vs SLO vs SLA?
 - When burn error budget fast?
 - Three mitigate steps for payment timeout spike?
 
-## 15. Exercises
+## 14. Exercises
 
 1. Write SLI/SLO for `GET /health` vs business API—why differ?
 2. Draft postmortem outline for cache outage.
 3. Link alert rule to runbook section headers.
 
-## 16. Chapter Summary
+## 15. Chapter Summary
 
 Reliable Java operations define user-centric SLOs and error budgets, respond to incidents with clear phases, and improve via blameless postmortems tied to tests and observability.
 
 ## Review Checklist
 
-- [x] SLI/SLO/error budget; incident flow; links Module 44/46
+- [x] Technical L2–3; incident + budget mechanisms; SLI/SLO preserved
+- [x] Links Module 44/46/48

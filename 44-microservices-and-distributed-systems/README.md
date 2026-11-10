@@ -1,15 +1,15 @@
 # Module 44 — Microservices and Distributed Systems
 
-**Status:** Completed
+**Status:** Completed — EXPAND-PRESERVE 2026-11-11 (Technical L3, Temurin 21.0.12.1)
 
-| # | Chapter | Status |
-|---|---------|--------|
-| 01 | [Distributed Fundamentals](01-distributed-fundamentals.md) | Completed |
-| 02 | [Resilience Patterns](02-resilience-patterns.md) | Completed |
-| 03 | [Consistency and Sagas](03-consistency-and-sagas.md) | Completed |
+| # | Chapter | Lines | Status |
+|---|---------|-------|--------|
+| 01 | [Distributed Fundamentals](01-distributed-fundamentals.md) | 284 | Completed |
+| 02 | [Resilience Patterns](02-resilience-patterns.md) | 299 | Completed |
+| 03 | [Consistency and Sagas](03-consistency-and-sagas.md) | 289 | Completed |
 
-**Prerequisites:** Modules 32, 40.
+**Module average:** ~291 lines/chapter
 
-**Assessment:** [44-microservices-assessment.md](../assessments/module-assessments/44-microservices-assessment.md)
+**Verified demo (2026-11-11):** `circuit-breaker-demo` (`circuit-breaker=ok`)
 
-**Examples:** [circuit-breaker-demo](../examples/resilience/circuit-breaker-demo/)
+**Assessment:** [44-microservices-assessment](../assessments/module-assessments/44-microservices-assessment.md)

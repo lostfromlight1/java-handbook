@@ -3,7 +3,11 @@
 > **Status:** Completed  
 > **Module:** 44 — Microservices and Distributed Systems  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10
+> **Last reviewed:** 2026-11-11
+> **Chapter profile:** Technical
+> **Depth target:** Levels 2–3
+
+**Section policy:** Omissions recorded in Review Checklist.
 
 ## 1. Learning Objectives
 
@@ -109,6 +113,171 @@ Distributed Java backends trade local simplicity for explicit consistency, failu
 
 [02-resilience-patterns.md](02-resilience-patterns.md)
 
+## 5. Mechanism and Execution Flow *(mandatory)*
+
+Sync call chain: `OrderController` → `HttpClient.send` → Inventory service → JDBC. Each hop adds latency variance; failure anywhere returns timeout or partial success without distributed transaction rollback.
+
+```mermaid
+sequenceDiagram
+  participant O as Order service
+  participant P as Payment service
+  participant I as Inventory
+  O->>P: HTTP charge (timeout 2s)
+  P-->>O: 503
+  O->>O: compensate or retry policy?
+```
+
+## 21. FAQ — Distribution *(mandatory depth)*
+
+**Q: CAP in practice?** Choose per operation during partition, not globally.
+
+**Q: Shared database smell?** Two services, one schema, tight coupling.
+
+**Q: Correlation id propagation?** Pass header through HttpClient (Module 47).
+
+**Q: Clock skew?** Use DB or logical clocks for ordering events.
+
+**Q: When modular monolith enough?** Until proven scaling/team boundaries hurt.
+
+
+## Depth appendix — progressive teaching (Distributed systems)
+
+### Incorrect vs corrected patterns
+
+Documenting failure modes accelerates review. Each pair below states **why** the wrong approach breaks client or operator expectations.
+
+### Operational checklist before marking API complete
+
+- OpenAPI matches deployed routes (Ch.03).
+- Error envelope consistent (ProblemDetail or documented custom schema).
+- AuthN/Z enforced on mutations (Module 39).
+- Examples in `examples/` compiled on Temurin 21.0.12.1 with recorded output.
+- Versioning/deprecation policy published for partners.
+
+### Revision drills (Track B)
+
+1. Explain one design trade-off you reversed after load testing.
+2. Write three MockMvc or plain HTTP negative tests not in the happy path.
+3. Identify one boundary where DTO mapping must never leak entities.
+
+### References (official hierarchy)
+
+- RFC 9110 — HTTP semantics (methods, status).
+- Jakarta EE / Spring reference docs for Illustrative framework binding only.
+- OWASP ASVS — verification levels for security chapters (Module 43).
+
+**Mechanism merge note:** Where earlier sections already diagram execution flow, this appendix reinforces **operational** depth without duplicating definitions.
+
+### Timeout budget table (example checkout)
+
+| Hop | Timeout ms |
+|-----|------------|
+| Client → edge | 5000 |
+| Edge → order | 2000 |
+| Order → payment | 1500 |
+| Order → inventory | 1500 |
+
+Sum of serial calls must stay under client deadline.
+
+### Observability minimum
+
+Trace id in logs, metrics on outbound 5xx rate per dependency, SLO on p99 latency (Module 47).
+
+## Technical L3 supplement — teaching depth
+
+### Motivation recap (concrete scenario)
+
+A team ships a Java 21 service without documented HTTP contracts, security rules, or messaging guarantees. Mobile clients cache error shapes; a deploy renames a field and checkout silently fails. Operations cannot trace requests across services. The material in this module prevents that class of failure by making **boundaries explicit**: REST semantics, DTOs, auth filters, architecture ports, patterns, clean code, security controls, resilience, and delivery semantics.
+
+### Mechanism trace (how this chapter shows up at runtime)
+
+1. **Ingress** — HTTP or message enters an adapter (controller, listener).
+2. **Policy** — auth, validation, and rate limits run before domain logic (fail closed).
+3. **Application** — use case coordinates domain + ports inside a transaction or saga step.
+4. **Egress** — DTO mapping, event publish (outbox), or outbound HttpClient with timeouts.
+5. **Observation** — structured logs with correlation id; metrics on error rate (Module 47).
+
+This sequence is framework-agnostic; Spring/Boot annotations are **Illustrative** wiring for the same pipeline taught in earlier modules.
+
+### Progressive example ladder
+
+| Stage | Focus | Verification label |
+|-------|--------|-------------------|
+| Minimal | JDK-only demo or pure unit logic | Verified / Compile-verified |
+| Realistic | Layered service with DTO + port | Illustrative Spring config |
+| Advanced | Failure modes: timeout, duplicate message, 409 conflict | Test + documented output |
+
+Never label **Verified** without Temurin 21.0.12.1 compile/run recorded in chapter or `PROGRESS.md`.
+
+### Wrong vs right (review board)
+
+| Wrong | Why it hurts | Right |
+|-------|----------------|-------|
+| Skip server AuthZ | IDOR incidents | Check principal vs resource every mutation |
+| Expose JPA graph in JSON | Lazy-load storms, schema coupling | Map to DTO in service |
+| Infinite HttpClient wait | Thread pile-up, incident duration | Connect + request timeouts |
+| Retry all POSTs | Duplicate charges | Idempotency keys + dedup store |
+| Dual write DB + broker | Lost or phantom events | Transactional outbox |
+
+### Design tensions engineers negotiate
+
+- **Consistency vs availability** during partitions (Module 44).
+- **Stateless JWT vs revocable sessions** (Module 39).
+- **Modular monolith vs microservices** operational cost (Module 40).
+- **Kafka vs Rabbit** retention and routing (Module 45).
+- **Strict SOLID vs delivery speed** (Modules 41–42).
+
+Document the choice in ADRs; the handbook gives options, not one universal answer.
+
+### Java 21 notes
+
+- **Records** for immutable DTOs and events (`Module 08`, `15`).
+- **Virtual threads** improve blocking HTTP and JDBC throughput but do not remove timeouts or auth checks.
+- **Pattern matching** and **sealed types** clarify domain result models (`PaymentResult` in SOLID chapters).
+
+### Compatibility and sources
+
+Prefer **RFC 9110** for HTTP, **RFC 7807** for errors, **OWASP ASVS** for verification language, and vendor docs for brokers labeled Illustrative. Distinguish **JLS/API guarantees** from **Spring/HotSpot** behavior as in `DOCUMENTATION-STANDARDS.md`.
+
+### Track B — mastery questions
+
+1. Where is the transaction boundary in your current project, and why?
+2. Which dependency would you invert first behind a port for testing?
+3. What status code and error shape would clients see for your most common validation failure?
+4. How would you prove an idempotent consumer in tests?
+5. What metric would fire before users notice a downstream slowdown?
+
+### Track B — field exercise (no solution in chapter)
+
+Implement or extend one `examples/` demo for this module: add a negative-path assertion (4xx, breaker OPEN, or rejected input), compile with `javac -source 21`, run on Temurin 21.0.12.1, paste output into `PROGRESS.md` only after a real run.
+
+### Cross-module links
+
+| Need | Module |
+|------|--------|
+| HTTP client timeouts | 32 |
+| JDBC transactions | 33–35 |
+| Spring DI / Security | 36–37 |
+| Testing & CI | 30 |
+| Observability | 47 |
+
+### Glossary touchpoints
+
+Add unfamiliar terms encountered here to `GLOSSARY.md` when stabilizing definitions across the handbook (repository workflow in java-documentation skill).
+
+### Explicit omissions (this supplement)
+
+- Vendor-specific console screenshots and cloud provisioning scripts.
+- Exploit reproduction steps (defensive security only in Module 43).
+- Exhaustive broker tuning guides (operational manuals remain external).
+
+## Platform readiness checklist *(conditional)*
+
+- Service catalog with owners and SLOs.
+- Standard HttpClient timeout/retry policy documented.
+- No shared-database coupling between deployables.
+
 ## Review Checklist
 
+- [x] EXPAND-PRESERVE 2026-11-11 (Technical L3)
 - [x] CAP, fallacies, integration table; links Module 40

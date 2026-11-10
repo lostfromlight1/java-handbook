@@ -1,14 +1,17 @@
 # Module 37 — Spring Boot
 
-**Status:** Not started (index only) — chapters appear when written.
+**Status:** Completed  
+**Last reviewed:** 2026-11-10  
+**Validation JDK:** Temurin 21.0.12.1  
+**Note:** Spring Boot content is conceptual (no Maven on handbook validation host); parallels verified JDK demos.
 
 | # | Chapter | Status |
 |---|---------|--------|
-| 01 | Spring Boot Fundamentals | Not started |
-| 02 | Configuration and Profiles | Not started |
-| 03 | Web Layer and Validation | Not started |
-| 04 | Actuator, Testing, and Production | Not started |
+| 01 | [Spring Boot Fundamentals](01-spring-boot-fundamentals.md) | Completed |
+| 02 | [Configuration and Profiles](02-configuration-and-profiles.md) | Completed |
+| 03 | [Web Layer and Validation](03-web-layer-and-validation.md) | Completed |
+| 04 | [Actuator, Testing, and Production](04-actuator-testing-and-production.md) | Completed |
 
-**Prerequisites:** See [LEARNING-ROADMAP.md](../LEARNING-ROADMAP.md).
+**Prerequisites:** Module 36; Module 30 (testing).
 
-**Assessment:** Created after all module chapters are Completed.
+**Assessment:** [37-spring-boot-assessment](../assessments/module-assessments/37-spring-boot-assessment.md)

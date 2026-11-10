@@ -3,8 +3,25 @@
 > **Status:** Completed  
 > **Module:** 09 — Encapsulation and Design  
 > **Target Java version:** 21  
-> **Last reviewed:** 2026-11-10  
-> **Examples verified with:** Temurin JDK 21.0.12.1 (javac 21.0.12.1)
+> **Last reviewed:** 2026-11-11  
+> **Chapter profile:** Technical  
+> **Depth target:** Levels 2–3 (coupling, cohesion, SRP, demo separation)  
+> **Examples verified with:** Temurin JDK 21.0.12.1 (`javac 21.0.12.1`)
+
+
+**Section policy:** Sections are **conditional unless marked mandatory**. Include a section when it adds meaningful learning value. Do **not** manufacture content to fill headings. For omitted sections, record the reason in the Review Checklist.
+
+| Mandatory for most chapters | Conditional |
+| --------------------------- | ----------- |
+| Learning objectives | Internal behavior |
+| Prerequisites | Performance |
+| Why this exists | Security |
+| Conceptual explanation | Language comparisons |
+| Mechanism and execution flow *(or merge note)* | Advanced examples |
+| Terminology | Real-world use cases |
+| Examples | Design trade-offs *(strongly encouraged for Technical / Deep-dive)* |
+| Common mistakes | Compatibility details |
+| Summary and references | — |
 
 ## 1. Learning Objectives
 
@@ -109,7 +126,39 @@ Tests for `formatInvoice` construct the whole object; email failures block prici
 - `InvoiceFormatter` — **high cohesion**, presentation only.
 - **Loose coupling** — formatter takes `String id` and `int totalCents`; no reference to calculator type.
 
-## 5. Terminology
+## 5. Mechanism and Execution Flow
+
+Coupling and cohesion are **design properties**, but their benefits show up in how the compiler wires **dependencies** at build time and how objects **exchange data** at run time.
+
+### 5.1 Compile-time dependency edges
+
+When `main` (or a framework) constructs collaborators:
+
+1. The compiler checks that each **constructor argument** type exists and is visible.
+2. If `OrderService` declares `PaymentProcessor pay`, only types **assignable** to `PaymentProcessor` may be passed—concrete wiring is explicit in source or DI configuration.
+3. Replacing `CardProcessor` with `FakePay` for tests does not require editing `OrderService` if both implement the interface—**the compile-time edge** points at the abstraction, not the vendor class.
+
+### 5.2 Demo execution path (pricing → presentation)
+
+[`CouplingCohesionDemo`](../../examples/core-java/coupling-cohesion-demo/):
+
+1. `OrderCalculator.totalCents(qty, unit, ship)` runs **only** pricing rules; it returns an `int`.
+2. `InvoiceFormatter.format(id, totalCents)` receives **data** (`String`, `int`), not the calculator instance—no shared mutable state between types.
+3. `main` prints both lines independently; changing tax logic does not recompile the formatter unless the **data contract** (`int` cents) changes.
+
+This is **data coupling**: modules communicate through simple, stable values.
+
+### 5.3 Injected seams (constructor path)
+
+```java
+OrderService(PaymentProcessor pay) { this.pay = pay; }
+```
+
+1. Caller supplies the implementation at construction.
+2. `OrderService` methods invoke `pay` through the **interface** vtable—runtime class may differ from compile-time reference type (Module 07–08).
+3. Coupling is **to the contract**, not to one concrete class file.
+
+## 6. Terminology
 
 | Term | Meaning |
 |------|---------|
@@ -120,7 +169,7 @@ Tests for `formatInvoice` construct the whole object; email failures block prici
 | **SRP** | Single Responsibility Principle — one reason to change per class |
 | **God class** | Type that accumulates unrelated responsibilities |
 
-## 6. Syntax and Language Rules
+## 7. Syntax and Language Rules
 
 No special keywords for coupling. Patterns that **reduce** coupling in Java:
 
@@ -134,9 +183,9 @@ class Service {
 
 **Final fields** for collaborators prevent accidental rebinding after construction.
 
-## 7. Step-by-Step Examples
+## 8. Step-by-Step Examples
 
-### 7.1 Minimal — split calculation and print
+### 8.1 Minimal — split calculation and print
 
 ```java
 int total = qty * price;
@@ -145,7 +194,7 @@ System.out.println("total=" + total); // presentation mixed in main only
 
 In real code, move print to a formatter class.
 
-### 7.2 Realistic — demo
+### 8.2 Realistic — demo
 
 ```java
 OrderCalculator calc = new OrderCalculator();
@@ -164,7 +213,7 @@ ORD-9 => 1050 cents
 
 **Math:** `2 * 500 + 50 = 1050` cents. Formatter does not know **how** total was computed—only the **value**.
 
-### 7.3 Advanced — inject formatter for tests
+### 8.3 Advanced — inject formatter for tests
 
 ```java
 interface InvoiceSink {
@@ -182,25 +231,27 @@ class ReportingInvoiceFormatter {
 
 Production uses `ConsoleSink`; tests use `ListSink` capturing lines **without** console.
 
-## 8. Real-World Use Cases
+## 9. Real-World Use Cases
 
 - **Spring `@Service` + `@Repository`:** service layer depends on repository **interface**; JDBC impl in another package.
 - **Hexagonal architecture:** **ports** (interfaces) on domain; **adapters** implement IO.
 - **Microservices:** loose coupling between services via **HTTP/events** and versioned schemas—not shared database tables as hidden API.
 - **UI separation:** Android ViewModel holds state; View renders—same cohesion idea.
 
-## 9. Internal Behavior
+## 10. Internal Behavior
+
+See **§5** for dependency edges and the demo data path. This section notes JVM dispatch context.
 
 Coupling is a **design** property, not a JVM feature. Compiler still resolves **concrete** types at compile time unless you use **interface** references—then **dynamic dispatch** applies at calls (Module 07–08).
 
-## 10. Edge Cases and Limitations
+## 11. Edge Cases and Limitations
 
 - **Over-splitting:** ten one-method classes with no domain name hurt readability—cohesion can be **too low** if concepts are fragmented.
 - **DTO proliferation:** every call with five primitives may need a **record** for clarity—balance stamp coupling vs named types.
 - **Framework magic** (reflection, proxies) can hide coupling—read wiring config.
 - **Circular dependencies:** `A` needs `B`, `B` needs `A`—extract shared interface or third type.
 
-## 11. Common Mistakes
+## 12. Common Mistakes
 
 ### Incorrect — static singleton for everything
 
@@ -233,7 +284,7 @@ fmt.formatFooter(order.id(), order.totalCents());
 
 Assert string layout in `OrderCalculatorTest` — wrong responsibility.
 
-## 12. Best Practices
+## 13. Best Practices
 
 - Ask: **“What is the one job of this class?”** Name classes as **nouns** doing that job (`OrderCalculator`, not `Helper`).
 - Pass **abstractions** or **minimal data** across boundaries.
@@ -241,7 +292,7 @@ Assert string layout in `OrderCalculatorTest` — wrong responsibility.
 - Use **package structure** to reflect layers (`domain`, `adapters`, `web`).
 - Measure coupling with **import fan-out** and **architectural tests** (optional, later modules).
 
-## 13. Design Trade-offs
+## 14. Design Trade-offs
 
 | Choice | Benefit | Cost |
 |--------|---------|------|
@@ -250,29 +301,29 @@ Assert string layout in `OrderCalculatorTest` — wrong responsibility.
 | Interface at seam | Swappable impl | Extra type |
 | Concrete everywhere | Fast prototype | Refactor pain |
 
-## 14. Performance Considerations
+## 15. Performance Considerations
 
 Extra indirection through interfaces is negligible vs I/O. **Do not** merge unrelated logic into one hot loop for “performance” without profiling.
 
-## 15. Security Considerations
+## 16. Security Considerations
 
 Tight coupling to **authentication details** in every method spreads security bugs. Centralize **authZ** in one filter/interceptor; keep domain rules **unaware** of HTTP headers except at boundaries.
 
-## 16. Java Version and Compatibility Notes
+## 17. Java Version and Compatibility Notes
 
 Principles are language-agnostic. **Records** (16+) encourage **immutable data carriers** that reduce shared mutable coupling. **Sealed hierarchies** (17+) document closed variants with less accidental extension.
 
-## 17. Related Language Comparisons
+## 18. Related Language Comparisons
 
 Go packages and small interfaces encourage loose coupling similarly. PHP legacy code often shows **god classes**—Java enterprise patterns (layers, DI) aim to prevent that.
 
-## 18. Revision and Mastery
+## 19. Revision and Mastery
 
 - **Gaps:** confusing SRP with “never more than one method”; thinking interfaces always means low coupling (fat interfaces still couple to unused methods—Interface Segregation, Module 08).
 - **You should answer:** Why can `InvoiceFormatter` change currency suffix without touching `OrderCalculator`?
 - **Advanced:** metrics for coupling (Ca, Ce); package cycles detection.
 
-## 19. Exercises
+## 20. Exercises
 
 ### Beginner
 
@@ -288,7 +339,7 @@ Go packages and small interfaces encourage loose coupling similarly. PHP legacy 
 
 5. One paragraph: SRP vs “one public class per file” rule in Java.
 
-## 20. Interview Questions
+## 21. Interview Questions
 
 1. Define coupling and cohesion in one sentence each.
 2. What is a god class?
@@ -296,7 +347,7 @@ Go packages and small interfaces encourage loose coupling similarly. PHP legacy 
 4. Name two types of coupling.
 5. Why pass `int totalCents` instead of `Order` to a formatter?
 
-## 21. Solutions
+## 22. Solutions
 
 1. `3*200+25=625` → `ORD-1 => 625 cents`.
 2. Pricing rule changes; invoice template changes (also email if merged).
@@ -304,28 +355,50 @@ Go packages and small interfaces encourage loose coupling similarly. PHP legacy 
 4. Formatter now does calculation + presentation—two reasons to change; tests need calculator.
 5. SRP is responsibility; file rule is compilation unit organization—related but not identical.
 
-## 22. Chapter Summary
+## 23. Chapter Summary
 
 **Cohesion** keeps classes focused; **coupling** measures how entangled they are. **SRP** and **DIP** guide you toward **small public APIs** and **injected abstractions**. The demo separates **pricing** from **formatting** with **data coupling** via primitives. Next: **composition** vs **inheritance** for reusing behavior without fragile **is-a** relationships.
 
-## 23. Key Terminology
+## 24. Key Terminology
 
 Coupling · cohesion · loose coupling · tight coupling · SRP · god class
 
-## 24. References and Further Reading
+## 25. References and Further Reading
 
 - Robert C. Martin — SOLID principles (SRP, DIP)
 - [Module 08 Ch.04](../08-interfaces-and-abstraction/04-api-design-with-interfaces.md) — DIP in code
 
-## 25. Next Steps
+## 26. Next Steps
 
 - [03-composition-versus-inheritance.md](03-composition-versus-inheritance.md)
 - Module 10 — typing and pattern matching for safer boundaries
 
 ## Review Checklist
 
+**Mandatory Depth Review:** Technical profile; coupling, cohesion, SRP, and demo separation at **Levels 2–3**.
+
 - [x] Learning objectives covered
-- [x] Coupling/cohesion types and SRP explained
-- [x] CouplingCohesionDemo verified Temurin 21.0.12.1
-- [x] Exercises, Revision and Mastery
-- [x] Depth gate met
+- [x] Prerequisites identified and briefly refreshed
+- [x] Chapter profile and depth target recorded and appropriate
+- [x] Depth gate passed (detailed definitions; progressive examples)
+- [x] Mandatory Depth Review (Levels 1–4) passed for this topic
+- [x] Mechanism and execution flow explained where applicable (§5)
+- [x] Complex relationships illustrated where useful (cohesion/coupling tables §4; demo path §5.2)
+- [x] First-appearance concepts explained now (not deferred away)
+- [x] Terminology defined before use
+- [x] Examples include sufficient context to compile and run (or labeled Illustrative)
+- [x] Verification status accurately labeled (**Verified** on Temurin JDK 21.0.12.1 where demos exist)
+- [x] Explanations distinguish specification guarantees from implementation details where relevant
+- [x] References support important technical claims
+- [x] Solutions explain reasoning, not just final answers
+- [x] No artificial sections, filler, or unexplained jargon
+- [x] Chapter can be understood without repeatedly consulting other chapters
+- [x] Conditional omissions recorded below
+- [x] Revision and Mastery included when profile requires
+- [x] `PROGRESS.md` updated honestly (standards-alignment pass 2026-11-11; Temurin re-verify)
+
+**Omissions (section → reason):**
+
+- **Architectural metrics** (afferent/efferent coupling counts) — optional analytics; design vocabulary suffices at this level.
+
+**Verification note:** `CouplingCohesionDemo` output `total=1050`, `ORD-9 => 1050 cents` on Temurin JDK 21.0.12.1 (2026-11-11 re-run).

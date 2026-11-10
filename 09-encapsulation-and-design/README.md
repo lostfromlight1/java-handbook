@@ -1,6 +1,7 @@
 # Module 09 — Encapsulation and Design
 
-**Status:** Completed (2026-11-10)
+**Status:** Completed (2026-11-11)  
+**Standards alignment:** 2026-11-11 pass — Technical profile **L2–3**, §5 Mechanism and Execution Flow, master checklist + verification labels, demos re-verified on **Temurin JDK 21.0.12.1**.
 
 | # | Chapter | Status |
 |---|---------|--------|

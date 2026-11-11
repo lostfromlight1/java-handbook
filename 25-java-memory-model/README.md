@@ -1,6 +1,6 @@
 # Module 25 — Java Memory Model
 
-**Status:** Completed — EXPAND-PRESERVE master template alignment 2026-11-11 (Temurin JDK 21.0.12.1 JVM demos re-verified).
+**Status:** Completed — third deepen pass 2026-11-11 (EXPAND-PRESERVE; notes-length drafts expanded to Deep-dive Levels 3–4; Temurin JDK 21.0.12.1 Verified demo outputs preserved; demos re-checked same day).
 
 | # | Chapter | Status |
 |---|---------|--------|

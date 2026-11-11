@@ -36,10 +36,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Document | Status | Review | Outstanding |
 |----------|--------|--------|-------------|
-| java-version-history.md | Drafted | Quality pass 2026-11-10 (terms + policy) | Expand full history narrative later |
-| java-quick-reference.md | Not started | | |
-| jvm-reference.md | Not started | | |
-| common-errors.md | Not started | | |
+| java-version-history.md | Completed | Expanded 2026-11-11 (policy + LTS 8/11/17/21/25 highlights; preview policy; validation JDK) | — |
+| java-quick-reference.md | Completed | Created 2026-11-11 (Java 21 syntax/API cheat sheet; links to chapters) | — |
+| jvm-reference.md | Completed | Created 2026-11-11 (runtime areas, loading, GC awareness, flags, jcmd/JFR; HotSpot vs JVMS) | — |
+| common-errors.md | Completed | Created 2026-11-11 (NPE, CME, classloading, OOME/SOE, equals/hashCode, checked, autobox, switch) | — |
 | interview-glossary.md | Drafted | Interview-hot terms by area; chapter links | Expand terms as modules deepen |
 | java-vs-go.md | Drafted | Fair Java↔Go bridge for learners | Optional Go samples later |
 | java-vs-csharp.md | Drafted | CLR/JVM, LINQ/Streams, async vs VT | Keep Spring/ASP.NET awareness-level |

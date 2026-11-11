@@ -11,8 +11,8 @@
 | 02 | [Compatibility and Migrations](02-compatibility-and-migrations.md) | Completed |
 | 03 | [Production Readiness](03-production-readiness.md) | Completed |
 
-**Prerequisites:** Modules 40–41, 47–48.
+**Prerequisites:** Modules 29–30, 38–40, 43, 46–49.
 
 **Assessment:** [51-enterprise-java-assessment.md](../assessments/module-assessments/51-enterprise-java-assessment.md)
 
-**Depth note (2026-11-11):** Mechanism flows for strangler, expand/contract, go-live gate.
+**Depth note (2026-11-11, fourth EXPAND-PRESERVE):** Textbook depth on boundaries/strangler, expand-contract migrations, and go-live/SLO readiness; Illustrative ops samples.

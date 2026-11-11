@@ -1120,21 +1120,23 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-reflection-proxies-and-annotations.md](50-advanced-java/01-reflection-proxies-and-annotations.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Deep-dive L3–4 | Demo re-verified |
-| [02-method-handles-varhandles-and-ffm.md](50-advanced-java/02-method-handles-varhandles-and-ffm.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Deep-dive L3–4 | FFM preview flags on JDK 21 |
-| [03-bytecode-and-agents.md](50-advanced-java/03-bytecode-and-agents.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Deep-dive L3–4 | `agentDemo=ok` re-verified |
+| [01-reflection-proxies-and-annotations.md](50-advanced-java/01-reflection-proxies-and-annotations.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Deep-dive L3–4 | Demo re-verified Oracle 21.0.9 |
+| [02-method-handles-varhandles-and-ffm.md](50-advanced-java/02-method-handles-varhandles-and-ffm.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Deep-dive L3–4 | FFM preview flags on JDK 21 |
+| [03-bytecode-and-agents.md](50-advanced-java/03-bytecode-and-agents.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Deep-dive L3–4 | `agentDemo=ok` re-verified |
 | [Module assessment](assessments/module-assessments/50-advanced-java-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Oracle JDK 21.0.9, re-verified 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
 | `reflection-annotations-demo` | `reflectionDemo=ok` |
+| `jdk-dynamic-proxy-demo` | `proxyAop=ok` |
 | `method-handles-varhandles-demo` | `methodHandlesDemo=ok` |
 | `ffm-arena-demo` | `ffmDemo=ok` (with `--enable-preview`) |
-| `java-agent-premain-demo` | `agentDemo=ok` |
+| `java-agent-premain-demo` | `agentDemo=ok` (`loadedClasses=814` host-specific) |
+| `bytecode-demo` | `sum=42` |
 
-**Module 50 status:** Completed  
+**Module 50 status:** Completed (fourth EXPAND-PRESERVE 2026-11-11; Deep-dive L3–4)  
 **Next recommended chapter:** Module 51 (Completed below)
 
 ---
@@ -1143,12 +1145,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-large-codebases.md](51-enterprise-java/01-large-codebases.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | ArchUnit sample optional |
-| [02-compatibility-and-migrations.md](51-enterprise-java/02-compatibility-and-migrations.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
-| [03-production-readiness.md](51-enterprise-java/03-production-readiness.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [01-large-codebases.md](51-enterprise-java/01-large-codebases.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | ArchUnit sample optional |
+| [02-compatibility-and-migrations.md](51-enterprise-java/02-compatibility-and-migrations.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | — |
+| [03-production-readiness.md](51-enterprise-java/03-production-readiness.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/51-enterprise-java-assessment.md) | Completed | Solutions separate | — |
 
-**Module 51 status:** Completed  
+**Module 51 status:** Completed (fourth EXPAND-PRESERVE 2026-11-11; Technical L2–3)  
 **Next recommended chapter:** Module 52 (Completed below)
 
 ---
@@ -1157,12 +1159,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-core-java-interviews.md](52-interview-preparation/01-core-java-interviews.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
-| [02-jvm-and-concurrency-interviews.md](52-interview-preparation/02-jvm-and-concurrency-interviews.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
-| [03-spring-and-system-design-interviews.md](52-interview-preparation/03-spring-and-system-design-interviews.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [01-core-java-interviews.md](52-interview-preparation/01-core-java-interviews.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | — |
+| [02-jvm-and-concurrency-interviews.md](52-interview-preparation/02-jvm-and-concurrency-interviews.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | — |
+| [03-spring-and-system-design-interviews.md](52-interview-preparation/03-spring-and-system-design-interviews.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | — |
 | [Module assessment](assessments/module-assessments/52-interview-preparation-assessment.md) | Completed | Solutions separate | — |
 
-**Module 52 status:** Completed  
+**Module 52 status:** Completed (fourth EXPAND-PRESERVE 2026-11-11; progressive WHY depth)  
 **Next recommended chapter:** Module 53 (Completed below)
 
 ---

@@ -1052,18 +1052,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-caching-strategies.md](46-caching-and-performance/01-caching-strategies.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 (~266 lines) | — |
-| [02-redis-and-invalidation.md](46-caching-and-performance/02-redis-and-invalidation.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 (~225 lines) | Redis lab optional |
-| [03-load-testing-and-capacity.md](46-caching-and-performance/03-load-testing-and-capacity.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 (~200 lines) | — |
+| [01-caching-strategies.md](46-caching-and-performance/01-caching-strategies.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~266 → ~403) | — |
+| [02-redis-and-invalidation.md](46-caching-and-performance/02-redis-and-invalidation.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~225 → ~373) | Redis lab optional |
+| [03-load-testing-and-capacity.md](46-caching-and-performance/03-load-testing-and-capacity.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~200 → ~360) | — |
 | [Module assessment](assessments/module-assessments/46-caching-performance-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Oracle JDK 21.0.9 re-verify 2026-11-11; matches Temurin 21.0.12.1 baseline):**
 
 | Example | Result |
 |---------|--------|
 | `in-memory-cache-demo` | `user:2=miss`; `in-memory-cache=ok` |
 
-**Module 46 status:** Completed (deepen pass 2 2026-11-11; demos re-verified)  
+**Module 46 status:** Completed (fourth deepen 2026-11-11; demos re-verified Oracle 21.0.9)  
 **Next recommended chapter:** Module 47 (Completed below)
 
 ---
@@ -1072,18 +1072,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-logging-metrics-and-tracing.md](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
-| [02-opentelemetry-and-prometheus.md](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | OTel collector lab optional |
-| [03-slos-and-incidents.md](47-observability-and-monitoring/03-slos-and-incidents.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [01-logging-metrics-and-tracing.md](47-observability-and-monitoring/01-logging-metrics-and-tracing.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~377) | — |
+| [02-opentelemetry-and-prometheus.md](47-observability-and-monitoring/02-opentelemetry-and-prometheus.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~350) | OTel collector lab optional |
+| [03-slos-and-incidents.md](47-observability-and-monitoring/03-slos-and-incidents.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~350+) | — |
 | [Module assessment](assessments/module-assessments/47-observability-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Oracle JDK 21.0.9 re-verify 2026-11-11; matches Temurin baseline fields):**
 
 | Example | Result |
 |---------|--------|
 | `structured-logging-demo` | `event=order.placed`; `structured-logging=ok` |
 
-**Module 47 status:** Completed  
+**Module 47 status:** Completed (fourth deepen 2026-11-11)  
 **Next recommended chapter:** Module 48 (Completed below)
 
 ---
@@ -1092,12 +1092,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-containers-and-the-jvm.md](48-devops-and-deployment/01-containers-and-the-jvm.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | Live docker smoke optional |
-| [02-ci-cd.md](48-devops-and-deployment/02-ci-cd.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | Sample Actions workflow file optional |
-| [03-deployment-strategies.md](48-devops-and-deployment/03-deployment-strategies.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
+| [01-containers-and-the-jvm.md](48-devops-and-deployment/01-containers-and-the-jvm.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~362); diagnostics demo re-verified | Live docker smoke optional |
+| [02-ci-cd.md](48-devops-and-deployment/02-ci-cd.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~360) | Sample Actions workflow file optional |
+| [03-deployment-strategies.md](48-devops-and-deployment/03-deployment-strategies.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 (~355) | — |
 | [Module assessment](assessments/module-assessments/48-devops-deployment-assessment.md) | Completed | Solutions separate | — |
 
-**Module 48 status:** Completed  
+**Module 48 status:** Completed (fourth deepen 2026-11-11)  
 **Next recommended chapter:** Module 49 (Completed below)
 
 ---

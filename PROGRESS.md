@@ -565,20 +565,20 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-java-time.md](22-date-time-and-internationalization/01-java-time.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | `Clock` testing patterns in unit-test module |
-| [02-time-zones-and-formatting.md](22-date-time-and-internationalization/02-time-zones-and-formatting.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | DST edge cases expanded later |
-| [03-locale-and-internationalization.md](22-date-time-and-internationalization/03-locale-and-internationalization.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | `MessageFormat` plural rules |
+| [01-java-time.md](22-date-time-and-internationalization/01-java-time.md) | Completed | Third deepen EXPAND-PRESERVE 2026-11-11 (Technical L2–3; was ~93 → ~409) | `Clock` testing patterns in unit-test module |
+| [02-time-zones-and-formatting.md](22-date-time-and-internationalization/02-time-zones-and-formatting.md) | Completed | Third deepen EXPAND-PRESERVE 2026-11-11 (Technical L2–3; was ~57 → ~358) | More coded DST gap/overlap lab optional |
+| [03-locale-and-internationalization.md](22-date-time-and-internationalization/03-locale-and-internationalization.md) | Completed | Third deepen EXPAND-PRESERVE 2026-11-11 (Technical L2–3; was ~52 → ~356) | `MessageFormat` plural rules |
 | [Module assessment](assessments/module-assessments/22-date-time-i18n-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1 baseline; re-verified 2026-11-11 on Oracle JDK 21.0.9 — identical output; Temurin not on PATH this session):**
 
 | Example | Result |
 |---------|--------|
-| `java-time-demo` | `ageYears=36`; `durationMinutes=150` |
-| `zones-formatting-demo` | `yangon=22:00`; `formatted=2026-11-10 22:00 MMT` |
-| `locale-i18n-demo` | `greeting=Hello`; `usdCode=USD`; `deCurrency=EUR` |
+| `java-time-demo` | `ageYears=36`; `durationMinutes=150`; `instantPlus=2026-11-10T10:00:00Z` |
+| `zones-formatting-demo` | `utc=15:30`; `yangon=22:00`; `formatted=2026-11-10 22:00 MMT` |
+| `locale-i18n-demo` | `usPrice=$1,999.50`; `greeting=Hello`; `usdCode=USD`; `deCurrency=EUR` |
 
-**Module 22 status:** Completed  
+**Module 22 status:** Completed (third deepen pass 2026-11-11)  
 **Next recommended chapter:** Module 23 (Completed below)
 
 ---
@@ -587,18 +587,18 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-regex-fundamentals.md](23-regular-expressions/01-regex-fundamentals.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | Unicode category flags |
-| [02-java-regex-api.md](23-regular-expressions/02-java-regex-api.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical, template) | `Matcher.quoteReplacement` in log pipelines |
+| [01-regex-fundamentals.md](23-regular-expressions/01-regex-fundamentals.md) | Completed | Third deepen EXPAND-PRESERVE 2026-11-11 (Technical L2–3; was ~50 → ~342) | Unicode category flags deep dive |
+| [02-java-regex-api.md](23-regular-expressions/02-java-regex-api.md) | Completed | Third deepen EXPAND-PRESERVE 2026-11-11 (Technical L2–3; was ~61 → ~374) | `appendReplacement` hands-on in a dedicated log-pipeline demo |
 | [Module assessment](assessments/module-assessments/23-regular-expressions-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1 baseline; re-verified 2026-11-11 on Oracle JDK 21.0.9 — identical output; Temurin not on PATH this session):**
 
 | Example | Result |
 |---------|--------|
-| `regex-fundamentals-demo` | `emailValid=true`; `capturedId=1042` |
-| `java-regex-api-demo` | `namedId=42`; `fullMatch=false` |
+| `regex-fundamentals-demo` | `emailValid=true`; `capturedId=1042`; `splitCount=3`; `secondWord=beta` |
+| `java-regex-api-demo` | `match=ENG-42/OPS-7`; `namedId=42`; `fullMatch=false`; `replaced=[ENG#42]` |
 
-**Module 23 status:** Completed  
+**Module 23 status:** Completed (third deepen pass 2026-11-11)  
 **Next recommended chapter:** Module 24 (Completed below)
 
 ---
@@ -607,24 +607,25 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-threads-and-runnables.md](24-concurrency-and-multithreading/01-threads-and-runnables.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~67 lines → ~189) | Structured concurrency preview detail in Module 19 |
-| [02-synchronization-and-atomics.md](24-concurrency-and-multithreading/02-synchronization-and-atomics.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive L4 JMM; was ~51 → ~300) | `java.util.concurrent.locks` depth later |
-| [03-executors-and-futures.md](24-concurrency-and-multithreading/03-executors-and-futures.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical; was ~50 → ~123) | `CompletableFuture` patterns in backend modules |
-| [04-concurrent-collections.md](24-concurrency-and-multithreading/04-concurrent-collections.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Technical; was ~49 → ~106) | BlockingQueue hands-on in projects |
-| [05-virtual-threads-and-structured-concurrency.md](24-concurrency-and-multithreading/05-virtual-threads-and-structured-concurrency.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~53 → ~109) | Carrier pinning ops tuning in production notes |
+| [01-threads-and-runnables.md](24-concurrency-and-multithreading/01-threads-and-runnables.md) | Completed | Third EXPAND-PRESERVE deepen 2026-11-11 (Deep-dive; ~189 → 360 lines) | — |
+| [02-synchronization-and-atomics.md](24-concurrency-and-multithreading/02-synchronization-and-atomics.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive L4 JMM; ~448 lines; left intact third pass) | `java.util.concurrent.locks` depth later |
+| [03-executors-and-futures.md](24-concurrency-and-multithreading/03-executors-and-futures.md) | Completed | Third EXPAND-PRESERVE deepen 2026-11-11 (Technical; ~123 → 361 lines) | `CompletableFuture` patterns in backend modules |
+| [04-concurrent-collections.md](24-concurrency-and-multithreading/04-concurrent-collections.md) | Completed | Third EXPAND-PRESERVE deepen 2026-11-11 (Technical; ~106 → 384 lines) | BlockingQueue hands-on in projects |
+| [05-virtual-threads-and-structured-concurrency.md](24-concurrency-and-multithreading/05-virtual-threads-and-structured-concurrency.md) | Completed | Third EXPAND-PRESERVE deepen 2026-11-11 (Deep-dive; ~109 → 438 lines; STS preview labeled) | Carrier pinning ops tuning in production notes |
 | [Module assessment](assessments/module-assessments/24-concurrency-multithreading-assessment.md) | Completed | Solutions separate | — |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled / re-verified (Oracle JDK 21.0.9, 2026-11-11 third deepen pass; Temurin 21.0.12.1 not installed on this host; outputs match prior Temurin 21.0.12.1 recordings):**
 
 | Example | Result |
 |---------|--------|
-| `threads-runnable-demo` | `mainThread=main`; `afterJoinAlive=false` |
-| `synchronization-atomics-demo` | `unsafeCounter=10856`; `atomicCounter=40000`; `syncCounter=40000` (unsafe count varies by scheduling) |
-| `executors-futures-demo` | `futureResult=42`; `poolShutdown=ok` |
-| `concurrent-collections-demo` | `Ada=2`; `Lin=2` |
-| `virtual-threads-demo` | `isVirtual=true`; `platformIsVirtual=false` |
+| `threads-runnable-demo` | `mainThread=main`; `daemonDefault=false`; `workerName=handbook-worker`; `workerAlive=true`; `afterJoinAlive=false` |
+| `synchronization-atomics-demo` | Prior Temurin: `unsafeCounter` varies; `atomicCounter=40000`; `syncCounter=40000` (not re-run this pass — Ch.02 untouched) |
+| `executors-futures-demo` | `futureResult=42`; `done=true`; `poolShutdown=ok` |
+| `concurrent-collections-demo` | `Ada=2`; `Lin=2`; `size=2` |
+| `virtual-threads-demo` | `isVirtual=true`; `vtName=` (empty); `executorVirtual=true`; `platformIsVirtual=false` |
+| `StructuredTaskScope` preview probe | **Verified** with `--enable-preview`: `a=A b=B` (not a shipped examples/ demo) |
 
-**Module 24 status:** Completed  
+**Module 24 status:** Completed (third deepen pass 2026-11-11 on residual short chapters 01/03/04/05)  
 **Next recommended chapter:** Module 25 (Completed below)
 
 ---
@@ -633,20 +634,20 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-stack-heap-and-references.md](25-java-memory-model/01-stack-heap-and-references.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~44 → ~72) | Off-heap / FFM in advanced modules |
-| [02-happens-before-and-visibility.md](25-java-memory-model/02-happens-before-and-visibility.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive L4 JLS HB; was ~50 → ~77) | `VarHandle` in advanced concurrency |
-| [03-safe-publication.md](25-java-memory-model/03-safe-publication.md) | Completed | EXPAND-PRESERVE 2026-11-11 (Deep-dive; was ~46 → ~48) | — |
-| [Module assessment](assessments/module-assessments/25-java-memory-model-assessment.md) | Completed | Solutions separate | — |
+| [01-stack-heap-and-references.md](25-java-memory-model/01-stack-heap-and-references.md) | Completed | Third deepen pass 2026-11-11 EXPAND-PRESERVE (Deep-dive L3–4; was ~72 → textbook depth) | Off-heap / FFM in advanced modules |
+| [02-happens-before-and-visibility.md](25-java-memory-model/02-happens-before-and-visibility.md) | Completed | Third deepen pass 2026-11-11 EXPAND-PRESERVE (Deep-dive L4 JLS HB; was ~77 → textbook depth) | `VarHandle` explicit orders in advanced concurrency |
+| [03-safe-publication.md](25-java-memory-model/03-safe-publication.md) | Completed | Third deepen pass 2026-11-11 EXPAND-PRESERVE (Deep-dive L3–4; was ~48 → textbook depth) | — |
+| [Module assessment](assessments/module-assessments/25-java-memory-model-assessment.md) | Completed | Solutions separate; may need depth alignment after chapter expand | Spot-check assessment vs third deepen pass |
 
-**Examples compiled (Temurin JDK 21.0.12.1):**
+**Examples compiled (Temurin JDK 21.0.12.1 Verified outputs preserved; re-checked 2026-11-11):**
 
 | Example | Result |
 |---------|--------|
 | `stack-heap-references-demo` | `sameRef=false`; `equalContent=true` |
-| `happens-before-demo` | `payload=42` |
-| `safe-publication-demo` | `finalFieldValue=99` |
+| `happens-before-demo` | `payload=42`; `publishDone=true` |
+| `safe-publication-demo` | `finalFieldValue=99`; `published=true` |
 
-**Module 25 status:** Completed  
+**Module 25 status:** Completed (third deepen pass 2026-11-11)
 **Next recommended chapter:** Module 26 (Completed below)
 
 ---

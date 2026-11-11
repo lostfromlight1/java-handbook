@@ -11,8 +11,8 @@
 | 02 | [JVM and Concurrency Interviews](02-jvm-and-concurrency-interviews.md) | Completed |
 | 03 | [Spring and System Design Interviews](03-spring-and-system-design-interviews.md) | Completed |
 
-**Prerequisites:** Modules 02–18, 24–28, 36–40 recommended before mock interviews.
+**Prerequisites:** Modules 02–18, 24–28, 36–40, 44–50 as relevant.
 
 **Assessment:** [52-interview-preparation-assessment.md](../assessments/module-assessments/52-interview-preparation-assessment.md)
 
-**Depth note (2026-11-11):** Mechanism diagrams (HashMap, happens-before, Spring MVC) added for interview depth.
+**Depth note (2026-11-11, fourth EXPAND-PRESERVE):** Progressive WHY depth (definition → rule → example → pitfall); not Q&A-only lists. Illustrative drills labeled.

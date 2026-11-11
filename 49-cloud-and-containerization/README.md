@@ -15,4 +15,4 @@
 
 **Assessment:** [49-cloud-containerization-assessment.md](../assessments/module-assessments/49-cloud-containerization-assessment.md)
 
-**Depth note (2026-11-11):** Mechanism sections for scale and K8s rollouts; native image build-time flow added.
+**Depth note (2026-11-11, fourth EXPAND-PRESERVE):** Uniform textbook depth (~350–500+ lines where warranted). Mechanism sections for scale, K8s rollouts/probes, and native closed-world builds; Illustrative labels for Spring/K8s/Graal snippets without runnable cluster/native CI.

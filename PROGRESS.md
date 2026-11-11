@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-11 (Modules 38–45 EXPAND-PRESERVE; Modules 29–32; curriculum through M53)
+**Last updated:** 2026-11-11 (Modules 49–52 fourth EXPAND-PRESERVE deepen; Modules 38–45; curriculum through M53)
 
 ## Status values
 
@@ -1106,12 +1106,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 
 | Chapter | Status | Review | Outstanding |
 |---------|--------|--------|-------------|
-| [01-cloud-native-java.md](49-cloud-and-containerization/01-cloud-native-java.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | — |
-| [02-kubernetes-basics-for-java.md](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | kind/minikube lab optional |
-| [03-graalvm-and-native-image-concepts.md](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) | Completed | EXPAND-PRESERVE deepen pass 2 2026-11-11; Technical L2–3 | Native build CI optional |
+| [01-cloud-native-java.md](49-cloud-and-containerization/01-cloud-native-java.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | — |
+| [02-kubernetes-basics-for-java.md](49-cloud-and-containerization/02-kubernetes-basics-for-java.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | kind/minikube lab optional |
+| [03-graalvm-and-native-image-concepts.md](49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md) | Completed | Fourth EXPAND-PRESERVE deepen 2026-11-11; Technical L2–3 | Native build CI optional |
 | [Module assessment](assessments/module-assessments/49-cloud-containerization-assessment.md) | Completed | Solutions separate | — |
 
-**Module 49 status:** Completed  
+**Module 49 status:** Completed (fourth EXPAND-PRESERVE 2026-11-11; ~350+ lines/chapter where warranted)  
 **Next recommended chapter:** Module 50 (Completed below)
 
 ---

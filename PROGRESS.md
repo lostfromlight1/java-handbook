@@ -4,7 +4,7 @@
 **Validation JDK (Phase 1):** Oracle JDK 21.0.9 (`javac 21.0.9`)  
 **Module 04 validation JDK:** Temurin 21.0.12.1 (`javac 21.0.12.1`)  
 **Quality-pass JDK check (2026-11-10):** Temurin 21.0.12.1 (language-level rechecks; Phase 1 example outputs remain those recorded on 21.0.9)  
-**Last updated:** 2026-11-11 (Modules 49–52 fourth EXPAND-PRESERVE deepen; Modules 38–45; curriculum through M53)
+**Last updated:** 2026-11-11 (Appendix Completed; Modules 46–52 fourth EXPAND-PRESERVE deepen; curriculum through M53)
 
 ## Status values
 
@@ -38,12 +38,12 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 |----------|--------|--------|-------------|
 | java-version-history.md | Completed | Expanded 2026-11-11 (policy + LTS 8/11/17/21/25 highlights; preview policy; validation JDK) | — |
 | java-quick-reference.md | Completed | Created 2026-11-11 (Java 21 syntax/API cheat sheet; links to chapters) | — |
-| jvm-reference.md | Completed | Created 2026-11-11 (runtime areas, loading, GC awareness, flags, jcmd/JFR; HotSpot vs JVMS) | — |
+| jvm-reference.md | Completed | EXPAND-PRESERVE 2026-11-11 (GC comparison, `-XX` warnings, jcmd recipes; HotSpot vs JVMS) | — |
 | common-errors.md | Completed | Created 2026-11-11 (NPE, CME, classloading, OOME/SOE, equals/hashCode, checked, autobox, switch) | — |
-| interview-glossary.md | Drafted | Interview-hot terms by area; chapter links | Expand terms as modules deepen |
-| java-vs-go.md | Drafted | Fair Java↔Go bridge for learners | Optional Go samples later |
-| java-vs-csharp.md | Drafted | CLR/JVM, LINQ/Streams, async vs VT | Keep Spring/ASP.NET awareness-level |
-| java-vs-python.md | Drafted | Static/dynamic, GIL vs JVM threads | Keep CPython labels explicit |
+| interview-glossary.md | Completed | EXPAND-PRESERVE 2026-11-11 (false sharing, biased locking historical, pools, N+1, idempotency, circuit breaker) | — |
+| java-vs-go.md | Completed | EXPAND-PRESERVE 2026-11-11 (Illustrative snippets, migration mistakes, tooling depth) | — |
+| java-vs-csharp.md | Completed | EXPAND-PRESERVE 2026-11-11 (Illustrative snippets, migration mistakes, tooling depth) | — |
+| java-vs-python.md | Completed | EXPAND-PRESERVE 2026-11-11 (Illustrative snippets, migration mistakes; CPython GIL labels) | — |
 
 ---
 

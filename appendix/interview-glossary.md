@@ -1,6 +1,6 @@
 # Interview Glossary (Java)
 
-> **Status:** Drafted  
+> **Status:** Completed  
 > **Audience:** Interview revision and quick lookup  
 > **Target:** Java 21; HotSpot/framework notes labeled  
 > **Last updated:** 2026-11-11  
@@ -80,9 +80,21 @@ The JMM defines which writes one thread is allowed to observe from another, and 
 
 ### Happens-before (HB)
 
-Happens-before is the JMM’s ordering relation: if action A happens-before action B, B is guaranteed to see A’s effects (among other constraints). Locks, `volatile`, thread start/join, and certain concurrent utilities establish HB edges. Saying “volatile means no cache” is imprecise; prefer HB and visibility wording.
+Happens-before is the JMM’s ordering relation: if action A happens-before action B, B is guaranteed to see A’s effects (among other constraints). Locks, `volatile` write/read pairs, thread start/join, and certain concurrent utilities establish HB edges. HB is transitive along a chain of edges. Saying “volatile means no cache” is imprecise; prefer HB and visibility wording. Interview refresh: HB is a *spec* guarantee about observable order—not a claim that every CPU instruction ran in source order.
 
 **Deeper:** [25-java-memory-model/02-happens-before-and-visibility.md](../25-java-memory-model/02-happens-before-and-visibility.md)
+
+### False sharing
+
+**HotSpot / hardware awareness:** two threads update different fields or array slots that share a CPU cache line; each write invalidates the other’s line and burns bandwidth even though the *logical* data is unshared. Classic when adjacent `long` counters live in one object. Padding, `@Contended` (internal/`jdk.internal`), or redesigning so hot fields are not adjacent are mitigations—measure first; do not pad everything.
+
+**Deeper:** [28-jit-and-performance/03-profiling.md](../28-jit-and-performance/03-profiling.md) · [24-concurrency-and-multithreading/02-synchronization-and-atomics.md](../24-concurrency-and-multithreading/02-synchronization-and-atomics.md)
+
+### Biased locking (historical HotSpot)
+
+**HotSpot historical:** biased locking optimized uncontended `synchronized` by “biasing” a monitor toward one thread so repeated lock/unlock avoided heavyweight atomics. Contended cases revoked bias (costly). Modern HotSpot/JDK lines have **disabled or removed** biased locking by default as virtual threads and lock implementations evolved—treat it as interview *history*, not current tuning advice. Prefer understanding monitors, HB, and contention over quoting obsolete `-XX` folklore.
+
+**Deeper:** [24-concurrency-and-multithreading/02-synchronization-and-atomics.md](../24-concurrency-and-multithreading/02-synchronization-and-atomics.md) · [28-jit-and-performance/01-hotspot-and-tiered-compilation.md](../28-jit-and-performance/01-hotspot-and-tiered-compilation.md)
 
 ### Safe publication
 
@@ -234,9 +246,15 @@ Spring beans are instantiated, dependencies injected, initialized (`@PostConstru
 
 **Deeper:** [36-spring-framework/02-bean-lifecycle-and-aop.md](../36-spring-framework/02-bean-lifecycle-and-aop.md)
 
+### Connection pool
+
+Opening a TCP + auth handshake per SQL call is expensive. A **connection pool** keeps a bounded set of live DB connections and lends them to callers. Pool size, validation, leak detection, and timeout settings are operational concerns; “max pool = traffic” without measuring often starves or overwhelms the database. In Java backends this is typically HikariCP (Spring Boot default) or similar—not a language feature.
+
+**Deeper:** [33-databases-and-jdbc/03-transactions-and-pooling.md](../33-databases-and-jdbc/03-transactions-and-pooling.md)
+
 ### ORM / lazy loading / N+1
 
-Object-relational mappers map tables to entities. Lazy associations defer loads until accessed; outside an open persistence context this can fail or explode into **N+1** queries. Fetch strategy and DTO projections are practical remedies.
+Object-relational mappers map tables to entities. Lazy associations defer loads until accessed; outside an open persistence context this can fail or explode into **N+1** queries (one query for parents, then one per child). Fetch joins, entity graphs, batch fetching, and DTO projections are practical remedies. Interview depth: show you can spot N+1 in logs/metrics, not only name it.
 
 **Deeper:** [35-hibernate-and-jpa/02-relationships-and-fetching.md](../35-hibernate-and-jpa/02-relationships-and-fetching.md)
 
@@ -264,7 +282,7 @@ A saga coordinates a long-running business transaction across services with loca
 
 ### Circuit breaker / bulkhead / retry
 
-Resilience patterns limit blast radius: fail fast when a dependency is unhealthy (circuit breaker), isolate resources (bulkhead), and retry with backoff/jitter for transient faults. Blind retries without idempotency amplify outages.
+Resilience patterns limit blast radius: a **circuit breaker** fails fast (open) when a dependency is unhealthy, probes recovery (half-open), then closes on success; a **bulkhead** isolates thread pools/connections so one dependency cannot exhaust the whole process; **retry** with backoff/jitter handles transient faults. Blind retries without **idempotency** amplify outages. Name the failure mode you are defending against—timeouts, overload, or partial dependency death.
 
 **Deeper:** [44-microservices-and-distributed-systems/02-resilience-patterns.md](../44-microservices-and-distributed-systems/02-resilience-patterns.md)
 
@@ -310,5 +328,7 @@ Before an interview, ensure you can explain—without notes—the difference bet
 | Erasure vs reification | Compile-time generic info mostly erased vs runtime type arguments retained |
 | Proxy self-invocation | Internal `this` call bypasses Spring AOP proxy |
 | Saga vs ACID TX | Compensating multi-service flow vs single-resource atomic commit |
+| False sharing vs true contention | Cache-line ping-pong on *distinct* fields vs competing for the *same* lock/data |
+| Connection pool vs ORM session | Bounded live DB sockets vs persistence-context / unit-of-work identity |
 
 **Next:** [52-interview-preparation/01-core-java-interviews.md](../52-interview-preparation/01-core-java-interviews.md)

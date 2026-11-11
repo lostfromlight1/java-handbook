@@ -1,6 +1,6 @@
 # Java vs Go (for Java learners)
 
-> **Status:** Drafted  
+> **Status:** Completed  
 > **Purpose:** Contrast Go with Java so Java concepts click faster—**not** a Go tutorial  
 > **Target:** Java 21; HotSpot notes labeled  
 > **Last updated:** 2026-11-11  
@@ -59,6 +59,34 @@ Historically, Java concurrency meant **platform threads** (expensive at huge cou
 | CPU-bound work | Still limited by cores; VTs do not invent parallelism | Same core limit |
 | Pinning / blocking | Long `synchronized` / native calls can pin carriers (**HotSpot/implementation detail**) | Different runtime constraints |
 
+### Illustrative concurrency mental models
+
+**Illustrative** — shapes only; not Verified runs.
+
+```java
+// Java 21 — many blocking tasks, virtual threads
+try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
+    for (int i = 0; i < 10_000; i++) {
+        exec.submit(() -> callRemoteApi()); // blocking OK on VT
+    }
+}
+```
+
+```go
+// Go — many tasks, goroutines + WaitGroup (awareness)
+var wg sync.WaitGroup
+for i := 0; i < 10_000; i++ {
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        callRemoteAPI()
+    }()
+}
+wg.Wait()
+```
+
+Go often coordinates with channels; Java often uses executors, futures, or structured concurrency APIs. Do not force channel-shaped designs into Java unless the problem truly needs that topology.
+
 ### JMM still matters
 
 Go’s memory model and Java’s **JMM** ([Module 25](../25-java-memory-model/README.md)) both exist; learning Java means learning happens-before, `volatile`, and safe publication—even if you came from Go channels that “feel” ordered.
@@ -70,6 +98,27 @@ Go’s memory model and Java’s **JMM** ([Module 25](../25-java-memory-model/RE
 Go encourages returning `(result, error)` and handling failures in-band. Panic/recover is for truly exceptional paths.
 
 Java uses a **Throwable hierarchy**: checked exceptions, unchecked exceptions, and errors ([Module 14](../14-exceptions-and-error-handling/README.md)). Stack unwinding, `try`/`catch`/`finally`, and try-with-resources are core.
+
+### Illustrative side-by-side (error handling)
+
+**Illustrative** — idioms, not a claim that APIs are equivalent.
+
+```go
+// Go — errors as values
+data, err := os.ReadFile(path)
+if err != nil {
+    return fmt.Errorf("read config: %w", err)
+}
+```
+
+```java
+// Java — exceptions + try-with-resources
+try (var in = Files.newInputStream(path)) {
+    return in.readAllBytes();
+} catch (IOException e) {
+    throw new UncheckedIOException("read config", e);
+}
+```
 
 **Transfer tips:**
 
@@ -84,20 +133,57 @@ Java uses a **Throwable hierarchy**: checked exceptions, unchecked exceptions, a
 | Concern | Java | Go |
 |---------|------|-----|
 | Dependency graph | Maven Central + Maven/Gradle | Module proxy + `go.mod` |
+| Lock / integrity | Gradle lockfiles / Maven versions plugin (opt-in culture) | `go.sum` is central and expected |
 | Artifact | JAR/WAR, sometimes native image | Usually a single binary |
-| Build reproducibility | Lockfiles/tooling vary; Gradle/Maven configs matter | `go.sum` is central |
+| Build reproducibility | Strong when you pin plugins + deps; easy to get wrong | `go build` + `go.sum` is the default story |
 | Modules | JPMS optional for apps; strong for JDK ([Module 29](../29-build-tools-and-dependency-management/04-java-platform-module-system.md)) | Language-level modules from day one |
+| Test runner | JUnit (via build tool) | `go test` in the toolchain |
+| Format / lint | Spotless, Checkstyle, Error Prone (ecosystem) | `gofmt` / `go vet` built into culture |
+| Cross-compile | Possible (esp. native image / containers) | First-class `GOOS`/`GOARCH` |
+| IDE expectation | IntelliJ / Eclipse deep Java support | GoLand / VS Code + gopls |
 
 Java’s strength is a huge ecosystem and mature build/test tooling. Go’s strength is simple deployable binaries and a small standard toolchain. Learning Java means becoming comfortable with **classpath vs module path**, dependency scopes, and IDE-driven builds—not pretending JARs are “just binaries.”
 
+**Practical Java build checklist for Go migrants:** pick Maven *or* Gradle; pin the JDK in CI; understand `compile` vs `runtime` vs `test` scopes; know how your fat JAR is built; run tests the same way locally and in CI.
+
 ---
+
+## Common migration mistakes (Go → Java)
+
+1. **Catching everything like `if err != nil`.** Empty or overly broad `catch (Exception e)` hides failures; use typed exceptions and boundaries.
+2. **Assuming interfaces are implicit.** Java needs `implements` (or adapters); structural typing will not save you at compile time.
+3. **Spawning unbounded platform threads.** Go’s “just `go func`” habit on Java platform threads exhausts the OS; prefer virtual threads or bounded executors.
+4. **Expecting a single static binary by default.** Fat JARs and containers are the usual deploy story; GraalVM native image is opt-in ([Module 49](../49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md)).
+5. **Ignoring the JMM because channels “felt ordered.”** Shared mutable Java objects need HB (locks, `volatile`, concurrent collections).
+6. **Treating `nil`-interface intuition as `null` safety.** Java `null` and Go’s nil interface/pointer traps differ; learn Java’s NPE patterns separately ([Module 18](../18-optional-and-null-handling/README.md)).
+
+---
+
+## Null, zero values, and APIs
+
+Go’s zero values and `nil` interfaces create failure modes that do not map 1:1 onto Java `null`. A non-nil interface value can still hold a typed nil pointer—an infamous Go footgun. Java’s hazard is usually a plain `null` reference and `NullPointerException`, plus Optional misuse at API edges ([Module 18](../18-optional-and-null-handling/README.md)).
+
+**Transfer tip:** design Java APIs with explicit absence (`Optional` as a *return* type, clear domain types) rather than inventing Go-shaped sentinel zeros on reference types.
 
 ## Performance mental model
 
 - **Java / HotSpot:** Warm-up, tiered JIT, escape analysis, GC pauses/throughput trade-offs ([Modules 27–28](../27-garbage-collection/README.md)). Peak throughput after warm-up can be excellent; startup and footprint need attention (containers, GraalVM native image awareness in [Module 49](../49-cloud-and-containerization/03-graalvm-and-native-image-concepts.md)).
 - **Go:** Fast startup, simpler performance story for many CLIs and network services; GC exists but the operational knobs differ.
 
+| Question | Prefer asking |
+|----------|----------------|
+| Cold start / CLI | Go often wins on simplicity; Java needs CDS/AppCDS, smaller heaps, or native image awareness |
+| Steady-state service | Measure both; HotSpot after warm-up is competitive on many backends |
+| Huge blocking concurrency | Java 21 virtual threads vs goroutines—pick by team and ecosystem, not slogans |
+| Memory ceiling | Both GC; tune and measure; do not assume Go is always smaller |
+
 Do not claim one is universally faster. Measure the workload you care about.
+
+## Ecosystem and HTTP services (awareness)
+
+Go’s standard library `net/http` is often enough for small services. Java backends typically lean on **Spring Boot**, Jakarta Servlet containers, or similar—more moving parts, deeper ops/integration story ([Module 37](../37-spring-boot/README.md)). That is not a moral judgment; it changes what “hello production” means (config, metrics, DI, transactions).
+
+If you know Go middleware chains, map them mentally to servlet filters / Spring interceptors—but learn the Java lifecycle and proxy rules separately.
 
 ---
 
@@ -119,6 +205,10 @@ Do not claim one is universally faster. Measure the workload you care about.
 ### Learning advice
 
 Master Java’s type system, concurrency utilities, JMM, and packaging on their own terms. Use this comparison only as a bridge—never as a prerequisite. If a handbook chapter mentions Go, it should still teach the Java mechanism fully without requiring Go.
+
+**Study order for Go → Java transfers:** (1) types + erasure, (2) exceptions + try-with-resources, (3) platform vs virtual threads, (4) JMM / happens-before, (5) Maven or Gradle + classpath. Skip none of those five even if Go felt “simple.”
+
+Keep a private cheat sheet of *false friends* (goroutine ≠ platform thread, `error` ≠ checked exception syntax, `go.mod` ≠ JPMS) and revise it after each module.
 
 ---
 

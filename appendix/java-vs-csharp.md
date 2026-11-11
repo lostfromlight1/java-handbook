@@ -1,6 +1,6 @@
 # Java vs C# (for Java learners)
 
-> **Status:** Drafted  
+> **Status:** Completed  
 > **Purpose:** Map familiar C# / .NET ideas onto Java 21 accurately—**not** a C# course  
 > **Target:** Java 21; HotSpot / Spring / ASP.NET notes labeled  
 > **Last updated:** 2026-11-11  
@@ -46,6 +46,28 @@ Both are managed runtimes with garbage collection, JIT (and sometimes AOT), and 
 
 Java distinguishes **checked** exceptions (part of a method’s compile-time contract) from **unchecked** ones ([Module 14](../14-exceptions-and-error-handling/01-throwable-hierarchy.md)). C# does not have checked exceptions; callers are not forced by the compiler to handle specific exception types.
 
+### Illustrative side-by-side (error handling)
+
+**Illustrative** — shapes only.
+
+```csharp
+// C# — exceptions unchecked by the compiler
+try {
+    return await File.ReadAllBytesAsync(path);
+} catch (IOException ex) {
+    throw new InvalidOperationException("read config", ex);
+}
+```
+
+```java
+// Java — IOException is checked at the API boundary
+try (var in = Files.newInputStream(path)) {
+    return in.readAllBytes();
+} catch (IOException e) {
+    throw new UncheckedIOException("read config", e);
+}
+```
+
 **Practical advice for Java:**
 
 - Use checked exceptions sparingly for recoverable, caller-relevant failures at API boundaries.
@@ -89,6 +111,29 @@ C#’s `async`/`await` is a first-class language feature over `Task` (and friend
 
 Java historically composed async work with callbacks, executors, and **`CompletableFuture`** ([Module 24 Ch.03](../24-concurrency-and-multithreading/03-executors-and-futures.md)). **Java 21 virtual threads** change the recommended default for many server apps: write blocking-style code on virtual threads instead of turning every API async.
 
+### Illustrative concurrency mental models
+
+**Illustrative** — idioms, not Verified equivalence.
+
+```csharp
+// C# — async/await composition
+async Task<string> LoadAsync(string id) {
+    var a = await client.GetAsync(id);
+    var b = await repo.FindAsync(id);
+    return a + b;
+}
+```
+
+```java
+// Java 21 — blocking style on a virtual thread (common server default)
+String load(String id) {
+    var a = client.get(id);   // blocking I/O
+    var b = repo.find(id);
+    return a + b;
+}
+// Fan-out still uses CompletableFuture / structured concurrency when useful
+```
+
 | Need | Prefer in modern Java 21 |
 |------|---------------------------|
 | Huge numbers of blocking I/O tasks | Virtual threads + structured concurrency APIs |
@@ -116,6 +161,24 @@ Learn Spring’s **IoC, proxies, bean lifecycle, and transactions** as Java-ecos
 
 ---
 
+## Packaging and tooling
+
+| Concern | Java | C# / .NET |
+|---------|------|-----------|
+| CLI | `javac` / `java` + Maven/Gradle | `dotnet` build/test/run |
+| Project file | `pom.xml` / `build.gradle(.kts)` | `.csproj` / `.sln` |
+| Package feed | Maven Central (and privates) | NuGet |
+| Test | JUnit / TestNG via build tool | xUnit / NUnit / MSTest |
+| Format / analyze | Spotless, Checkstyle, Error Prone | `dotnet format`, analyzers / Roslyn |
+| Diagnostics | JFR, `jcmd`, heap dumps | dotnet-trace, dump, PerfView culture |
+| AOT / native | GraalVM native image (opt-in) | Native AOT evolving on .NET |
+| DI in frameworks | Spring IoC (ecosystem) | Built-in + ASP.NET extensions |
+| Config culture | `application.yml` / profiles / env | `appsettings` / environments / secrets managers |
+
+**Transfer tip:** `dotnet restore/build/test` maps mentally to Maven/Gradle lifecycle phases; learn Java dependency *scopes* (compile/runtime/test/provided) explicitly—NuGet’s model will not translate by muscle memory alone.
+
+---
+
 ## Other sharp edges for .NET → Java transfers
 
 1. **Properties vs getters:** Java uses methods (`getX`/`setX` or records’ accessors); fields are not C# properties.
@@ -123,6 +186,17 @@ Learn Spring’s **IoC, proxies, bean lifecycle, and transactions** as Java-ecos
 3. **Generics erasure:** CLR reification intuition fails for Java runtime casts and `new T()` restrictions ([Module 13](../13-generics/03-type-erasure-and-restrictions.md)).
 4. **`var`:** Local-variable type inference exists in both; Java `var` is still static typing ([Module 02](../02-java-fundamentals/04-type-conversion-and-inference.md)).
 5. **Nullable reference types:** C#’s compiler feature is stronger than Java’s historical model; Java relies on discipline, annotations, Optional, and analysis tools ([Module 18](../18-optional-and-null-handling/README.md)).
+
+---
+
+## Common migration mistakes (.NET → Java)
+
+1. **Expecting `async`/`await` everywhere.** Prefer virtual threads for many I/O services; use `CompletableFuture` when composition demands it.
+2. **Assuming reified generics.** `List<String>` is not a distinct runtime class; `new T()` and runtime casts behave differently than on the CLR.
+3. **Using `==` for string/value equality.** Prefer `equals` / `Objects.equals` (and beware interning folklore).
+4. **Mapping properties 1:1 onto public fields.** Idiomatic Java uses accessors, records, or libraries (Lombok is optional culture—not language).
+5. **Treating Spring like ASP.NET middleware only.** Learn proxies, self-invocation traps, and transaction boundaries.
+6. **Swallowing checked exceptions to “feel like C#.”** Wrap with context or redesign the API; do not empty-catch.
 
 ---
 

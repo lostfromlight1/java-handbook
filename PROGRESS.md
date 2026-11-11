@@ -27,7 +27,7 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | Cursor agents | Completed | 7 agents updated to match new standards |
 | java-documentation skill | Completed | SKILL + review-checklist expanded |
 | Diagnostic framework | Completed | README + scoring + area index |
-| appendix/java-version-history.md | Drafted | Seed table |
+| appendix/java-version-history.md | Completed | LTS narrative + policy 2026-11-11 |
 | Git initialized | Completed | Local only; no remote required |
 
 ---
@@ -40,10 +40,10 @@ Only mark `Completed` after the quality checklist in `DOCUMENTATION-STANDARDS.md
 | java-quick-reference.md | Not started | | |
 | jvm-reference.md | Not started | | |
 | common-errors.md | Not started | | |
-| interview-glossary.md | Not started | | |
-| java-vs-go.md | Not started | | |
-| java-vs-csharp.md | Not started | | |
-| java-vs-python.md | Not started | | |
+| interview-glossary.md | Drafted | Interview-hot terms by area; chapter links | Expand terms as modules deepen |
+| java-vs-go.md | Drafted | Fair Java↔Go bridge for learners | Optional Go samples later |
+| java-vs-csharp.md | Drafted | CLR/JVM, LINQ/Streams, async vs VT | Keep Spring/ASP.NET awareness-level |
+| java-vs-python.md | Drafted | Static/dynamic, GIL vs JVM threads | Keep CPython labels explicit |
 
 ---
 
